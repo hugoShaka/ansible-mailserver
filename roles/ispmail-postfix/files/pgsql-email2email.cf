@@ -1,0 +1,4 @@
+user = postfix
+hosts = unix:/var/run/postgresql
+dbname = mailserver
+query = SELECT email FROM virtual_users WHERE email='%s'

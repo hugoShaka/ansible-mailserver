@@ -1,30 +1,30 @@
 ---
 - name: define Postfix virtual mailbox domain mapping
-  template: src=mysql-virtual-mailbox-domains.cf.j2 dest=/etc/postfix/mysql-virtual-mailbox-domains.cf
+  copy: src=pgsql-virtual-mailbox-domains.cf dest=/etc/postfix/pgsql-virtual-mailbox-domains.cf
   notify: restart postfix
 - name: tell Postfix to use the virtual mailbox domain mapping
-  command: postconf virtual_mailbox_domains=mysql:/etc/postfix/mysql-virtual-mailbox-domains.cf
+  command: postconf virtual_mailbox_domains=proxy:pgsql:/etc/postfix/pgsql-virtual-mailbox-domains.cf
 
 - name: define Postfix virtual mailbox mapping
-  template: src=mysql-virtual-mailbox-maps.cf.j2 dest=/etc/postfix/mysql-virtual-mailbox-maps.cf
+  copy: src=pgsql-virtual-mailbox-maps.cf dest=/etc/postfix/pgsql-virtual-mailbox-maps.cf
   notify: restart postfix
 - name: tell Postfix to use the virtual mailbox mapping
-  command: postconf virtual_mailbox_maps=mysql:/etc/postfix/mysql-virtual-mailbox-maps.cf
+  command: postconf virtual_mailbox_maps=proxy:pgsql:/etc/postfix/pgsql-virtual-mailbox-maps.cf
 
 - name: define Postfix virtual alias mapping
-  template: src=mysql-virtual-alias-maps.cf.j2 dest=/etc/postfix/mysql-virtual-alias-maps.cf
+  copy: src=pgsql-virtual-alias-maps.cf dest=/etc/postfix/pgsql-virtual-alias-maps.cf
   notify: restart postfix
 - name: tell Postfix to use the virtual alias mapping
-  command: postconf virtual_alias_maps=mysql:/etc/postfix/mysql-virtual-alias-maps.cf
+  command: postconf virtual_alias_maps=proxy:pgsql:/etc/postfix/pgsql-virtual-alias-maps.cf
 
 - name: define Postfix email-to-email mapping (required for catchall domains)
-  template: src=mysql-email2email.cf.j2 dest=/etc/postfix/mysql-email2email.cf
+  copy: src=pgsql-email2email.cf dest=/etc/postfix/pgsql-email2email.cf
   notify: restart postfix
 - name: tell Postfix to use the email-to-email mapping
-  command: postconf virtual_alias_maps=mysql:/etc/postfix/mysql-virtual-alias-maps.cf,mysql:/etc/postfix/mysql-email2email.cf
+command: postconf virtual_alias_maps=proxy:pgsql:/etc/postfix/pgsql-virtual-alias-maps.cf,proxy:pgsql:/etc/postfix/pgsql-email2email.cf
 
 - name: Restricting access to database mapping files that contain a password
-  file: path=/etc/postfix/mysql-{{item}}.cf mode=0640
+  file: path=/etc/postfix/pgsql-{{item}}.cf mode=0640
   with_items:
   - virtual-mailbox-domains
   - virtual-mailbox-maps
