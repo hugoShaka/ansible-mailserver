@@ -1,29 +1,103 @@
 ---
-- name: Installing required Python mysqldb module for Ansible to manage databases
-  apt: pkg=python-mysqldb state=installed
-# - name: Creating my-cnf for root user
-#   template: src=root-my-cnf.j2 dest=/root/.my.cnf mode=0600
-- name: creating mailserver MySQL database
-  mysql_db: name=mailserver state=present
-- name: creating Roundcube MySQL database
-  mysql_db: name=roundcube state=present
-- name: copying MySQL database schema to server
-  copy: src=schema.sql dest=/tmp
-- name: setting up SQL schema of mailserver database
-  mysql_db: name=mailserver state=import target=/tmp/schema.sql
-# - name: set the MySQL root user's password
-  # mysql_user: name=root password={{ispmail_mysql_root_password}} state=present
-- name: creating MySQL user to read the mailserver database
-  mysql_user: name=mailuser password={{ispmail_mysql_mailuser_password}} priv=mailserver.*:SELECT,INSERT,UPDATE,DELETE state=present
+- name: Installing required Python pgsql module for Ansible to manage databases
+  apt:
+    pkg: python-psycopg2
+    state: installed
+
+- name: creating SQL mail user
+  postgresql_user:
+    name: mail
+    state: present
+  become: true
+  become_user: postgres
+
+- name: creating mailserver SQL database
+  postgresql_db:
+    name: mailserver
+    encoding: UTF-8
+    lc_collate: C
+    lc_ctype: C
+    template: template0
+    owner: mail
+  become: true
+  become_user: postgres
+
+- name: creating SQL pgadmin user
+  postgresql_user:
+    name: pgadmin
+    password: {{ispmail_pgadmin_password}}
+    state: present
+    db: mailserver
+    priv: "SELECT,UPDATE,INSERT,DELETE"
+  become: true
+  become_user: postgres
+
 - name: creating MySQL user for roundcube
-  mysql_user: name=roundcube password={{ispmail_mysql_roundcube_password}} priv=roundcube.*:ALL state=present
-- name: copying MySQL test data to server
+  postgresql_user:
+    name: roundcubeuser
+    password: "{{ispmail_mysql_roundcube_password}}"
+    state: present
+  become: true
+  become_user: postgres
+
+- name: creating Roundcube SQL database
+  postgresql_db:
+    name: roundcube
+    encoding: UTF-8
+    lc_collate: C
+    lc_ctype: C
+    template: template0
+    owner: roundcubeuser
+  become: true
+  become_user: postgres
+
+- name: Creating the postgres user map
+  blockinfile:
+    path: /etc/postgresql/9.4/main/pg_ident.conf
+    marker: "### {mark} ANSIBLE MANAGED BLOCK : MAILMAP ###"
+    insertafter: "^#\s-+"
+    content: |
+      mailmap         dovecot                 mail
+      mailmap         postfix                 mail
+      mailmap         root                    mail
+
+- name: Allowing unix socket connections on mailserver database
+  lineinfile:
+    dest: /etc/postgresql/9.4/main/pg_hba.conf
+    regexp: "^local\s+mail\s+all\s+peer\s+map=mailmap$"
+    insertbefore: "^#\sIPv4\slocal.+"
+    line: "local   mail            all             peer                    map=mailmap"
+
+- name: Allowing pgadmin connections on mailserver database
+  lineinfile:
+    dest: /etc/postgresql/9.4/main/pg_hba.conf
+    regexp: "^host\s+mailserver\s+pgadmin\s+127.0.0.1/32\s+md5$"
+    insertbefore: "^#\sIPv4\slocal.+"
+    line: "host    mailserver      pgadmin         127.0.0.1/32            md5"
+
+- name: Allowing IP connections on roundcube database
+  lineinfile:
+    dest: /etc/postgresql/9.4/main/pg_hba.conf
+    regexp: "^host\s+roundcube\s+roundcubeuser\s+127.0.0.1/32\s+md5$"
+    insertafter: "^#\sIPv4\slocal.+"
+    line: "host    roundcube       roundcubeuser   127.0.0.1/32            md5"
+
+- name: copying SQL database schema to server
+  copy: src=schema.sql dest=/tmp
+
+- name: setting up SQL schema of mailserver database
+  postgresql_db: name=mailserver state=import target=/tmp/schema.sql
+  become: true
+  become_user: postgres
+
+- name: copying SQL test data to server
   copy: src=test.sql dest=/tmp
   when: ispmail_populate_test_data == true
+  become: true
+  become_user: postgres
+
 - name: populating the database with test data
-  mysql_db: name=mailserver state=import target=/tmp/test.sql
+  postgresql_db: name=mailserver state=import target=/tmp/test.sql
   when: ispmail_populate_test_data == true
-# - name: set the MySQL root user's password
-#   mysql_user: name=root password={{ispmail_mysql_root_password}} state=present
-# - name: Create root's .my.cnf
-#   template: src=my-cnf.j2 dest=/root/.my.cnf mode=0600
+  become: true
+  become_user: postgres
