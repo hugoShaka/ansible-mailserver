@@ -21,7 +21,7 @@
   copy: src=pgsql-email2email.cf dest=/etc/postfix/pgsql-email2email.cf
   notify: restart postfix
 - name: tell Postfix to use the email-to-email mapping
-command: postconf virtual_alias_maps=proxy:pgsql:/etc/postfix/pgsql-virtual-alias-maps.cf,proxy:pgsql:/etc/postfix/pgsql-email2email.cf
+  command: postconf virtual_alias_maps=proxy:pgsql:/etc/postfix/pgsql-virtual-alias-maps.cf,proxy:pgsql:/etc/postfix/pgsql-email2email.cf
 
 - name: Restricting access to database mapping files that contain a password
   file: path=/etc/postfix/pgsql-{{item}}.cf mode=0640
