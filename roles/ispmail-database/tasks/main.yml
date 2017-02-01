@@ -25,7 +25,7 @@
 - name: creating SQL pgadmin user
   postgresql_user:
     name: pgadmin
-    password: {{ispmail_pgadmin_password}}
+    password: "{{ispmail_pgadmin_password}}"
     state: present
     db: mailserver
     priv: "SELECT,UPDATE,INSERT,DELETE"
