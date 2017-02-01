@@ -28,7 +28,7 @@
     password: "{{ispmail_pgadmin_password}}"
     state: present
     db: mailserver
-    priv: "SELECT,UPDATE,INSERT,DELETE"
+    priv: "ALL:ALL"
   become: true
   become_user: postgres
 
