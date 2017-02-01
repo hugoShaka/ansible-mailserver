@@ -15,5 +15,5 @@ install:
 
 script:
   - docker exec --tty "$(cat ${container_id})" env TERM=xterm ansible-playbook /etc/ansible/ispmail.yml --syntax-check
-  - docker exec "$(cat ${container_id})" ansible-playbook /etc/ansible/ispmail.yml -v
+  - docker exec "$(cat ${container_id})" ansible-playbook /etc/ansible/ispmail.yml -v -l localhost
 

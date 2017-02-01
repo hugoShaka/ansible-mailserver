@@ -5,7 +5,7 @@
   user: name=vmail uid=5000 group=vmail home=/var/vmail
 
 - name: Create mailbox directory
-  file:path=/var/vmail state=directory owner=vmail group=vmail
+  file: path=/var/vmail state=directory owner=vmail group=vmail
 
 - name: Allow LOGIN authentication method for Outlook clients
   lineinfile:
