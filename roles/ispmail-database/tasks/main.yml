@@ -53,7 +53,7 @@
 
 - name: Creating the postgres user map
   blockinfile:
-    path: /etc/postgresql/9.4/main/pg_ident.conf
+    dest: /etc/postgresql/9.4/main/pg_ident.conf
     marker: "### {mark} ANSIBLE MANAGED BLOCK : MAILMAP ###"
     insertafter: "^#\\s-+"
     content: |
