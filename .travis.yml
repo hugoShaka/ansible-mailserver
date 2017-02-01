@@ -12,7 +12,6 @@ install:
   - docker pull ansiblecheck/ansiblecheck:debian-jessie
   - container_id=$(mktemp)
   - docker run --detach --volume="${PWD}":/etc/ansible:ro --privileged --volume=/sys/fs/cgroup:/sys/fs/cgroup:ro ansiblecheck/ansiblecheck:debian-jessie /lib/systemd/systemd > "${container_id}"
-  - echo "${container_id}"
 
 script:
   - docker exec --tty "$(cat ${container_id})" env TERM=xterm ansible-playbook /etc/ansible/ispmail.yml --syntax-check
