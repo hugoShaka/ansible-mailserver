@@ -55,7 +55,7 @@
   blockinfile:
     path: /etc/postgresql/9.4/main/pg_ident.conf
     marker: "### {mark} ANSIBLE MANAGED BLOCK : MAILMAP ###"
-    insertafter: "^#\s-+"
+    insertafter: "^#\\s-+"
     content: |
       mailmap         dovecot                 mail
       mailmap         postfix                 mail
@@ -64,22 +64,22 @@
 - name: Allowing unix socket connections on mailserver database
   lineinfile:
     dest: /etc/postgresql/9.4/main/pg_hba.conf
-    regexp: "^local\s+mail\s+all\s+peer\s+map=mailmap$"
-    insertbefore: "^#\sIPv4\slocal.+"
+    regexp: "^local\\s+mail\s+all\s+peer\s+map=mailmap$"
+    insertbefore: "^#\\sIPv4\slocal.+"
     line: "local   mail            all             peer                    map=mailmap"
 
 - name: Allowing pgadmin connections on mailserver database
   lineinfile:
     dest: /etc/postgresql/9.4/main/pg_hba.conf
-    regexp: "^host\s+mailserver\s+pgadmin\s+127.0.0.1/32\s+md5$"
-    insertbefore: "^#\sIPv4\slocal.+"
+    regexp: "^host\\s+mailserver\s+pgadmin\s+127.0.0.1/32\s+md5$"
+    insertbefore: "^#\\sIPv4\slocal.+"
     line: "host    mailserver      pgadmin         127.0.0.1/32            md5"
 
 - name: Allowing IP connections on roundcube database
   lineinfile:
     dest: /etc/postgresql/9.4/main/pg_hba.conf
-    regexp: "^host\s+roundcube\s+roundcubeuser\s+127.0.0.1/32\s+md5$"
-    insertafter: "^#\sIPv4\slocal.+"
+    regexp: "^host\\s+roundcube\s+roundcubeuser\s+127.0.0.1/32\s+md5$"
+    insertafter: "^#\\sIPv4\slocal.+"
     line: "host    roundcube       roundcubeuser   127.0.0.1/32            md5"
 
 - name: copying SQL database schema to server
