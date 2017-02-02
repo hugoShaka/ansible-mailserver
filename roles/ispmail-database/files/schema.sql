@@ -1,24 +1,24 @@
-CREATE TABLE IF NOT EXISTS `virtual_domains` (
-  `id` int(11) NOT NULL auto_increment,
-  `name` varchar(50) NOT NULL,
-  PRIMARY KEY (`id`)
+CREATE TABLE IF NOT EXISTS virtual_domains (
+  id SERIAL,
+  name varchar(50) NOT NULL,
+  PRIMARY KEY (id)
 );
 
-CREATE TABLE IF NOT EXISTS `virtual_users` (
-  `id` int(11) NOT NULL auto_increment,
-  `domain_id` int(11) NOT NULL,
-  `password` varchar(150) NOT NULL,
-  `email` varchar(100) NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `email` (`email`),
+CREATE TABLE IF NOT EXISTS virtual_users (
+  id SERIAL,
+  domain_id integer NOT NULL,
+  password varchar(150) NOT NULL,
+  email varchar(100) NOT NULL,
+  PRIMARY KEY (id),
+  UNIQUE (email),
   FOREIGN KEY (domain_id) REFERENCES virtual_domains(id) ON DELETE CASCADE
 );
 
-CREATE TABLE IF NOT EXISTS `virtual_aliases` (
-  `id` int(11) NOT NULL auto_increment,
-  `domain_id` int(11) NOT NULL,
-  `source` varchar(100) NOT NULL,
-  `destination` varchar(100) NOT NULL,
-  PRIMARY KEY (`id`),
+CREATE TABLE IF NOT EXISTS virtual_aliases (
+  id SERIAL,
+  domain_id integer NOT NULL,
+  source varchar(100) NOT NULL,
+  destination varchar(100) NOT NULL,
+  PRIMARY KEY (id),
   FOREIGN KEY (domain_id) REFERENCES virtual_domains(id) ON DELETE CASCADE
 );

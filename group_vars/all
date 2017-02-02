@@ -1,4 +1,4 @@
-ispmail_populate_test_data: true
+ispmail_populate_test_data: false
 
 ispmail_mysql_mailuser_password: ChangeMe
 ispmail_mysql_root_password: ChangeMeRoot

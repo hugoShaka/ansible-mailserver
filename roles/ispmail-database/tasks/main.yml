@@ -85,8 +85,15 @@
 - name: copying SQL database schema to server
   copy: src=schema.sql dest=/tmp
 
+#- name: setting up SQL schema of mailserver database
+#  postgresql_db: name=mailserver state=import target=/tmp/schema.sql
+#  become: true
+#  become_user: postgres
+
+# Ugly, not idempotent fix, to change
+
 - name: setting up SQL schema of mailserver database
-  postgresql_db: name=mailserver state=import target=/tmp/schema.sql
+  shell: "psql mailserver < /tmp/schema.sql"
   become: true
   become_user: postgres
 
