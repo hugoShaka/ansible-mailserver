@@ -32,6 +32,34 @@
   become: true
   become_user: postgres
 
+- name: Giving pgadmin user some rights
+  postgresql_privs:
+    database: mailserver
+    type: table
+    objs: "{{ item }}"
+    roles: pgadmin
+    privs: SELECT,INSERT,UPDATE,DELETE
+  with_items:
+    - virtual_domains
+    - virtual_aliases
+    - virtual_users
+  become: true
+  become_user: postgres
+
+- name: Giving mail user some rights
+  postgresql_privs:
+    database: mailserver
+    type: table
+    objs: "{{ item }}"
+    roles: mail
+    privs: SELECT,INSERT,UPDATE,DELETE
+  with_items:
+    - virtual_domains
+    - virtual_aliases
+    - virtual_users
+  become: true
+  become_user: postgres
+
 - name: creating MySQL user for roundcube
   postgresql_user:
     name: roundcubeuser
@@ -60,13 +88,14 @@
       mailmap         dovecot                 mail
       mailmap         postfix                 mail
       mailmap         root                    mail
+      mailmap         postgres                postgres
 
 - name: Allowing unix socket connections on mailserver database
   lineinfile:
     dest: /etc/postgresql/9.4/main/pg_hba.conf
     regexp: "^local\\s+mail\\s+all\\s+peer\\s+map=mailmap$"
     insertbefore: "^#\\sIPv4\\slocal.+"
-    line: "local   mail            all             peer                    map=mailmap"
+    line: "local   mailserver      all             peer                    map=mailmap"
 
 - name: Allowing pgadmin connections on mailserver database
   lineinfile:

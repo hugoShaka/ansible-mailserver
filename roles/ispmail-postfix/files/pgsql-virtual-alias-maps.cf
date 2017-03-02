@@ -1,4 +1,4 @@
-user = postfix
+user = mail
 hosts = unix:/var/run/postgresql
 dbname = mailserver
 query = SELECT destination FROM virtual_aliases WHERE source='%s'

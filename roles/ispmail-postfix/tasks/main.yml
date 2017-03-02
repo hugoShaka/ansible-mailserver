@@ -24,7 +24,7 @@
   command: postconf virtual_alias_maps=proxy:pgsql:/etc/postfix/pgsql-virtual-alias-maps.cf,proxy:pgsql:/etc/postfix/pgsql-email2email.cf
 
 - name: Restricting access to database mapping files that contain a password
-  file: path=/etc/postfix/pgsql-{{item}}.cf mode=0640
+  file: path=/etc/postfix/pgsql-{{item}}.cf mode=0644
   with_items:
   - virtual-mailbox-domains
   - virtual-mailbox-maps
@@ -48,17 +48,17 @@
 - name: Setting SMTP encryption security level
   command: postconf smtpd_tls_security_level=may
 
-- name: Setting SMTP encryption security level
-  command: postconf smtpd_tls_security_level=may
-
 - name: Enforce SMTP encryption
   command: postconf smtpd_tls_auth_only=yes
 
 - name: Set TLS encryption certificate
-  command: postconf smtpd_tls_cert_file=/etc/ssl/certs/mailserver.pem
+  command: "postconf smtpd_tls_cert_file={{ispmail_certificate_location}}"
 
 - name: Set TLS encryption key
-  command: postconf smtpd_tls_key_file=/etc/ssl/private/mailserver.pem
+  command: "postconf smtpd_tls_key_file={{ispmail_certificate_keyfile}}"
+
+- name: Set TLS CA file
+  command: "postconf smtpd_tls_key_file={{ispmail_certificate_cafile}}"
 
 - name: Copying patch for Debian bug 739738
   copy: src=spamassassin.patch dest=/tmp/spamassassin.patch

@@ -1,4 +1,4 @@
-user = postfix
+user = mail
 hosts = unix:/var/run/postgresql
 dbname = mailserver
 query = SELECT 1 FROM virtual_domains WHERE name='%s'

@@ -25,7 +25,7 @@
 
 - name: Enabling SQL-based authentication
   lineinfile:
-    dest: /etc/dovecot/conf.d/10-auth.conf 
+    dest: /etc/dovecot/conf.d/10-auth.conf
     regexp: '^\#!include auth-sql.conf.ext'
     line: '!include auth-sql.conf.ext'
     backrefs: yes
@@ -44,7 +44,7 @@
   notify: restart dovecot
 
 - name: Copying SSL configuration (10-ssl.conf)
-  copy: src=10-ssl.conf dest=/etc/dovecot/conf.d/10-ssl.conf
+  template: src=10-ssl.conf.j2 dest=/etc/dovecot/conf.d/10-ssl.conf
   notify: restart dovecot
 
 - name: Copying LMTP configuration (20-lmtp.conf - enable sieve plugin)
@@ -77,4 +77,3 @@
 - name: Copying Sieve plugin configuration (90-sieve.conf)
   copy: src=90-sieve.conf dest=/etc/dovecot/conf.d/90-sieve.conf
   notify: restart dovecot
-
