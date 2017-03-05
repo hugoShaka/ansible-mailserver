@@ -32,34 +32,6 @@
   become: true
   become_user: postgres
 
-- name: Giving pgadmin user some rights
-  postgresql_privs:
-    database: mailserver
-    type: table
-    objs: "{{ item }}"
-    roles: pgadmin
-    privs: SELECT,INSERT,UPDATE,DELETE
-  with_items:
-    - virtual_domains
-    - virtual_aliases
-    - virtual_users
-  become: true
-  become_user: postgres
-
-- name: Giving mail user some rights
-  postgresql_privs:
-    database: mailserver
-    type: table
-    objs: "{{ item }}"
-    roles: mail
-    privs: SELECT,INSERT,UPDATE,DELETE
-  with_items:
-    - virtual_domains
-    - virtual_aliases
-    - virtual_users
-  become: true
-  become_user: postgres
-
 - name: creating MySQL user for roundcube
   postgresql_user:
     name: roundcubeuser
@@ -135,5 +107,33 @@
 - name: populating the database with test data
   postgresql_db: name=mailserver state=import target=/tmp/test.sql
   when: ispmail_populate_test_data == true
+  become: true
+  become_user: postgres
+
+- name: Giving pgadmin user some rights
+  postgresql_privs:
+    database: mailserver
+    type: table
+    objs: "{{ item }}"
+    roles: pgadmin
+    privs: SELECT,INSERT,UPDATE,DELETE
+  with_items:
+    - virtual_domains
+    - virtual_aliases
+    - virtual_users
+  become: true
+  become_user: postgres
+
+- name: Giving mail user some rights
+  postgresql_privs:
+    database: mailserver
+    type: table
+    objs: "{{ item }}"
+    roles: mail
+    privs: SELECT,INSERT,UPDATE,DELETE
+  with_items:
+    - virtual_domains
+    - virtual_aliases
+    - virtual_users
   become: true
   become_user: postgres
