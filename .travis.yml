@@ -1,9 +1,8 @@
 ---
 sudo: required
-dist: docker
-
-language: python
-python: "2.7"
+dist: trusty
+services:
+  - docker
 
 before_install:
   - sudo apt-get update -q
