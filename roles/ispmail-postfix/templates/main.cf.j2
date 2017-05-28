@@ -1,0 +1,217 @@
+# See /usr/share/postfix/main.cf.dist for a commented, more complete version
+
+
+# Debian specific:  Specifying a file name will cause the first
+# line of that file to be used as the name.  The Debian default
+# is /etc/mailname.
+#myorigin = /etc/mailname
+
+# Postfix respond : 220 $smtp_banner
+smtpd_banner = $myhostname ESMTP $mail_name
+# Do not send notifications to unix users when they got mail
+biff = no
+
+########## SASL Auth ############
+# Specify how the users auth using SASL and who handles it
+# We want dovecot to handle SASL
+smtpd_sasl_type = dovecot
+# Specify the unix socket used for SASL
+# Info : postfix may be chrooted in /var/spool/postfix
+smtpd_sasl_path = private/auth
+# Enable SASL Auth
+smtpd_sasl_auth_enable = yes
+# Write info about SASL auth into mail headers
+smtpd_sasl_authenticated_header = yes
+
+########## Smtpd restrictions #########
+
+
+smtpd_recipient_restrictions =
+  permit_mynetworks,
+  permit_sasl_authenticated,
+  reject_unauth_destination,
+# reject_unknown_client_hostname,
+# check_policy_service inet:127.0.0.1:10023,
+  permit
+
+# What to do after a HELO/EHLO command
+smtpd_helo_restrictions =
+  permit_mynetworks,
+  permit_sasl_authenticated,
+  reject_non_fqdn_hostname,
+  reject_invalid_hostname,
+  permit
+
+# What to do with an email not for us ?
+smtpd_relay_restrictions =
+  reject_unauth_destination
+# We do not allow smtp relaying
+# For submission this param will be overriden with $mua_relay_restrictions
+
+# What to do when we have a client who wants to send an email
+mua_relay_restrictions =
+  permit_mynetworks,
+  permit_sasl_authenticated,
+  reject_unauth_destination
+
+############# Postscreen ###############
+# Postscreen recieves the client commands
+# He checks the client's SMTP implementations
+# If the client speaks too early, bye bye.
+# Filters dummy spam bots and bad clients.
+
+# If a client is not RFC compliant but we still want it
+# to send emails, we whitelist.
+postscreen_access_list = permit_mynetworks,
+                         cidr:/etc/postfix/postscreen_access.cidr
+
+# Postcreen can check if the domain name is black listed
+# We define the threshold, domains with higer scores are dropped
+postscreen_dnsbl_threshold = 2
+# And we choose the blacklists, and the weight we give them.
+postscreen_dnsbl_sites = zen.spamhaus.org*2
+                         bl.spamcop.net*1 b.barracudacentral.org*1
+
+# Disable VRTFY command (used to check if an adress is valid)
+disable_vrfy_command =  yes
+
+
+############## Rate limiting #############
+# Some mailservers does not like recieveing to many emails per second
+# We don't want to get blacklisted so we calm down a little
+smtp_destination_concurrency_limit = 5
+smtp_destination_rate_delay = 1s
+# An email should not be sent to more than 10 external mailadresses
+# If we don't restect this rule, mails will be flagged as spam
+smtp_extra_recipient_limit = 10
+### and with anvil: http://www.postfix.org/TUNING_README.html
+anvil_rate_time_unit = 60s
+
+# And we don't want to recieve tons of emails at the same time
+smtpd_client_connection_rate_limit = 5
+smtpd_client_connection_count_limit = 5
+
+# in case of too many SMTP errors, let them wait
+# Clients who get errors are usually trying to spam you
+
+smtpd_error_sleep_time = 5s
+smtpd_soft_error_limit = 2
+smtpd_hard_error_limit = 3
+##################
+
+
+# appending .domain is the MUA's job.
+append_dot_mydomain = no
+
+# Uncomment the next line to generate "delayed mail" warnings
+#delay_warning_time = 4h
+
+readme_directory = no
+
+############# TLS parameters ##############
+# We will use TLS connections to secure the email
+# We specify the certificate (signed by a trusted CA)
+smtpd_tls_cert_file = {{ispmail_certificate_location}}
+# We give postfix the private key
+smtpd_tls_key_file = {{ispmail_certificate_keyfile}}
+# What random source postfix use
+tls_random_source = dev:/dev/urandom
+
+##### As a server ######
+# We enable tls and chose policy
+# may : Announce STARTTLS to SMTP clients but do not force them
+# encrypt : force clients to TLS (not for public servers)
+smtpd_tls_security_level =  may
+# Do not allow SASL auth over non-TLS connections
+smtpd_tls_auth_only =   no
+# Choose the tls cache file
+smtpd_tls_session_cache_database =  btree:${data_directory}/smtpd_scache
+# Choose the TTL of a TLS session
+smtpd_tls_session_cache_timeout = 3600s
+# Write info about the TLS connection in the email header
+smtpd_tls_received_header = yes
+# Log infos about TLS handshakes
+smtpd_tls_loglevel =    1
+
+##### As a client ######
+# We enable TLS and chose policy
+# may : If TLS supported by the server, go for it.
+# encrypt : Do not send emails if TLS is not supported
+# dane : obtain the DNS policy via DNSSEC, still opportunistic
+smtp_tls_security_level =   dane
+# Write info about the TLS connection in the email header
+smtp_tls_session_cache_database = btree:${data_directory}/smtp_scache
+# Log infos about TLS handshakes
+smtp_tls_loglevel =     1
+
+# See /usr/share/doc/postfix/TLS_README.gz in the postfix-doc package for
+# information on enabling SSL in the smtp client.
+
+myhostname = {{ispmail_webmail_hostname}}
+
+mydestination = localhost, localhost.localdomain, pride.shaka.xyz
+mynetworks = 127.0.0.0/8 [::ffff:127.0.0.0]/104 [::1]/128
+mailbox_size_limit = 0
+# Allow to use tags : user.foo@domain.tld -> user@fomain.tld
+recipient_delimiter = +-
+#Listen on every network interface
+inet_interfaces = all
+
+# Mailing list conf
+#relay_domains = $mydestination, listes.gozmail.net, listes.gozmail.bzh
+
+########### Local mailboxes ############
+# This section specify how to handle emails sent to your users
+# There are 2 types of users :
+# - local users like root or your unix users
+# - virtual users specified in a SQL database
+
+# We forward local emails to the Mail Delivery Agent : Dovecot
+# We do not use virtual to deliver emails
+virtual_transport = lmtp:unix:private/dovecot-lmtp
+
+# Additional informations you may need :
+# proxy: creates a single socket for all requests
+# pgsql: specifies the driver to use to request
+# Specify the conf file used by the driver to answer the request
+
+# Domains we handle mails for
+virtual_mailbox_domains = proxy:pgsql:/etc/postfix/pgsql-virtual-mailbox-domains.cf
+# Mailboxes which are valid and exist on the server
+virtual_mailbox_maps = proxy:pgsql:/etc/postfix/pgsql-virtual-mailbox-maps.cf
+# Aliases that are valid and applied before delivering the email
+virtual_alias_maps = proxy:pgsql:/etc/postfix/pgsql-virtual-alias-maps.cf,proxy:pgsql:/etc/postfix/pgsql-email2email.cf
+
+# Specify the UID & GUI of the virtual worker and the mailbox
+# Should be useless with dovecot
+#virtual_uid_maps = static:5000
+#virtual_gid_maps = static:5000
+
+# Hardcoded alias map, yo may want to alias root, postmaster, admin
+alias_maps = hash:/etc/aliases
+alias_database = hash:/etc/aliases
+
+# We can use transport maps to handle mails differently
+# For example we can force IPv4 for gmail if they mark you as spam
+# when you use IPv6
+#transport_maps =  hash:/etc/postfix/transport
+
+############# Milters ##############
+# Milters are mail filters, all the actions applied to filter emails
+
+# What to do when the milter is failing
+milter_default_action = tempfail
+# We use Postfix > 2.6, so we can use milter_protocol 6
+milter_protocol = 6
+# We take all the mails and filter them, SMTP or not.
+smtpd_milters = unix:/var/run/opendkim/opendkim.sock
+non_smtpd_milters = unix:/var/run/opendkim/opendkim.sock
+# unix:/run/spamass.sock
+#milter_connect_macros = j {daemon_name} v {if_name} _
+
+# The errors postmaster will recieve mail for
+notify_classes = data, resource, software, bounce, delay
+
+#mailman_destination_recipient_limit = 1
+#Available in postfix 3.0, check for DNSSEC enabled domains
+#smtp_dns_support_level = dnssec

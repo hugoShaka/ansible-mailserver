@@ -2,26 +2,18 @@
 - name: define Postfix virtual mailbox domain mapping
   copy: src=pgsql-virtual-mailbox-domains.cf dest=/etc/postfix/pgsql-virtual-mailbox-domains.cf
   notify: restart postfix
-- name: tell Postfix to use the virtual mailbox domain mapping
-  command: postconf virtual_mailbox_domains=proxy:pgsql:/etc/postfix/pgsql-virtual-mailbox-domains.cf
 
 - name: define Postfix virtual mailbox mapping
   copy: src=pgsql-virtual-mailbox-maps.cf dest=/etc/postfix/pgsql-virtual-mailbox-maps.cf
   notify: restart postfix
-- name: tell Postfix to use the virtual mailbox mapping
-  command: postconf virtual_mailbox_maps=proxy:pgsql:/etc/postfix/pgsql-virtual-mailbox-maps.cf
 
 - name: define Postfix virtual alias mapping
   copy: src=pgsql-virtual-alias-maps.cf dest=/etc/postfix/pgsql-virtual-alias-maps.cf
   notify: restart postfix
-- name: tell Postfix to use the virtual alias mapping
-  command: postconf virtual_alias_maps=proxy:pgsql:/etc/postfix/pgsql-virtual-alias-maps.cf
 
 - name: define Postfix email-to-email mapping (required for catchall domains)
   copy: src=pgsql-email2email.cf dest=/etc/postfix/pgsql-email2email.cf
   notify: restart postfix
-- name: tell Postfix to use the email-to-email mapping
-  command: postconf virtual_alias_maps=proxy:pgsql:/etc/postfix/pgsql-virtual-alias-maps.cf,proxy:pgsql:/etc/postfix/pgsql-email2email.cf
 
 - name: Restricting access to database mapping files that contain a password
   file: path=/etc/postfix/pgsql-{{item}}.cf mode=0644
@@ -30,61 +22,14 @@
   - virtual-mailbox-maps
   - virtual-alias-maps
 
-- name: Make Postfix use LMTP to send emails to Dovecot
-  command: postconf virtual_transport=lmtp:unix:private/dovecot-lmtp
+- name: Copy main.cf conf file
+  template:
+    src: main.cf.j2
+    dest: /etc/postfix/main.cf
+  notify: restart postfix
 
-- name: Restricting delivery to Dovecot to one email at a time
-  command: postconf dovecot_destination_recipient_limit=1
-
-- name: Setting SMTP authentication type to dovecot
-  command: postconf smtpd_sasl_type=dovecot
-
-- name: Setting SMTP authentication path/socket
-  command: postconf smtpd_sasl_path=private/auth
-
-- name: Enabling SMTP authentication
-  command: postconf smtpd_sasl_auth_enable=yes
-
-- name: Setting SMTP encryption security level
-  command: postconf smtpd_tls_security_level=may
-
-- name: Enforce SMTP encryption
-  command: postconf smtpd_tls_auth_only=yes
-
-- name: Set TLS encryption certificate
-  command: "postconf smtpd_tls_cert_file={{ispmail_certificate_location}}"
-
-- name: Set TLS encryption key
-  command: "postconf smtpd_tls_key_file={{ispmail_certificate_keyfile}}"
-
-- name: Set TLS CA file
-  command: "postconf smtpd_tls_key_file={{ispmail_certificate_cafile}}"
-
-- name: Copying patch for Debian bug 739738
-  copy: src=spamassassin.patch dest=/tmp/spamassassin.patch
-
-- name: Patching Debian bug 739738
-  patch: src=/tmp/spamassassin.patch strip=0 basedir=/ remote_src=True
-
-- name: Enabling Spamassassin milter
-  command: postconf smtpd_milters=unix:/spamass/spamass.sock
-
-- name: Configuring Spamassassin milter
-  command: postconf milter_connect_macros="i j {daemon_name} v {if_name} _"
-
-- name: Setting spamd options
-  copy: src=etc-default-spamassassin dest=/etc/default/spamassassin
-  notify: restart spamassassin
-
-- name: Adding user spamass-milter to debian-spamd group
-  user: name=spamass-milter groups=debian-spamd
-  notify: restart spamassassin
-
-- name: Enabling spamd at startup
-  command: systemctl enable spamassassin
-
-- name: Allow emails up to 40 MB large
-  command: postconf message_size_limit=41943040
-
-- name: Make Postfix listen on all interfaces
-  command: postconf inet_interfaces=all
+- name: Copy master.cf conf file
+  template:
+    src: master.cf.j2
+    dest: /etc/postfix/master.cf
+  notify: restart postfix
