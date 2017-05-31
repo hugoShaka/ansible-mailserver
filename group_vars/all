@@ -17,7 +17,7 @@ ispmail_certificate_cafile: /etc/letsencrypt/live/sub.domain.tld/chain.pem
 
 ispmail_certificate_country: DE
 ispmail_certificate_state: Hamburg
-#ispmail_certificate_location: Hamburg
+ispmail_certificate_city: Hamburg
 ispmail_certificate_organisation: workaround.org
 ispmail_certificate_orgunit: IT-Crowd
 ispmail_certificate_domains:
