@@ -17,7 +17,7 @@ submission inet n       -       -       -       -       smtpd
   -o syslog_name=postfix/submission
   -o smtpd_tls_security_level=encrypt
   -o smtpd_sasl_auth_enable=yes
-  -o smtpd_client_restrictions=$mua_relay_restrictions
+  -o smtpd_relay_restrictions=$mua_relay_restrictions
   -o smtpd_milters=unix:/var/run/opendkim/opendkim.sock
 #  -o smtpd_milters=unix:/run/spamass.sock,unix:/run/opendkim.sock
 #  -o milter_connect_macros="j {daemon_name} v {if_name} _"
