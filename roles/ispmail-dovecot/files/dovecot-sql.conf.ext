@@ -142,5 +142,8 @@
 
 driver = pgsql
 connect = host=/var/run/postgresql/ dbname=mailserver user=mail
+user_query = SELECT '/var/vmail/%d/%n/' as home, 5000 AS uid, 5000 as gid FROM virtual_users WHERE email='%u';
 default_pass_scheme = SHA512
 password_query = SELECT email as user, password FROM virtual_users WHERE email='%u';
+iterate_query = SELECT email AS user FROM virtual_users;
+
