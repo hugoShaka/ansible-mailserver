@@ -10,7 +10,6 @@
     state: present
   become: true
   become_user: postgres
-
 - name: creating mailserver SQL database
   postgresql_db:
     name: mailserver
@@ -62,26 +61,20 @@
       mailmap         root                    mail
       mailmap         postgres                postgres
 
-- name: Allowing unix socket connections on mailserver database
-  lineinfile:
-    dest: /etc/postgresql/9.6/main/pg_hba.conf
-    regexp: "^local\\s+mail\\s+all\\s+peer\\s+map=mailmap$"
-    insertbefore: "^#\\sIPv4\\slocal.+"
-    line: "local   mailserver      all             peer                    map=mailmap"
 
-- name: Allowing pgadmin connections on mailserver database
-  lineinfile:
-    dest: /etc/postgresql/9.6/main/pg_hba.conf
-    regexp: "^host\\s+mailserver\\s+pgadmin\\s+127.0.0.1/32\\s+md5$"
-    insertbefore: "^#\\sIPv4\\slocal.+"
-    line: "host    mailserver      pgadmin         127.0.0.1/32            md5"
-
-- name: Allowing IP connections on roundcube database
-  lineinfile:
-    dest: /etc/postgresql/9.6/main/pg_hba.conf
-    regexp: "^host\\s+roundcube\\s+roundcubeuser\\s+127.0.0.1/32\\s+md5$"
-    insertafter: "^#\\sIPv4\\slocal.+"
-    line: "host    roundcube       roundcubeuser   127.0.0.1/32            md5"
+- name: Configuring connections to the pg database
+  blockinfile:
+    path: /etc/postgresql/9.6/main/pg_hba.conf
+    marker: "###### ANSIBLE MANAGED BLOCK ######"
+    insertafter: "local\\s+all\\s+postgres\\s+peer"
+    content: |
+      local   mailserver      all             peer                    map=mailmap
+      host    mailserver      pgadmin         127.0.0.1/32            md5
+      # IPv4 local connections:
+      host    roundcube       roundcubeuser   127.0.0.1/32            md5
+      host    all             all             127.0.0.1/32            md5
+      # IPv6 local connections:
+      host    all             all             ::1/128                 md5
 
 - name: copying SQL database schema to server
   copy: src=schema.sql dest=/tmp
