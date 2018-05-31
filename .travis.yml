@@ -8,13 +8,13 @@ before_install:
   - sudo apt-get update -q
 
 install:
-  - docker pull ansiblecheck/ansiblecheck:debian-jessie
+  - docker pull ansiblecheck/ansiblecheck:debian-stretch
   - container_id=$(mktemp)
-  - docker run --detach --volume="${PWD}":/etc/ansible:ro --privileged --volume=/sys/fs/cgroup:/sys/fs/cgroup:ro ansiblecheck/ansiblecheck:debian-jessie /lib/systemd/systemd > "${container_id}"
+  - docker run --detach --volume="${PWD}":/etc/ansible:ro --privileged --volume=/sys/fs/cgroup:/sys/fs/cgroup:ro ansiblecheck/ansiblecheck:debian-stretch /lib/systemd/systemd > "${container_id}"
 
 script:
-  - docker exec --tty "$(cat ${container_id})" env TERM=xterm ansible-playbook /etc/ansible/ispmail.yml --syntax-check
-  - docker exec "$(cat ${container_id})" ansible-playbook /etc/ansible/ispmail.yml -v -l localhost
+  - docker exec --tty "$(cat ${container_id})" env TERM=xterm ansible-playbook /etc/ansible/tests.yml --syntax-check
+  - docker exec "$(cat ${container_id})" ansible-playbook /etc/ansible/tests.yml -v -l localhost
 
 after_script:
-  - docker exec "$(cat ${container_id})" ansible-playbook /etc/ansible/ispmail.yml -v -l localhost
+  - docker exec "$(cat ${container_id})" ansible-playbook /etc/ansible/tests.yml -v -l localhost
