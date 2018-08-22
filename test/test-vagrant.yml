@@ -1,0 +1,38 @@
+---
+# Requires Ansible >= 1.9
+- hosts: mailserver
+  tasks:
+    - name: install acl
+      apt:
+        name: acl
+        state: installed
+        update_cache: true
+
+    - name: '/etc/fstab: Set opt "{{ opt }}" for mount point {{ point }}'
+      lineinfile:
+        path: /etc/fstab
+        backup: yes
+        backrefs: yes
+        regexp: '^(\S+\s+{{ point }}\s+\S+\s+)(?!(?:\S*,)?{{ opt }}(?:,\S*)?\s+)(\S+)(\s+.+)$'
+        line: '\1{{ opt }},\2\3'
+      register: fstab
+
+    - name: 'If {{ point }} changed, remount'
+      command: 'mount {{ point }} -o remount'
+      when: fstab.changed
+  vars:
+    opt: "acl"
+    point: "/"
+
+- hosts: mailserver
+  roles:
+  #- dumpvars
+  - ispmail-packages
+  - ispmail-certificate
+  - ispmail-database
+  - ispmail-postfix
+  - ispmail-dovecot
+  #- ispmail-webmail
+  #- ispmail-webmail-apache
+  become: yes
+  become_user: root

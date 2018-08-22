@@ -1,4 +1,12 @@
 ---
+- name: "Grant user postfix read permission on the private key"
+  acl:
+    path: "{{ ispmail_certificate_keyfile }}"
+    entity: postfix
+    etype: user
+    permissions: r
+    state: present
+
 - name: define Postfix virtual mailbox domain mapping
   copy: src=pgsql-virtual-mailbox-domains.cf dest=/etc/postfix/pgsql-virtual-mailbox-domains.cf
   notify: restart postfix
