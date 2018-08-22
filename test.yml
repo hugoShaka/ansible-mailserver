@@ -1,0 +1,13 @@
+---
+- hosts: mailserver
+  roles:
+  #- dumpvars
+  - ispmail-packages
+  - ispmail-certificate
+  - ispmail-database
+  - ispmail-postfix
+  - ispmail-dovecot
+  #- ispmail-webmail
+  #- ispmail-webmail-apache
+  become: yes
+  become_user: root
