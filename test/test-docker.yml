@@ -1,10 +1,20 @@
 ---
 # Requires Ansible >= 1.9
 - hosts: localhost
+  tasks:
+    - name: install acl
+      apt:
+        name: acl
+        state: installed
+        update_cache: true
+  become: yes
+  become_user: root
+
+- hosts: localhost
   roles:
   #- dumpvars
   - ispmail-packages
-  #- ispmail-certificate
+  - ispmail-certificate
   - ispmail-database
   - ispmail-postfix
   - ispmail-dovecot
