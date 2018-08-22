@@ -1,4 +1,13 @@
 ---
+- name: Creates cert directory
+  file:
+    path: "{{ispmail_certificate_directory}}"
+    state: directory
+    owner: root
+    group: root
+    mode: 0775
+    recurse: yes
+
 - name: Create a self-signed certificate
   command: >
     openssl req -newkey rsa:4096
@@ -12,4 +21,4 @@
     creates: "{{ispmail_certificate_keyfile}}"
 
 - name: Restrict access permissions of the private key
-  file: "path={{ispmail_certificate_keyfile}} mode=0640"
+  file: "path={{ispmail_certificate_keyfile}} mode=0640 group=root owner=root"

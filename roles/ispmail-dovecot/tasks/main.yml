@@ -1,11 +1,20 @@
 ---
 - name: Create the vmail group
   group: name=vmail gid=5000
+
 - name: Create the vmail user
   user: name=vmail uid=5000 group=vmail home=/var/vmail
 
 - name: Create mailbox directory
   file: path=/var/vmail state=directory owner=vmail group=vmail
+
+- name: Grant user vmail read permission on the private key
+  acl:
+    path: "{{ispmail_certificate_keyfile}}"
+    entity: dovecot
+    etype: user
+    permissions: r
+    state: present
 
 - name: Allow LOGIN authentication method for Outlook clients
   lineinfile:
