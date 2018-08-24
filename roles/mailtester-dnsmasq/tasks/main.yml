@@ -1,0 +1,34 @@
+---
+- name: install packages
+  apt:
+    name: "{{ item }}"
+    state: installed
+    cache_valid_time: 3600
+  loop:
+    - dnsmasq
+    - net-tools
+
+- name: saves original resolv.conf
+  copy:
+    src: /etc/resolv.conf
+    dest: /etc/real-resolvers.conf
+    force: no
+
+- name: Put custom resolv.cong
+  copy:
+    src: resolv.conf
+    dest: /etc/resolv.conf
+
+
+- name: Copy dnsmasq conf
+  template:
+    src: dnsmasq.conf.j2
+    dest: /etc/dnsmasq.conf
+  notify: restart dnsmasq
+
+- name: Copy dnsmasq hosts
+  template:
+    src: dnsmasq.hosts.j2
+    dest: /etc/dnsmasq.hosts
+  notify: restart dnsmasq
+

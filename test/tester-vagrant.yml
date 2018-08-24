@@ -1,0 +1,29 @@
+---
+# Requires Ansible >= 1.9
+- hosts: tester
+  tasks:
+    - name: install packages
+      apt:
+        name: "{{ item }}"
+        state: installed
+        cache_valid_time: 3600
+      loop:
+        - python3
+        - python3-pip
+        - vim
+        - less
+        - net-tools
+
+- hosts: tester
+  roles:
+  - mailtester-dnsmasq
+
+- hosts: mailserver
+  tasks:
+
+  - name: use test resolver
+    lineinfile:
+      path: /etc/resolv.conf
+      regexp: "^nameserver"
+      line: "nameserver 10.0.0.50"
+
