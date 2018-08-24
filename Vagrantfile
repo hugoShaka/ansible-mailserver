@@ -5,7 +5,7 @@ Vagrant.configure(2) do |config|
   config.vm.define "mailserver" do |subconfig|
     subconfig.vm.provision "ansible" do |ansible|
       ansible.playbook = "test/mailserver-vagrant.yml"
-      ansible.sudo = true
+      ansible.become = true
     end
     subconfig.vm.provider "virtualbox" do |vb|
       subconfig.vm.network "private_network", ip: "10.0.0.100"
