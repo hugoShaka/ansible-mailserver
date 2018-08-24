@@ -1,0 +1,8 @@
+resolv-file=/etc/real-resolvers.conf
+no-dhcp-interface=
+
+addn-hosts=/etc/dnsmasq.hosts
+mx-host=test.local,{{ ispmail_hostname }},50
+mx-host=test.not.local,mail.not.local,50
+txt-record=test.local,"v=spf1 mx -all"
+txt-record=test.not.local,"v=spf1 mx -all"
