@@ -9,7 +9,7 @@ ispmail_dovecot_auth_mechanisms: plain login
 ispmail_postmaster_address: postmaster@example.org
 
 #ispmail_webmail_hostname: mail.example.org
-ispmail_webmail_hostname: mail.shaka.local
+ispmail_hostname: mail.shaka.local
 
 ispmail_certificate_directory: /etc/letsencrypt/live/sub.domain.tld
 ispmail_certificate_location: /etc/letsencrypt/live/sub.domain.tld/fullchain.pem
