@@ -31,25 +31,6 @@
   become: true
   become_user: postgres
 
-- name: creating MySQL user for roundcube
-  postgresql_user:
-    name: roundcubeuser
-    password: "{{ispmail_mysql_roundcube_password}}"
-    state: present
-  become: true
-  become_user: postgres
-
-- name: creating Roundcube SQL database
-  postgresql_db:
-    name: roundcube
-    encoding: UTF-8
-    lc_collate: C
-    lc_ctype: C
-    template: template0
-    owner: roundcubeuser
-  become: true
-  become_user: postgres
-
 - name: Creating the postgres user map
   blockinfile:
     dest: /etc/postgresql/9.6/main/pg_ident.conf
@@ -71,7 +52,6 @@
       local   mailserver      all             peer                    map=mailmap
       host    mailserver      pgadmin         127.0.0.1/32            md5
       # IPv4 local connections:
-      host    roundcube       roundcubeuser   127.0.0.1/32            md5
       host    all             all             127.0.0.1/32            md5
       # IPv6 local connections:
       host    all             all             ::1/128                 md5
