@@ -72,7 +72,7 @@ postscreen_dnsbl_threshold = 2
 postscreen_dnsbl_sites = zen.spamhaus.org*2
                          bl.spamcop.net*1 b.barracudacentral.org*1
 
-# Disable VRTFY command (used to check if an adress is valid)
+# Disable VRFY command (used to check if an adress is valid)
 disable_vrfy_command =  yes
 
 
@@ -147,9 +147,9 @@ smtp_tls_loglevel =     1
 # See /usr/share/doc/postfix/TLS_README.gz in the postfix-doc package for
 # information on enabling SSL in the smtp client.
 
-myhostname = {{ispmail_webmail_hostname}}
+myhostname = {{ispmail_hostname}}
 
-mydestination = localhost, localhost.localdomain, pride.shaka.xyz
+mydestination = localhost, localhost.localdomain
 mynetworks = 127.0.0.0/8 [::ffff:127.0.0.0]/104 [::1]/128
 mailbox_size_limit = 0
 # Allow to use tags : user.foo@domain.tld -> user@fomain.tld
