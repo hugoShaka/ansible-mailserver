@@ -25,14 +25,16 @@ smtpd_sasl_authenticated_header = yes
 
 ########## Smtpd restrictions #########
 
-
 smtpd_recipient_restrictions =
   permit_mynetworks,
+  reject_non_fqdn_sender,
+  reject_unknown_sender_domain,
+  reject_sender_login_mismatch,
   permit_sasl_authenticated,
-  reject_unauth_destination,
+  reject_unauth_destination
 # reject_unknown_client_hostname,
 # check_policy_service inet:127.0.0.1:10023,
-  permit
+#  permit
 
 # What to do after a HELO/EHLO command
 smtpd_helo_restrictions =
@@ -181,6 +183,9 @@ virtual_mailbox_domains = proxy:pgsql:/etc/postfix/pgsql-virtual-mailbox-domains
 virtual_mailbox_maps = proxy:pgsql:/etc/postfix/pgsql-virtual-mailbox-maps.cf
 # Aliases that are valid and applied before delivering the email
 virtual_alias_maps = proxy:pgsql:/etc/postfix/pgsql-virtual-alias-maps.cf,proxy:pgsql:/etc/postfix/pgsql-email2email.cf
+# Addresses that we manage, we will force authentification for these
+smtpd_sender_login_maps = proxy:pgsql:/etc/postfix/pgsql-sender-login-maps.cf
+
 
 # Specify the UID & GUI of the virtual worker and the mailbox
 # Should be useless with dovecot
