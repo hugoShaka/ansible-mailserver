@@ -25,7 +25,7 @@
     - name: copy test suite
       copy:
         src: suite
-        dest: /home/vagrant/testsuite
+        dest: /home/vagrant/
 
 - hosts: tester
   roles:
