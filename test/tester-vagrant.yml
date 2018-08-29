@@ -14,6 +14,19 @@
         - less
         - net-tools
 
+    - name: install python packages
+      pip:
+        name: "{{ item }}"
+        executable: pip3
+      loop:
+        - bpython
+        - pytest
+
+    - name: copy test suite
+      copy:
+        src: suite
+        dest: /home/vagrant/
+
 - hosts: tester
   roles:
   - mailtester-dnsmasq
@@ -27,3 +40,13 @@
       regexp: "^nameserver"
       line: "nameserver 10.0.0.50"
 
+  - name: copy fixtures file
+    copy: src=fixtures/mailserverdb.sql dest=/tmp
+
+  - name: import fixtures
+    postgresql_db:
+      name: mailserver
+      state: restore
+      target: /tmp/mailserverdb.sql
+    become: true
+    become_user: postgres

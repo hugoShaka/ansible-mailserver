@@ -1,4 +1,4 @@
 user = mail
 hosts = unix:/var/run/postgresql
 dbname = mailserver
-query = SELECT 1 FROM virtual_users WHERE email='%s'
+query = SELECT u.email || '@' || d.name FROM virtual_users AS u JOIN virtual_domains AS d ON u.domain_id = d.id WHERE u.email=split_part('%u','_',1) AND d.name='%d'
