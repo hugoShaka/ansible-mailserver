@@ -10,6 +10,21 @@ def send_mail(recipient, *, sender="tester@mail.not.local"):
     return conn.sendmail(sender, recipient, "hello !")
 
 
+def login(user, password="test"):
+    conn = smtplib.SMTP("mail.shaka.local")
+    print("connection established")
+    conn.ehlo("mail.not.local")
+    return (conn.login(user, password)[0], conn)
+
+
+def login_error_code(user, **kwargs):
+    with pytest.raises(Exception) as excinfo:
+        _, _ = login(user, **kwargs)
+    print(excinfo)
+    print(excinfo.value)
+    return excinfo.value.smtp_code
+
+
 def smtp_error_code(recipient, **kwargs):
     with pytest.raises(Exception) as excinfo:
         send_mail(recipient, **kwargs)
@@ -76,3 +91,25 @@ def test_impostor_local(sender):
     """Sending mail to local as local user, not logged in
     should be 553 5.7.1 Sender address rejected: not logged in"""
     assert smtp_error_code("obiwan@jedi.local", sender=sender) == 553
+
+
+@pytest.mark.parametrize(
+    "user", [("sidious@sith.local"), ("obiwan@jedi.local"), ("vader@sith.local")]
+)
+def test_login(user):
+    """We check if legitimate users can log in"""
+    assert login(user)[0] == 235
+
+
+@pytest.mark.parametrize(
+    "user,password", [("kirby", "nom-nom"), ("sidious", "jedi-ftw")]
+)
+def test_wrong_login(user, password):
+    """Client should not be able to login with wrong credentials"""
+    assert login_error_code(user, password=password) == 535
+
+
+@pytest.mark.skip()
+def test_auth_relay(sender):
+    """Send email to another domain from an authenticated account"""
+    pass
