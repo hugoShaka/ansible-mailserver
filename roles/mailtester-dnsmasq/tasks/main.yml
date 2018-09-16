@@ -13,6 +13,7 @@
     src: /etc/resolv.conf
     dest: /etc/real-resolvers.conf
     force: no
+    remote_src: true
 
 - name: Put custom resolv.cong
   copy:
