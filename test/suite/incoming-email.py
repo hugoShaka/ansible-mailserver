@@ -2,16 +2,32 @@
 
 import smtplib
 import pytest
+import ssl
+
+##### Helpers
 
 
-def send_mail(recipient, *, sender="tester@mail.not.local"):
-    conn = smtplib.SMTP("mail.shaka.local")
-    print("connection established")
+def send_mail(recipient, *, sender="tester@mail.not.local", conn=None):
+    if conn is None:
+        conn = smtplib.SMTP("mail.shaka.local")
+        print("New connection established")
+    else:
+        print("Connection already established")
     return conn.sendmail(sender, recipient, "hello !")
 
 
-def login(user, password="test"):
-    conn = smtplib.SMTP("mail.shaka.local")
+def login(user, password="test", *, submission=False):
+    """Creates a connection and logs in with user & password. sumbission can be
+    specified to log in on 587 port (submission) over a TLS connection.
+    Returns ( login state , connection object ).
+    """
+    if submission:
+        conn = smtplib.SMTP("mail.shaka.local", 587)
+        context = ssl.create_default_context(ssl.Purpose.CLIENT_AUTH)
+        conn.ehlo()
+        conn.starttls(context=context)
+    else:
+        conn = smtplib.SMTP("mail.shaka.local")
     print("connection established")
     conn.ehlo("mail.not.local")
     return (conn.login(user, password)[0], conn)
@@ -30,6 +46,11 @@ def smtp_error_code(recipient, **kwargs):
         send_mail(recipient, **kwargs)
     print(excinfo.value)
     return excinfo.value.recipients[recipient][0]
+
+
+##### Tests
+
+### Reception
 
 
 @pytest.mark.parametrize(
@@ -93,12 +114,20 @@ def test_impostor_local(sender):
     assert smtp_error_code("obiwan@jedi.local", sender=sender) == 553
 
 
+##### Outgoing email
+
+
 @pytest.mark.parametrize(
-    "user", [("sidious@sith.local"), ("obiwan@jedi.local"), ("vader@sith.local")]
+    "user, submission",
+    [
+        ("sidious@sith.local", False),
+        ("obiwan@jedi.local", True),
+        ("vader@sith.local", True),
+    ],
 )
-def test_login(user):
+def test_login(user, submission):
     """We check if legitimate users can log in"""
-    assert login(user)[0] == 235
+    assert login(user, submission=submission)[0] == 235
 
 
 @pytest.mark.parametrize(
@@ -109,7 +138,30 @@ def test_wrong_login(user, password):
     assert login_error_code(user, password=password) == 535
 
 
-@pytest.mark.skip()
-def test_auth_relay(sender):
+@pytest.mark.parametrize(
+    "recipient",
+    [
+        ("pikachu@mail.not.local"),  # non-local user
+        ("sidious@sith.local"),    # local user
+    ],
+)
+def test_auth_relay(recipient):
     """Send email to another domain from an authenticated account"""
-    pass
+    sender = "obiwan@jedi.local"
+    state, conn = login(sender, "test", submission=True)
+    result = send_mail(recipient, sender=sender, conn=conn)
+    assert result == dict()
+
+@pytest.mark.parametrize(
+    "victim",
+    [
+        ("pikachu@mail.not.local"),  # non-local user
+        ("sidious@sith.local"),    # local user
+    ],
+)
+def test_auth_relay_mismatch(victim):
+    """Login as a user and send an email as another user.
+    Should be error 553 5.7.1 Sender access reject: not owned by user"""
+    state, conn = login("obiwan@jedi.local", "test", submission=True)
+    result = smtp_error_code("sidious@sith.local", sender=victim, conn=conn)
+    assert result == 553
