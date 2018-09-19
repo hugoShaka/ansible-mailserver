@@ -50,3 +50,13 @@
       target: /tmp/mailserverdb.sql
     become: true
     become_user: postgres
+
+  - name: Restart sevrices
+    service:
+      name: "{{ item }}"
+      state: restarted
+    loop:
+      - postgresql
+      - postfix
+      - dovecot
+
