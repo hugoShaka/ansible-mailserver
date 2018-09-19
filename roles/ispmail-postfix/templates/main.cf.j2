@@ -46,6 +46,7 @@ smtpd_helo_restrictions =
 
 # What to do with an email not for us ?
 smtpd_relay_restrictions =
+  permit_mynetworks,
   reject_unauth_destination
 # We do not allow smtp relaying
 # For submission this param will be overriden with $mua_relay_restrictions
@@ -53,6 +54,7 @@ smtpd_relay_restrictions =
 # What to do when we have a client who wants to send an email
 mua_relay_restrictions =
   permit_mynetworks,
+  reject_sender_login_mismatch,
   permit_sasl_authenticated,
   reject_unauth_destination
 
@@ -220,3 +222,5 @@ notify_classes = data, resource, software, bounce, delay
 #mailman_destination_recipient_limit = 1
 #Available in postfix 3.0, check for DNSSEC enabled domains
 #smtp_dns_support_level = dnssec
+
+# vi: ft=pfmain

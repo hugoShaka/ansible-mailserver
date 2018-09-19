@@ -18,7 +18,7 @@ submission inet n       -       -       -       -       smtpd
   -o smtpd_tls_security_level=encrypt
   -o smtpd_sasl_auth_enable=yes
   -o smtpd_relay_restrictions=$mua_relay_restrictions
-  -o smtpd_milters=unix:/var/run/opendkim/opendkim.sock
+#  -o smtpd_milters=unix:/var/run/opendkim/opendkim.sock
 #  -o smtpd_milters=unix:/run/spamass.sock,unix:/run/opendkim.sock
 #  -o milter_connect_macros="j {daemon_name} v {if_name} _"
 #  -o milter_macro_daemon_name=ORIGINATING
@@ -133,3 +133,5 @@ mailman   unix  -       n       n       -       -       pipe
 #  flags=R user=sympa argv=/usr/lib/sympa/bin/queue ${recipient}
 #sympabounce  unix  -       n       n       -       -       pipe
 #  flags=R user=sympa argv=/usr/lib/sympa/bin/bouncequeue ${recipient}
+
+# vi: ft=pf
