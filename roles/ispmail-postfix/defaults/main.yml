@@ -1,0 +1,3 @@
+---
+ispmail_postfix_smtpd_ratelimit: 10
+ispmail_postfix_smtpd_countlimit: 10
