@@ -92,8 +92,8 @@ smtp_extra_recipient_limit = 10
 anvil_rate_time_unit = 60s
 
 # And we don't want to recieve tons of emails at the same time
-smtpd_client_connection_rate_limit = 5
-smtpd_client_connection_count_limit = 5
+smtpd_client_connection_rate_limit = {{ ispmail_postfix_smtpd_ratelimit }}
+smtpd_client_connection_count_limit = {{ ispmail_postfix_smtpd_countlimit }}
 
 # in case of too many SMTP errors, let them wait
 # Clients who get errors are usually trying to spam you
