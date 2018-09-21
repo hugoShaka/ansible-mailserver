@@ -21,6 +21,7 @@
       loop:
         - bpython
         - pytest
+        - imapclient
 
     - name: copy test suite
       copy:
