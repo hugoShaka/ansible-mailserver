@@ -2,8 +2,6 @@
 # Requires Ansible >= 1.9
 - hosts: mailserver
   roles:
-  #- dumpvars
-  - ispmail-packages
   - ispmail-certificate
   - ispmail-database
   - ispmail-postfix

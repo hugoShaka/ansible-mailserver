@@ -1,4 +1,17 @@
 ---
+- name: Install postgres packages
+  apt:
+    name: "{{item}}"
+    state: present
+  with_items:
+    - postgresql
+
+- name: Make sure postgresql server is started
+  service:
+    name: postgresql
+    enabled: yes
+    state: started
+
 - name: Installing required Python pgsql module for Ansible to manage databases
   apt:
     pkg: python-psycopg2

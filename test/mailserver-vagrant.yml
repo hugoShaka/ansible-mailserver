@@ -26,8 +26,6 @@
 
 - hosts: mailserver
   roles:
-  #- dumpvars
-  - ispmail-packages
   - ispmail-certificate
   - ispmail-database
   - ispmail-postfix
