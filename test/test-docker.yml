@@ -12,8 +12,6 @@
 
 - hosts: localhost
   roles:
-  #- dumpvars
-  - ispmail-packages
   - ispmail-certificate
   - ispmail-database
   - ispmail-postfix
