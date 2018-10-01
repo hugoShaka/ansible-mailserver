@@ -15,7 +15,7 @@
 - name: Installing required Python pgsql module for Ansible to manage databases
   apt:
     pkg: python-psycopg2
-    state: installed
+    state: present
 
 - name: creating SQL mail user
   postgresql_user:

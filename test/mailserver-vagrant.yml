@@ -5,7 +5,7 @@
     - name: install acl
       apt:
         name: acl
-        state: installed
+        state: present
         update_cache: true
 
     - name: '/etc/fstab: Set opt "{{ opt }}" for mount point {{ point }}'
