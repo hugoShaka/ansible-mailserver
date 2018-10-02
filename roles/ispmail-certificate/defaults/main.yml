@@ -1,15 +1,4 @@
-ispmail_populate_test_data: false
-
-ispmail_mysql_mailuser_password: ChangeMe
-ispmail_mysql_root_password: ChangeMeRoot
-ispmail_pgadmin_password: ChangeMeAlso
-ispmail_dovecot_auth_mechanisms: plain login
-
-ispmail_postmaster_address: postmaster@example.org
-
-#ispmail_webmail_hostname: mail.example.org
-ispmail_hostname: mail.shaka.local
-
+---
 ispmail_certificate_directory: /etc/letsencrypt/live/sub.domain.tld
 ispmail_certificate_location: /etc/letsencrypt/live/sub.domain.tld/fullchain.pem
 ispmail_certificate_keyfile: /etc/letsencrypt/live/sub.domain.tld/privkey.pem
@@ -24,5 +13,4 @@ ispmail_certificate_domains:
   - example.org
 ispmail_certificate_email: postmaster@example.org
 ispmail_certificate_days_valid: 3650
-ispmail_postfix_smtpd_ratelimit: 10
-ispmail_postfix_smtpd_countlimit: 10
+

@@ -2,7 +2,7 @@
 - name: install packages
   apt:
     name: "{{ item }}"
-    state: installed
+    state: present
     cache_valid_time: 3600
   loop:
     - dnsmasq

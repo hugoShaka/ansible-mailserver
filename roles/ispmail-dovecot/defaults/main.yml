@@ -1,0 +1,2 @@
+---
+ispmail_dovecot_auth_mechanisms: plain login
