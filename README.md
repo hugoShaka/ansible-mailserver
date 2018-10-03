@@ -1,7 +1,8 @@
 # ISPmail Ansible Playbook #
 
 This repository contains a playbook and roles that you can use to set up your
-own Debian-based mail server.
+own Debian-based mail server. Behind the scene, it makes use of postfix,
+ dovecot, postgresql.
 
 This is a modified version of the original repo :
 (https://git.workaround.org/chaas/ansible-ispmail-jessie/)
