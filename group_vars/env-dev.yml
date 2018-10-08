@@ -1,0 +1,9 @@
+---
+mailservers:
+  - name: "tester"
+    ip: "10.0.0.50"
+  - name: "mailserver1"
+    ip: "10.0.0.100"
+
+ispmail_postfix_smtpd_ratelimit: 5000
+ispmail_postfix_smtpd_countlimit: 5000

@@ -1,10 +1,19 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
+#
+
 Vagrant.configure(2) do |config|
   config.vm.box = "debian/stretch64"
   config.vm.define "mailserver" do |subconfig|
+    subconfig.vm.hostname = "mailserver"
     subconfig.vm.provision "ansible" do |ansible|
       ansible.playbook = "test/mailserver-vagrant.yml"
+      ansible.groups = {
+        "env-dev:children" => ["mta", "mda", "db" ],
+        "mta" => ["mailserver"],
+        "mda" => ["mailserver"],
+        "db" => ["mailserver"],
+      }
       ansible.become = true
     end
     subconfig.vm.provider "virtualbox" do |vb|
@@ -12,6 +21,7 @@ Vagrant.configure(2) do |config|
     end
   end
   config.vm.define "tester" do |subconfig|
+    subconfig.vm.hostname = "tester"
     subconfig.vm.provision "ansible" do |ansible|
       ansible.limit = "all"
       ansible.playbook = "test/tester-vagrant.yml"
