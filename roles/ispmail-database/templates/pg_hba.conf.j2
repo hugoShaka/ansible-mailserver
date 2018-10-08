@@ -1,0 +1,36 @@
+# PostgreSQL Client Authentication Configuration File
+# ===================================================
+#
+# Refer to the "Client Authentication" section in the PostgreSQL
+# documentation for a complete description of this file.  A short
+# synopsis follows.
+#
+# This file controls: which hosts are allowed to connect, how clients
+# are authenticated, which PostgreSQL user names they can use, which
+# databases they can access.  Records take one of these forms:
+#
+# local      DATABASE  USER  METHOD  [OPTIONS]
+# host       DATABASE  USER  ADDRESS  METHOD  [OPTIONS]
+# hostssl    DATABASE  USER  ADDRESS  METHOD  [OPTIONS]
+# hostnossl  DATABASE  USER  ADDRESS  METHOD  [OPTIONS]
+#
+# TYPE  DATABASE        USER            ADDRESS                 METHOD
+#
+# Database administrative login by Unix domain socket
+local   all             postgres                                peer
+# Local connection using user map
+local   mailserver      all             peer                    map=mailmap
+# Distant connection for mailservers over md5
+{% for mailserver in mailservers %}
+host    mailserver      mail            {{ mailserver.ip }}/32            md5
+{% endfor %}
+# Distant connection for admin
+host    mailserver      pgadmin         127.0.0.1/32            md5
+# IPv4 local connections:
+host    all             all             127.0.0.1/32            md5
+# IPv6 local connections:
+host    all             all             ::1/128                 md5
+# "local" is for Unix domain socket connections only
+local   all             all                                     peer
+
+# vi: ft=conf
