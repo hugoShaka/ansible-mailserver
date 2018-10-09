@@ -1,2 +1,6 @@
 ---
 ispmail_dovecot_auth_mechanisms: plain login
+ispmail_dovecot_database_password: ''
+ispmail_dovecot_databases:
+  - name: local
+    address: /var/run/postgresql

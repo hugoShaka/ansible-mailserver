@@ -1,0 +1,26 @@
+# Authentication for SQL users. Included from 10-auth.conf.
+#
+# <doc/wiki/AuthDatabase.SQL.txt>
+#
+# Each database needs its own passdb and args file.
+
+{% for database in ispmail_dovecot_databases %}
+# passdb for database {{ database.name }}
+passdb {
+  driver = sql
+  # Path for SQL configuration file, see example-config/dovecot-sql.conf.ext
+  args = /etc/dovecot/{{ database.name }}-sql.conf
+}
+
+{% endfor %}
+
+# Each database needs its own userdb and args file.
+
+{% for database in ispmail_dovecot_databases %}
+# userdb for database {{ database.name }}
+userdb {
+  driver = sql
+  args = /etc/dovecot/{{ database.name }}-sql.conf
+}
+{% endfor %}
+
