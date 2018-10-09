@@ -17,12 +17,23 @@
     pkg: python-psycopg2
     state: present
 
-- name: creating SQL mail user
+- name: creating SQL mail user (without password)
   postgresql_user:
     name: mail
     state: present
   become: true
   become_user: postgres
+  when: (mailservers|length == 0)
+
+- name: creating SQL mail user (with password)
+  postgresql_user:
+    name: mail
+    password: "{{ispmail_mailserver_password}}"
+    state: present
+  become: true
+  become_user: postgres
+  when: (mailservers|length > 0)
+
 - name: creating mailserver SQL database
   postgresql_db:
     name: mailserver
@@ -54,20 +65,19 @@
       mailmap         postfix                 mail
       mailmap         root                    mail
       mailmap         postgres                postgres
+  notify: restart postgresql
 
-
-- name: Configuring connections to the pg database
-  blockinfile:
-    path: /etc/postgresql/9.6/main/pg_hba.conf
-    marker: "###### ANSIBLE MANAGED BLOCK ######"
-    insertafter: "local\\s+all\\s+postgres\\s+peer"
-    content: |
-      local   mailserver      all             peer                    map=mailmap
-      host    mailserver      pgadmin         127.0.0.1/32            md5
-      # IPv4 local connections:
-      host    all             all             127.0.0.1/32            md5
-      # IPv6 local connections:
-      host    all             all             ::1/128                 md5
+- name: Creating postgresql configuration files
+  template:
+    dest: "/etc/postgresql/9.6/main/{{ item }}"
+    src: "{{ item }}.j2"
+    mode: 0640
+    owner: postgres
+    group: postgres
+  loop:
+    - pg_hba.conf
+    - postgresql.conf
+  notify: restart postgresql
 
 - name: copying SQL database schema to server
   copy: src=schema.sql dest=/tmp

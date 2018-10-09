@@ -24,14 +24,16 @@
     opt: "acl"
     point: "/"
 
-- hosts: mailserver
+- hosts: "mta"
   roles:
   - ispmail-certificate
-  - ispmail-database
   - ispmail-postfix
+
+- hosts: "mda"
+  roles:
+  - ispmail-certificate
   - ispmail-dovecot
-  become: yes
-  become_user: root
-  vars:
-    ispmail_postfix_smtpd_ratelimit: 5000
-    ispmail_postfix_smtpd_countlimit: 5000
+
+- hosts: "db"
+  roles:
+  - ispmail-database
