@@ -2,3 +2,7 @@
 ispmail_postfix_hostname: mail.shaka.local
 ispmail_postfix_smtpd_ratelimit: 10
 ispmail_postfix_smtpd_countlimit: 10
+
+ispmail_postfix_database_hosts:
+  - unix:/var/run/postgresql
+ispmail_postfix_database_password: ''
