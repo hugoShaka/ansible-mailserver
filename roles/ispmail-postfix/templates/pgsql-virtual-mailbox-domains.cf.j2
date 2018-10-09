@@ -1,0 +1,5 @@
+user = mail
+hosts = {{ ispmail_postfix_database_hosts|join(' ') }}
+password = {{ ispmail_postfix_database_password }}
+dbname = mailserver
+query = SELECT 1 FROM virtual_domains WHERE name='%s'
