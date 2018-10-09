@@ -27,21 +27,11 @@
     state: present
 
 - name: define Postfix sender login mapping
-  copy:
-    src: "{{ item }}"
+  template:
+    src: "{{ item }}.j2"
     dest: "/etc/postfix/{{ item }}"
-  notify: restart postfix
-  loop:
-    - pgsql-sender-login-maps.cf
-    - pgsql-virtual-mailbox-domains.cf
-    - pgsql-virtual-mailbox-maps.cf
-    - pgsql-virtual-alias-maps.cf
-    - pgsql-email2email.cf
-
-- name: Restricting access to database mapping files that contain a password
-  file:
-    path: "/etc/postfix/{{ item }}"
     mode: 0644
+  notify: restart postfix
   loop:
     - pgsql-sender-login-maps.cf
     - pgsql-virtual-mailbox-domains.cf
