@@ -19,7 +19,7 @@
 - name: Create mailbox directory
   file: path=/var/vmail state=directory owner=vmail group=vmail
 
-- name: Grant user vmail read permission on the private key
+- name: Grant user dovecot read permission on the private key
   acl:
     path: "{{ispmail_certificate_keyfile}}"
     entity: dovecot
@@ -52,7 +52,9 @@
   notify: restart dovecot
 
 - name: Copying SQL authentication configuration (auth-sql.conf.ext)
-  copy: src=auth-sql.conf.ext dest=/etc/dovecot/conf.d/auth-sql.conf.ext
+  template:
+    src: auth-sql.conf.ext.j2
+    dest: /etc/dovecot/conf.d/auth-sql.conf.ext
   notify: restart dovecot
 
 - name: Copying mailbox and namespace configuration (10-mail.conf)
@@ -75,8 +77,12 @@
   copy: src=15-mailboxes.conf dest=/etc/dovecot/conf.d/15-mailboxes.conf
   notify: restart dovecot
 
-- name: Copying SQL access configuration (dovecot-sql.conf.ext)
-  copy: src=dovecot-sql.conf.ext dest=/etc/dovecot/dovecot-sql.conf.ext
+- name: Generating SQL access configuration for each database (<database>-sql.conf)
+  template:
+    src: dovecot-sql.conf.ext.j2
+    dest: /etc/dovecot/{{ item.name }}-sql.conf
+    owner: root
+  loop: "{{ ispmail_dovecot_databases }}"
   notify: restart dovecot
 
 - name: Fixing ownership and mode of dovecot.conf
