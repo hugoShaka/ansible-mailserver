@@ -1,6 +1,6 @@
 ---
 # Requires Ansible >= 1.9
-- hosts: mailserver
+- hosts: all
   tasks:
     - name: install acl
       apt:

@@ -1,2 +1,5 @@
 ---
-ispmail_hostname: mail.shaka.local
+mailservers:
+  - name: mail
+    ip: 10.0.0.100
+    host: mail.local

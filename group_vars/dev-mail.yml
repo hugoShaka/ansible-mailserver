@@ -1,0 +1,15 @@
+---
+ispmail_postfix_smtpd_ratelimit: 5000
+ispmail_postfix_smtpd_countlimit: 5000
+
+ispmail_mailserver_password: 'TestDatabasePassword'
+ispmail_postfix_database_password: 'TestDatabasePassword'
+ispmail_dovecot_database_password: 'TestDatabasePassword'
+
+ispmail_postfix_database_hosts:
+  - 10.0.0.100
+
+ispmail_dovecot_databases:
+  - name: "north"
+    address: 10.0.0.100
+
