@@ -2,7 +2,13 @@ resolv-file=/etc/real-resolvers.conf
 no-dhcp-interface=
 
 addn-hosts=/etc/dnsmasq.hosts
-mx-host=test.local,{{ ispmail_hostname }},50
+{% for mailserver in mailservers %}
+mx-host=test.local,{{ mailserver.host }},50
+mx-host=jedi.local,{{ mailserver.host }},50
+mx-host=sith.local,{{ mailserver.host }},50
+{% endfor %}
 mx-host=test.not.local,mail.not.local,50
 txt-record=test.local,"v=spf1 mx -all"
+txt-record=jedi.local,"v=spf1 mx -all"
+txt-record=sith.local,"v=spf1 mx -all"
 txt-record=test.not.local,"v=spf1 mx -all"
