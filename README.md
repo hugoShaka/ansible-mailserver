@@ -24,14 +24,17 @@ DO NOT APPLY IF YOU ARE NOT CONFIDENT WITH WHAT THE PLAYBOOK DOES.
 * Clone the repository
 * `cd ansible-mailserver`
 * *If you've installed ansible in a venv make sure it is activated here*
-* `vagrant up` will create 2 VMs : mailserver and tester
+* `vagrant up` will create 3 VMs : the mailservers (north and south) and the tester
 
 ## Running tests
 
 Tests are still manually started.
 * `vagrant ssh tester`
 * `cd suite`
-* `pytest <yourtestfile.py>`
+* `pytest <yourtestfile.py> [--server south.mail.local]`
+
+Test suites `imap.py` and `incoming-email.py` hits by default
+`north.mail.local`. The target can be configured with the flag `--server`.
 
 # Credits and copyrights #
 

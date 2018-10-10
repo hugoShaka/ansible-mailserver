@@ -3,21 +3,22 @@ import ssl
 import pytest
 import uuid
 
-FOLDER = "folder-%s" % uuid.uuid4()
-FLAG = "May the force be with you %s" % uuid.uuid4()
 
-@pytest.fixture(scope='session')
-def populate_mailbox():
-    _, conn = login("padme@jedi.local")
-    conn.create_folder(FOLDER)
-    conn.append(FOLDER, FLAG)
-    conn.append(FOLDER, FLAG)
-    conn.append(FOLDER, FLAG)
+@pytest.fixture()
+def populate_mailbox(server):
+    _, conn = login("padme@jedi.local", server=server)
+    folder = "folder-%s" % uuid.uuid4()
+    flag = "May the force be with you %s" % uuid.uuid4()
+    conn.create_folder(folder)
+    conn.append(folder, flag)
+    conn.append(folder, flag)
+    conn.append(folder, flag)
+    return (folder, flag)
 
-def login(user, password="test", *, conn=None):
+def login(user, password="test", *, conn=None, server=None):
     ssl_context = ssl.create_default_context(ssl.Purpose.CLIENT_AUTH)
     if conn is None:
-        conn = imapclient.IMAPClient("mail.shaka.local", 993, ssl_context=ssl_context)
+        conn = imapclient.IMAPClient(server, 993, ssl_context=ssl_context)
     result = conn.login(user, password)
     return result.decode("utf-8"), conn
 
@@ -36,9 +37,9 @@ def login_error_code(user, **kwargs):
         ("vader@sith.local"),
     ],
 )
-def test_login(user):
+def test_login(user, server):
     """We check if legitimate users can log in"""
-    assert login(user)[0] == 'Logged in'
+    assert login(user, server=server)[0] == 'Logged in'
 
 @pytest.mark.parametrize(
     "user, password",
@@ -48,21 +49,22 @@ def test_login(user):
         ("sidious@pokemon.local", "test"),
     ],
 )
-def test_invalid_credentials(user, password):
+def test_invalid_credentials(user, password, server):
     """Users with invalid credentials should not be able to log in"""
-    assert login_error_code(user, password=password) == 'AUTHENTICATIONFAILED'
+    assert login_error_code(user, password=password, server=server) == 'AUTHENTICATIONFAILED'
 
-def test_no_tls():
+def test_no_tls(server):
     """No login should be possible over non-TLS"""
-    conn = imapclient.IMAPClient("mail.shaka.local", 143, ssl=False)
+    conn = imapclient.IMAPClient(server, 143, ssl=False)
     assert login_error_code("obiwan@jedi.local", conn=conn) == 'PRIVACYREQUIRED'
 
-def test_read_email(populate_mailbox):
+def test_read_email(populate_mailbox, server):
     """Reads fixture emails and recover content"""
-    _, conn = login("padme@jedi.local")
-    conn.select_folder(FOLDER)
+    _, conn = login("padme@jedi.local", server=server)
+    folder, flag = populate_mailbox
+    conn.select_folder(folder)
     messages_ids = conn.search('ALL')
     assert len(messages_ids) == 3
     messages = conn.fetch(messages_ids, 'RFC822')
     message_content = messages[messages_ids[0]][b'RFC822'].decode('utf-8')
-    assert message_content == FLAG
+    assert message_content == flag
