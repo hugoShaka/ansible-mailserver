@@ -1,6 +1,6 @@
 ---
 # Requires Ansible >= 1.9
-- hosts: tester
+- hosts: dev-test
   tasks:
     - name: install packages
       apt:
@@ -8,7 +8,6 @@
         state: present
         cache_valid_time: 3600
       loop:
-        - python3
         - python3-pip
         - vim
         - less
@@ -28,11 +27,11 @@
         src: suite
         dest: /home/vagrant/
 
-- hosts: tester
+- hosts: dev-test
   roles:
   - mailtester-dnsmasq
 
-- hosts: mailserver
+- hosts: dev-mail
   tasks:
 
   - name: use test resolver
@@ -41,6 +40,8 @@
       regexp: "^nameserver"
       line: "nameserver 10.0.0.50"
 
+- hosts: db
+  tasks:
   - name: copy fixtures file
     copy: src=fixtures/mailserverdb.sql dest=/tmp
 
@@ -52,12 +53,23 @@
     become: true
     become_user: postgres
 
-  - name: Restart sevrices
+  - name: Restart postgres
     service:
-      name: "{{ item }}"
+      name: postgresql
       state: restarted
-    loop:
-      - postgresql
-      - postfix
-      - dovecot
+
+- hosts: mta
+  tasks:
+  - name: Restart postfix
+    service:
+      name: postfix
+      state: restarted
+
+- hosts: mda
+  tasks:
+  - name: Restart dovecot
+    service:
+      name: dovecot
+      state: restarted
+
 
