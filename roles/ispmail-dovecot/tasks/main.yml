@@ -66,16 +66,10 @@
     dest: /etc/dovecot/conf.d/auth-sql.conf.ext
   notify: restart dovecot
 
-- name: Copying mailbox and namespace configuration (10-mail.conf)
-  copy:
-    src: 10-mail.conf
-    dest: /etc/dovecot/conf.d/10-mail.conf
-  notify: restart dovecot
-
-- name: Copying service configuration (10-master.conf)
-  copy:
-    src: 10-master.conf
-    dest: /etc/dovecot/conf.d/10-master.conf
+- name: Copying plugin conf (replication)
+  template:
+    src: 90-plugin.conf.j2
+    dest: /etc/dovecot/conf.d/90-plugin.conf
   notify: restart dovecot
 
 - name: Copying SSL configuration (10-ssl.conf)
@@ -84,17 +78,18 @@
     dest: /etc/dovecot/conf.d/10-ssl.conf
   notify: restart dovecot
 
-- name: Copying LMTP configuration (20-lmtp.conf - enable sieve plugin)
+- name: Copying static configuration
   copy:
-    src: 20-lmtp.conf
-    dest: /etc/dovecot/conf.d/20-lmtp.conf
+    src: "{{ item }}"
+    dest: "/etc/dovecot/conf.d/{{ item }}"
   notify: restart dovecot
-
-- name: Copying mailboxes configuration (15-mailboxes.conf - autocreate folders)
-  copy:
-    src: 15-mailboxes.conf
-    dest: /etc/dovecot/conf.d/15-mailboxes.conf
-  notify: restart dovecot
+  loop:
+    - 10-mail.conf
+    - 10-master.conf
+    - 15-mailboxes.conf
+    - 20-lmtp.conf
+    - 30-replication.conf
+    - 90-sieve.conf
 
 - name: Generating SQL access configuration for each database (<database>-sql.conf)
   template:
@@ -129,9 +124,3 @@
     src: spam-to-folder.sieve
     dest: /etc/dovecot/sieve-after/spam-to-folder.sieve
   notify: recompile sieve script
-
-- name: Copying Sieve plugin configuration (90-sieve.conf)
-  copy:
-    src: 90-sieve.conf
-    dest: /etc/dovecot/conf.d/90-sieve.conf
-  notify: restart dovecot

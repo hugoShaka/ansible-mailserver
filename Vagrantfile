@@ -11,6 +11,11 @@ ansible_groups = {
   "db" => ["north"],
 }
 
+ansible_host_vars = {
+  "north" => {"ispmail_dovecot_replication_peer" => "south.mail.local"},
+  "south" => {"ispmail_dovecot_replication_peer" => "north.mail.local"}
+}
+
 
 Vagrant.configure(2) do |config|
   config.vm.box = "debian/stretch64"
@@ -30,6 +35,7 @@ Vagrant.configure(2) do |config|
       ansible.playbook = "test/mailserver-vagrant.yml"
       ansible.limit = "dev-mail"
       ansible.groups = ansible_groups
+      ansible.host_vars = ansible_host_vars
       ansible.become = true
     end
   end
