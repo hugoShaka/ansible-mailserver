@@ -86,11 +86,15 @@
   when: ispmail_dovecot_replication_peer is not defined
   notify: restart dovecot
 
-- name: Copying SSL configuration (10-ssl.conf)
+- name: Copying SSL/TLS configuration
   template:
-    src: 10-ssl.conf.j2
-    dest: /etc/dovecot/conf.d/10-ssl.conf
+    src: "{{ item }}.j2"
+    dest: "/etc/dovecot/conf.d/{{ item }}"
   notify: restart dovecot
+  loop:
+    - 10-ssl.conf
+    - 20-imap.conf
+    - 20-pop3.conf
 
 - name: Copying static configuration
   copy:
