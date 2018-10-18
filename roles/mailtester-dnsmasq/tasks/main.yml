@@ -32,4 +32,3 @@
     src: dnsmasq.hosts.j2
     dest: /etc/dnsmasq.hosts
   notify: restart dnsmasq
-

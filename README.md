@@ -50,4 +50,3 @@ Contributors :
 # License
 
 Everything in this repository can be freely used under the terms of the MIT license.
-
