@@ -12,4 +12,3 @@ ispmail_postfix_database_hosts:
 ispmail_dovecot_databases:
   - name: "north"
     address: 10.0.0.100
-

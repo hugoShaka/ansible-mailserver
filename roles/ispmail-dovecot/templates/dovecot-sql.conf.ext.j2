@@ -13,4 +13,3 @@ user_query = SELECT '/var/vmail/%d/%n/' as home, 5000 AS uid, 5000 as gid FROM v
 default_pass_scheme = SHA512-CRYPT
 password_query = SELECT u.email||'@'||d.name as user, u.password as password  FROM virtual_users AS u JOIN virtual_domains AS d ON u.domain_id = d.id WHERE u.email='%n' AND d.name='%d'
 iterate_query = SELECT email AS user FROM virtual_users;
-

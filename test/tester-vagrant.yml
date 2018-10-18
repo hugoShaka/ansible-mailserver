@@ -71,5 +71,3 @@
     service:
       name: dovecot
       state: restarted
-
-

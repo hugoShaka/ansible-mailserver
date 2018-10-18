@@ -9,4 +9,3 @@ INSERT INTO virtual_users VALUES (4, 2, '{SHA512-CRYPT}$6$fysxPW0xNM5dMZ.z$xlsrV
 
 INSERT INTO virtual_aliases VALUES (1, 2, 'skywalker', 'vader@sith.local');
 INSERT INTO virtual_aliases VALUES (2, 1, 'external-alias', 'user@test.not.local');
-
