@@ -27,45 +27,44 @@
 
 - hosts: dev-test
   roles:
-  - mailtester-dnsmasq
+    - mailtester-dnsmasq
 
 - hosts: dev-mail
   tasks:
-
-  - name: use test resolver
-    lineinfile:
-      path: /etc/resolv.conf
-      regexp: "^nameserver"
-      line: "nameserver 10.0.0.50"
+    - name: use test resolver
+      lineinfile:
+        path: /etc/resolv.conf
+        regexp: "^nameserver"
+        line: "nameserver 10.0.0.50"
 
 - hosts: db
   tasks:
-  - name: copy fixtures file
-    copy: src=fixtures/mailserverdb.sql dest=/tmp
+    - name: copy fixtures file
+      copy: src=fixtures/mailserverdb.sql dest=/tmp
 
-  - name: import fixtures
-    postgresql_db:
-      name: mailserver
-      state: restore
-      target: /tmp/mailserverdb.sql
-    become: true
-    become_user: postgres
+    - name: import fixtures
+      postgresql_db:
+        name: mailserver
+        state: restore
+        target: /tmp/mailserverdb.sql
+      become: true
+      become_user: postgres
 
-  - name: Restart postgres
-    service:
-      name: postgresql
-      state: restarted
+    - name: Restart postgres
+      service:
+        name: postgresql
+        state: restarted
 
 - hosts: mta
   tasks:
-  - name: Restart postfix
-    service:
-      name: postfix
-      state: restarted
+    - name: Restart postfix
+      service:
+        name: postfix
+        state: restarted
 
 - hosts: mda
   tasks:
-  - name: Restart dovecot
-    service:
-      name: dovecot
-      state: restarted
+    - name: Restart dovecot
+      service:
+        name: dovecot
+        state: restarted

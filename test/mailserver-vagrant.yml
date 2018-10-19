@@ -26,14 +26,14 @@
 
 - hosts: "mta"
   roles:
-  - ispmail-certificate
-  - ispmail-postfix
+    - ispmail-certificate
+    - ispmail-postfix
 
 - hosts: "mda"
   roles:
-  - ispmail-certificate
-  - ispmail-dovecot
+    - ispmail-certificate
+    - ispmail-dovecot
 
 - hosts: "db"
   roles:
-  - ispmail-database
+    - ispmail-database
