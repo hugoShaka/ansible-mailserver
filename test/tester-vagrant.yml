@@ -1,26 +1,24 @@
 ---
-# Requires Ansible >= 1.9
+# Requires Ansible >= 2.2
 - hosts: dev-test
   tasks:
     - name: install packages
       apt:
-        name: "{{ item }}"
+        name:
+          - python3-pip
+          - vim
+          - less
+          - net-tools
         state: present
         cache_valid_time: 3600
-      loop:
-        - python3-pip
-        - vim
-        - less
-        - net-tools
 
     - name: install python packages
       pip:
-        name: "{{ item }}"
+        name:
+          - bpython
+          - pytest
+          - imapclient
         executable: pip3
-      loop:
-        - bpython
-        - pytest
-        - imapclient
 
     - name: copy test suite
       copy:
