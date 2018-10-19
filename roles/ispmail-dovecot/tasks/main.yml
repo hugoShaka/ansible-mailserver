@@ -1,14 +1,13 @@
 ---
 - name: Install dovecot packages
   apt:
-    name: "{{item}}"
+    name:
+      - dovecot-pgsql
+      - dovecot-pop3d
+      - dovecot-imapd
+      - dovecot-lmtpd
+      - dovecot-managesieved
     state: present
-  with_items:
-    - dovecot-pgsql
-    - dovecot-pop3d
-    - dovecot-imapd
-    - dovecot-lmtpd
-    - dovecot-managesieved
 
 - name: Create the vmail group
   group: name=vmail gid=5000

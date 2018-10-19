@@ -1,22 +1,20 @@
 ---
 - name: purge Exim installation
   apt:
-    name: "{{item}}"
+    name:
+      - exim4
+      - exim4-base
+      - exim4-config
+      - exim4-daemon-light
     state: absent
     purge: yes
-  with_items:
-    - exim4
-    - exim4-base
-    - exim4-config
-    - exim4-daemon-light
 
 - name: Install postfix packages
   apt:
-    name: "{{item}}"
+    name:
+      - postfix
+      - postfix-pgsql
     state: present
-  with_items:
-    - postfix
-    - postfix-pgsql
 
 - name: "Grant user postfix read permission on the private key"
   acl:
