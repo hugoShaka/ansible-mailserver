@@ -1,4 +1,4 @@
 image: williamyeh/ansible:debian8
 
 job1:
-    script: "ansible-playbook ispmail.yml -l localhost"
+  script: "ansible-playbook ispmail.yml -l localhost"

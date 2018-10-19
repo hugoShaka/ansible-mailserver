@@ -12,9 +12,9 @@
 
 - hosts: localhost
   roles:
-  - ispmail-certificate
-  - ispmail-database
-  - ispmail-postfix
-  - ispmail-dovecot
+    - ispmail-certificate
+    - ispmail-database
+    - ispmail-postfix
+    - ispmail-dovecot
   become: yes
   become_user: root
