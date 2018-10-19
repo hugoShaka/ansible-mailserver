@@ -40,7 +40,9 @@
 - hosts: db
   tasks:
     - name: copy fixtures file
-      copy: src=fixtures/mailserverdb.sql dest=/tmp
+      copy:
+        src: fixtures/mailserverdb.sql
+        dest: /tmp
 
     - name: import fixtures
       postgresql_db:
