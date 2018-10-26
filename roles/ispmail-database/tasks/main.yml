@@ -3,7 +3,7 @@
   apt:
     name: "{{item}}"
     state: present
-  with_items:
+  loop:
     - postgresql
 
 - name: Make sure postgresql server is started
@@ -113,7 +113,7 @@
     objs: "{{ item }}"
     roles: pgadmin
     privs: SELECT,INSERT,UPDATE,DELETE
-  with_items:
+  loop:
     - virtual_domains
     - virtual_aliases
     - virtual_users
@@ -127,7 +127,7 @@
     objs: "{{ item }}"
     roles: mail
     privs: SELECT,INSERT,UPDATE,DELETE
-  with_items:
+  loop:
     - virtual_domains
     - virtual_aliases
     - virtual_users

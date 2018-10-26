@@ -4,7 +4,7 @@
     name: "{{item}}"
     state: absent
     purge: yes
-  with_items:
+  loop:
     - exim4
     - exim4-base
     - exim4-config
@@ -14,7 +14,7 @@
   apt:
     name: "{{item}}"
     state: present
-  with_items:
+  loop:
     - postfix
     - postfix-pgsql
 
