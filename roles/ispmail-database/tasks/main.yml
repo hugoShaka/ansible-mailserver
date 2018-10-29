@@ -1,10 +1,8 @@
 ---
 - name: Install postgres packages
   apt:
-    name: "{{item}}"
+    name: postgresql
     state: present
-  with_items:
-    - postgresql
 
 - name: Make sure postgresql server is started
   service:
@@ -14,7 +12,7 @@
 
 - name: Installing required Python pgsql module for Ansible to manage databases
   apt:
-    pkg: python-psycopg2
+    name: python-psycopg2
     state: present
 
 - name: creating SQL mail user (without password)
@@ -80,12 +78,17 @@
   notify: restart postgresql
 
 - name: copying SQL database schema to server
-  copy: src=schema.sql dest=/tmp
+  copy:
+    src: schema.sql
+    dest: /tmp
 
-#- name: setting up SQL schema of mailserver database
-#  postgresql_db: name=mailserver state=import target=/tmp/schema.sql
-#  become: true
-#  become_user: postgres
+# - name: setting up SQL schema of mailserver database
+#   postgresql_db:
+#    name: mailserver
+#    state: import
+#    target: /tmp/schema.sql
+#   become: true
+#   become_user: postgres
 
 # Ugly, not idempotent fix, to change
 
@@ -95,13 +98,18 @@
   become_user: postgres
 
 - name: copying SQL test data to server
-  copy: src=test.sql dest=/tmp
+  copy:
+    src: test.sql
+    dest: /tmp
   when: ispmail_populate_test_data == true
   become: true
   become_user: postgres
 
 - name: populating the database with test data
-  postgresql_db: name=mailserver state=import target=/tmp/test.sql
+  postgresql_db:
+    name: mailserver
+    state: import
+    target: /tmp/test.sql
   when: ispmail_populate_test_data == true
   become: true
   become_user: postgres

@@ -21,4 +21,8 @@
     creates: "{{ispmail_certificate_keyfile}}"
 
 - name: Restrict access permissions of the private key
-  file: "path={{ispmail_certificate_keyfile}} mode=0640 group=root owner=root"
+  file:
+    path: "{{ispmail_certificate_keyfile}}"
+    mode: 0640
+    group: root
+    owner: root

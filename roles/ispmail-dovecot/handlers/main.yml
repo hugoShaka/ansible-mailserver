@@ -1,6 +1,8 @@
 ---
 - name: restart dovecot
-  service: name=dovecot state=restarted
+  service:
+    name: dovecot
+    state: restarted
+
 - name: recompile sieve script
   command: sievec /etc/dovecot/sieve-after
-
