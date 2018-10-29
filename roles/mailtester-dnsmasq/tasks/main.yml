@@ -1,12 +1,11 @@
 ---
 - name: install packages
   apt:
-    name: "{{ item }}"
+    name:
+      - dnsmasq
+      - net-tools
     state: present
     cache_valid_time: 3600
-  loop:
-    - dnsmasq
-    - net-tools
 
 - name: saves original resolv.conf
   copy:
@@ -32,4 +31,3 @@
     src: dnsmasq.hosts.j2
     dest: /etc/dnsmasq.hosts
   notify: restart dnsmasq
-

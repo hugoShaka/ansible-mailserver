@@ -2,9 +2,9 @@
 # Requires Ansible >= 1.9
 - hosts: mailserver
   roles:
-  - ispmail-certificate
-  - ispmail-database
-  - ispmail-postfix
-  - ispmail-dovecot
+    - ispmail-certificate
+    - ispmail-database
+    - ispmail-postfix
+    - ispmail-dovecot
   become: yes
   become_user: root
