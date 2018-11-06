@@ -5,8 +5,8 @@ import uuid
 
 
 @pytest.fixture()
-def populate_mailbox(server):
-    _, conn = login("padme@jedi.local", server=server)
+def populate_mailbox(primary):
+    _, conn = login("padme@jedi.local", server=primary)
     folder = "folder-%s" % uuid.uuid4()
     flag = "May the force be with you %s" % uuid.uuid4()
     conn.create_folder(folder)
@@ -37,9 +37,9 @@ def login_error_code(user, **kwargs):
         ("vader@sith.local"),
     ],
 )
-def test_login(user, server):
+def test_login(user, primary):
     """We check if legitimate users can log in"""
-    assert login(user, server=server)[0] == 'Logged in'
+    assert login(user, server=primary)[0] == 'Logged in'
 
 @pytest.mark.parametrize(
     "user, password",
@@ -49,18 +49,18 @@ def test_login(user, server):
         ("sidious@pokemon.local", "test"),
     ],
 )
-def test_invalid_credentials(user, password, server):
+def test_invalid_credentials(user, password, primary):
     """Users with invalid credentials should not be able to log in"""
-    assert login_error_code(user, password=password, server=server) == 'AUTHENTICATIONFAILED'
+    assert login_error_code(user, password=password, server=primary) == 'AUTHENTICATIONFAILED'
 
-def test_no_tls(server):
+def test_no_tls(primary):
     """No login should be possible over non-TLS"""
-    conn = imapclient.IMAPClient(server, 143, ssl=False)
+    conn = imapclient.IMAPClient(primary, 143, ssl=False)
     assert login_error_code("obiwan@jedi.local", conn=conn) == 'PRIVACYREQUIRED'
 
-def test_read_email(populate_mailbox, server):
+def test_read_email(populate_mailbox, primary):
     """Reads fixture emails and recover content"""
-    _, conn = login("padme@jedi.local", server=server)
+    _, conn = login("padme@jedi.local", server=primary)
     folder, flag = populate_mailbox
     conn.select_folder(folder)
     messages_ids = conn.search('ALL')
