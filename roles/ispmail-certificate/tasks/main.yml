@@ -1,4 +1,5 @@
 ---
+# Legacy part, to be cleaned
 - name: Creates cert directory
   file:
     path: "{{ispmail_certificate_directory}}"
@@ -6,9 +7,8 @@
     owner: root
     group: root
     mode: 0775
-    recurse: yes
 
-- name: Create a self-signed certificate
+- name: Create a self-signed certificate (emulates letsencrypt)
   command: >
     openssl req -newkey rsa:4096
       -nodes -sha512 -x509
@@ -26,3 +26,50 @@
     mode: 0640
     group: root
     owner: root
+
+# New PKI part, each node got its own CA
+- name: Create TLS directories
+  file:
+    state: directory
+    path: "{{ item }}"
+    owner: root
+    group: root
+    mode: 0770
+  loop:
+    - "{{ node_ca_key | dirname }}"
+    - "{{ node_ca_cert | dirname}}"
+
+- name: Generate node's CA keypair
+  command: "openssl req -x509 -nodes -newkey rsa:4096 \
+                    -keyout {{ node_ca_key }} \
+                    -out {{ node_ca_cert }} -days 1826 \
+                    -subj '/CN=CA.{{ ansible_hostname }}'"
+  args:
+    creates: "{{ node_ca_key }}"
+
+- name: Ensure root owns the tls material
+  file:
+    state: file
+    path: "{{ item }}"
+    owner: root
+    group: root
+    mode: 0600
+  loop:
+    - "{{ node_ca_key }}"
+    - "{{ node_ca_cert }}"
+
+- name: Recover certificate
+  slurp:
+    src: "{{ node_ca_cert }}"
+  register: certificate
+
+- name: Trust CA on every server
+  copy:
+    content: "{{ certificate['content'] | b64decode }}"
+    dest: "/usr/local/share/ca-certificates/{{ inventory_hostname }}.crt"
+    owner: root
+    group: root
+  delegate_to: "{{ item }}"
+  loop: "{{ groups['mail'] }}"
+  become: true
+  notify: update ca-certificates

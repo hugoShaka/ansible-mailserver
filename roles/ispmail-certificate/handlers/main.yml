@@ -1,0 +1,6 @@
+---
+- name: update ca-certificates
+  command: /usr/sbin/update-ca-certificates
+  delegate_to: "{{ item }}"
+  loop: "{{ groups['mail'] }}"
+  become: true

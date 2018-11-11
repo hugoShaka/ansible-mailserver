@@ -13,3 +13,6 @@ ispmail_certificate_domains:
   - example.org
 ispmail_certificate_email: postmaster@example.org
 ispmail_certificate_days_valid: 3650
+
+node_ca_key: /etc/ssl/ca/privkey.pem
+node_ca_cert: /etc/ssl/ca/cert.pem
