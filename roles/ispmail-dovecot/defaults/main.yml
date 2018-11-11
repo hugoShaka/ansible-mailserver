@@ -6,3 +6,7 @@ ispmail_dovecot_databases:
     address: /var/run/postgresql
 
 ispmail_dovecot_doveadm_password: ChangeMe
+
+dovecot_internal_key: /etc/ssl/dovecot/privkey.pem
+dovecot_internal_cert: /etc/ssl/dovecot/cert.pem
+dovecot_internal_csr: /etc/ssl/dovecot/node.csr

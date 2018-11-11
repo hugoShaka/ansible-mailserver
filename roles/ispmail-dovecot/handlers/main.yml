@@ -1,4 +1,17 @@
 ---
+- name: sign dovecot internal key
+  command: >
+    openssl x509 -req
+      -days 365
+      -in {{ dovecot_internal_csr }}
+      -CA {{ node_ca_cert }}
+      -CAkey {{ node_ca_key }}
+      -CAcreateserial
+      -out {{ dovecot_internal_cert }}
+      -sha512
+  become: true
+  notify: restart dovecot
+
 - name: restart dovecot
   service:
     name: dovecot

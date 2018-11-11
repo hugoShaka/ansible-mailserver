@@ -9,8 +9,11 @@ ssl = required
 # dropping root privileges, so keep the key file unreadable by anyone but
 # root. Included doc/mkcert.sh can be used to easily generate self-signed
 # certificate, just make sure to update the domains in dovecot-openssl.cnf
-ssl_cert = <{{ispmail_certificate_location}}
-ssl_key = <{{ispmail_certificate_keyfile}}
+
+# The tls for imap and pop is defined in their own section
+# The tls material here is only used for replication
+ssl_cert = <{{ dovecot_internal_cert }}
+ssl_key = <{{ dovecot_internal_key }}
 
 # If key file is password protected, give the password here. Alternatively
 # give it when starting dovecot with -p parameter. Since this file is often
@@ -31,7 +34,7 @@ ssl_ca = <{{ispmail_certificate_cafile}}
 # when Dovecot needs to act as an SSL client (e.g. imapc backend). The
 # directory is usually /etc/ssl/certs in Debian-based systems and the file is
 # /etc/pki/tls/cert.pem in RedHat-based systems.
-#ssl_client_ca_dir =
+ssl_client_ca_dir = /etc/ssl/certs
 #ssl_client_ca_file =
 
 # Request client to send a certificate. If you also want to require it, set

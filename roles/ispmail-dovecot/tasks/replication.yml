@@ -1,0 +1,54 @@
+---
+- name: Create dovecot tls folders
+  file:
+    state: directory
+    path: "{{ item }}"
+    owner: dovecot
+    group: vmail
+    mode: 0770
+  loop:
+    - "{{ dovecot_internal_key | dirname }}"
+    - "{{ dovecot_internal_csr | dirname }}"
+    - "{{ dovecot_internal_cert | dirname }}"
+    - "{{ dovecot_trust_directory }}"
+
+- name: Generate replication keypair and CSR
+  command: >
+    openssl req -nodes -newkey rsa:4096
+      -keyout {{ dovecot_internal_key }}
+      -out {{ dovecot_internal_csr }}
+      -subj '/CN={{ ansible_fqdn }}'
+  args:
+    creates: "{{ dovecot_internal_key }}"
+  notify: sign dovecot internal key
+
+- name: Ensure root owns the tls material
+  file:
+    state: file
+    path: "{{ item }}"
+    owner: root
+    group: root
+    mode: 0600
+  loop:
+    - "{{ dovecot_internal_key }}"
+    - "{{ dovecot_internal_csr }}"
+
+- name: Copying replication conf (if a peer is defined)
+  template:
+    src: "{{ item }}.j2"
+    dest: "/etc/dovecot/conf.d/{{ item }}"
+  loop:
+    - 30-replication.conf
+    - 90-plugin.conf
+  when: "ispmail_dovecot_replication_peer is defined"
+  notify: restart dovecot
+
+- name: Removing replication conf (if no peer is defined)
+  file:
+    path: "/etc/dovecot/conf.d/{{ item }}"
+    state: absent
+  loop:
+    - 30-replication.conf
+    - 90-plugin.conf
+  when: "ispmail_dovecot_replication_peer is not defined"
+  notify: restart dovecot
