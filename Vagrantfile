@@ -4,8 +4,10 @@
 
 ansible_groups = {
   "dev:children" => ["dev-mail", "dev-test"],
-  "dev-mail:children" => ["mta", "mda", "db" ],
-  "dev-test" => ["tester"],
+  "dev-mail:children" => ["mail"],
+  "dev-test:children" => ["test"],
+  "mail:children" => ["mta", "mda", "db" ],
+  "test" => ["tester"],
   "mta" => ["north", "south"],
   "mda" => ["north", "south"],
   "db" => ["north"],
@@ -21,19 +23,19 @@ Vagrant.configure(2) do |config|
   config.vm.box = "debian/stretch64"
 
   config.vm.define "north" do |subconfig|
-    subconfig.vm.hostname = "mailserver-north"
+    subconfig.vm.hostname = "north.mail.local"
     subconfig.vm.provider "virtualbox" do |vb|
       subconfig.vm.network "private_network", ip: "10.0.0.100"
     end
   end
   config.vm.define "south" do |subconfig|
-    subconfig.vm.hostname = "mailserver-south"
+    subconfig.vm.hostname = "south.mail.local"
     subconfig.vm.provider "virtualbox" do |vb|
       subconfig.vm.network "private_network", ip: "10.0.0.101"
     end
     subconfig.vm.provision "ansible" do |ansible|
       ansible.playbook = "test/mailserver-vagrant.yml"
-      ansible.limit = "dev-mail"
+      ansible.limit = "mail"
       ansible.groups = ansible_groups
       ansible.host_vars = ansible_host_vars
       ansible.become = true

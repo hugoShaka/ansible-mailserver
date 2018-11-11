@@ -24,16 +24,25 @@
     opt: "acl"
     point: "/"
 
+- hosts: "db"
+  roles:
+    - ispmail-database
+  tags:
+    - postgres
+    - db
+
 - hosts: "mta"
   roles:
     - ispmail-certificate
     - ispmail-postfix
+  tags:
+    - postfix
+    - mta
 
 - hosts: "mda"
   roles:
     - ispmail-certificate
     - ispmail-dovecot
-
-- hosts: "db"
-  roles:
-    - ispmail-database
+  tags:
+    - dovecot
+    - mda
