@@ -101,7 +101,7 @@
   copy:
     src: test.sql
     dest: /tmp
-  when: ispmail_populate_test_data == true
+  when: ispmail_populate_test_data
   become: true
   become_user: postgres
 
@@ -110,7 +110,7 @@
     name: mailserver
     state: import
     target: /tmp/test.sql
-  when: ispmail_populate_test_data == true
+  when: ispmail_populate_test_data
   become: true
   become_user: postgres
 
