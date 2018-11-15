@@ -1,0 +1,54 @@
+---
+- hosts: all
+  tasks:
+    - name: install acl
+      apt:
+        name: acl
+        state: present
+        update_cache: true
+
+    - name: "/etc/fstab: Set opt {{ opt }} for mount point {{ point }}"
+      lineinfile:
+        path: /etc/fstab
+        backup: yes
+        backrefs: yes
+        regexp: ^(\S+\s+{{ point }}\s+\S+\s+)(?!(?:\S*,)?{{ opt }}(?:,\S*)?\s+)(\S+)(\s+.+)$
+        line: \1{{ opt }},\2\3
+      register: fstab
+
+    - name: If {{ point }} changed, remount
+      command: mount {{ point }} -o remount
+      when: fstab.changed
+  vars:
+    opt: acl
+    point: /
+
+- hosts: db
+  roles:
+    - ispmail-database
+  tags:
+    - postgres
+    - db
+
+- hosts: mta
+  roles:
+    - ispmail-certificate
+    - ispmail-postfix
+  tags:
+    - postfix
+    - mta
+
+- hosts: mda
+  roles:
+    - ispmail-certificate
+    - ispmail-dovecot
+  tags:
+    - dovecot
+    - mda
+
+# - hosts: ns
+#   roles:
+#     - mailtester-dnsmasq
+#   tags:
+#     - dnsmasq
+...
