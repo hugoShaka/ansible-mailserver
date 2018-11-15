@@ -7,7 +7,7 @@
         name: acl
         state: installed
         update_cache: true
-  become: yes
+  become: true
   become_user: root
 
 - hosts: localhost
@@ -16,5 +16,5 @@
     - ispmail-database
     - ispmail-postfix
     - ispmail-dovecot
-  become: yes
+  become: true
   become_user: root

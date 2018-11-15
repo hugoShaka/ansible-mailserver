@@ -11,14 +11,13 @@
   copy:
     src: /etc/resolv.conf
     dest: /etc/real-resolvers.conf
-    force: no
+    force: false
     remote_src: true
 
 - name: Put custom resolv.cong
   copy:
     src: resolv.conf
     dest: /etc/resolv.conf
-
 
 - name: Copy dnsmasq conf
   template:

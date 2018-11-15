@@ -7,7 +7,7 @@
       - exim4-config
       - exim4-daemon-light
     state: absent
-    purge: yes
+    purge: true
 
 - name: Install postfix packages
   apt:
