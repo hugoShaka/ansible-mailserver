@@ -2,7 +2,7 @@
 # Requires Ansible >= 1.9
 - hosts: all
   tasks:
-    - name: install acl
+    - name: Install acl
       apt:
         name: acl
         state: present

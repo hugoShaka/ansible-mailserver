@@ -1,5 +1,5 @@
 ---
-- name: Creates cert directory
+- name: Create cert directory
   file:
     path: "{{ispmail_certificate_directory}}"
     state: directory

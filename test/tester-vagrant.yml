@@ -2,7 +2,7 @@
 # Requires Ansible >= 2.2
 - hosts: dev-test
   tasks:
-    - name: install packages
+    - name: Install packages
       apt:
         name:
           - python3-pip
@@ -12,7 +12,7 @@
         state: present
         cache_valid_time: 3600
 
-    - name: install python packages
+    - name: Install python packages
       pip:
         name:
           - bpython
@@ -20,7 +20,7 @@
           - imapclient
         executable: pip3
 
-    - name: copy test suite
+    - name: Copy test suite
       copy:
         src: suite
         dest: /home/vagrant/
@@ -31,7 +31,7 @@
 
 - hosts: dev-mail
   tasks:
-    - name: use test resolver
+    - name: Use test resolver
       lineinfile:
         path: /etc/resolv.conf
         regexp: "^nameserver"
@@ -39,12 +39,12 @@
 
 - hosts: db
   tasks:
-    - name: copy fixtures file
+    - name: Copy fixtures file
       copy:
         src: fixtures/mailserverdb.sql
         dest: /tmp
 
-    - name: import fixtures
+    - name: Import fixtures
       postgresql_db:
         name: mailserver
         state: restore

@@ -1,5 +1,5 @@
 ---
-- name: Install postgres packages
+- name: Install postgres package
   apt:
     name: postgresql
     state: present
@@ -10,12 +10,12 @@
     enabled: true
     state: started
 
-- name: Installing required Python pgsql module for Ansible to manage databases
+- name: Install required Python pgsql module for Ansible to manage databases
   apt:
     name: python-psycopg2
     state: present
 
-- name: creating SQL mail user (without password)
+- name: Create SQL mail user (without password)
   postgresql_user:
     name: mail
     state: present
@@ -23,7 +23,7 @@
   become_user: postgres
   when: (mailservers|length == 0)
 
-- name: creating SQL mail user (with password)
+- name: Create SQL mail user (with password)
   postgresql_user:
     name: mail
     password: "{{ispmail_mailserver_password}}"
@@ -32,7 +32,7 @@
   become_user: postgres
   when: (mailservers|length > 0)
 
-- name: creating mailserver SQL database
+- name: Create mailserver SQL database
   postgresql_db:
     name: mailserver
     encoding: UTF-8
@@ -43,7 +43,7 @@
   become: true
   become_user: postgres
 
-- name: creating SQL pgadmin user
+- name: Create SQL pgadmin user
   postgresql_user:
     name: pgadmin
     password: "{{ispmail_pgadmin_password}}"
@@ -53,7 +53,7 @@
   become: true
   become_user: postgres
 
-- name: Creating the postgres user map
+- name: Create the postgres user map
   blockinfile:
     dest: /etc/postgresql/9.6/main/pg_ident.conf
     marker: "### {mark} ANSIBLE MANAGED BLOCK : MAILMAP ###"
@@ -65,7 +65,7 @@
       mailmap         postgres                postgres
   notify: restart postgresql
 
-- name: Creating postgresql configuration files
+- name: Create postgresql configuration files
   template:
     dest: "/etc/postgresql/9.6/main/{{ item }}"
     src: "{{ item }}.j2"
@@ -77,12 +77,12 @@
     - postgresql.conf
   notify: restart postgresql
 
-- name: copying SQL database schema to server
+- name: Copy SQL database schema to server
   copy:
     src: schema.sql
     dest: /tmp
 
-# - name: setting up SQL schema of mailserver database
+# - name: Set up SQL schema of mailserver database
 #   postgresql_db:
 #    name: mailserver
 #    state: import
@@ -92,12 +92,12 @@
 
 # Ugly, not idempotent fix, to change
 
-- name: setting up SQL schema of mailserver database
+- name: Set up SQL schema of mailserver database
   shell: "psql mailserver < /tmp/schema.sql"
   become: true
   become_user: postgres
 
-- name: copying SQL test data to server
+- name: Copy SQL test data to server
   copy:
     src: test.sql
     dest: /tmp
@@ -105,7 +105,7 @@
   become: true
   become_user: postgres
 
-- name: populating the database with test data
+- name: Populate the database with test data
   postgresql_db:
     name: mailserver
     state: import
@@ -114,7 +114,7 @@
   become: true
   become_user: postgres
 
-- name: Giving pgadmin user some rights
+- name: Give pgadmin user some rights
   postgresql_privs:
     database: mailserver
     type: table
@@ -128,7 +128,7 @@
   become: true
   become_user: postgres
 
-- name: Giving mail user some rights
+- name: Give mail user some rights
   postgresql_privs:
     database: mailserver
     type: table
