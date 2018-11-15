@@ -1,5 +1,5 @@
 ---
-- name: install packages
+- name: Install packages
   apt:
     name:
       - dnsmasq
@@ -7,14 +7,14 @@
     state: present
     cache_valid_time: 3600
 
-- name: saves original resolv.conf
+- name: Save original resolv.conf
   copy:
     src: /etc/resolv.conf
     dest: /etc/real-resolvers.conf
     force: false
     remote_src: true
 
-- name: Put custom resolv.cong
+- name: Copy custom resolv.conf
   copy:
     src: resolv.conf
     dest: /etc/resolv.conf
