@@ -1,0 +1,14 @@
+---
+extends: default
+
+rules:
+  braces:
+    max-spaces-inside: 1
+    level: error
+  brackets:
+    max-spaces-inside: 1
+    level: error
+  line-length:  # 80 chars should be enough, but don't fail if a line is longer
+    max: 80
+    level: warning
+...
