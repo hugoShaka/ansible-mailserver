@@ -41,7 +41,7 @@
     dest: /etc/dovecot/conf.d/10-auth.conf
     regexp: '^auth_mechanisms ='
     line: 'auth_mechanisms = {{ispmail_dovecot_auth_mechanisms}}'
-    backrefs: yes
+    backrefs: true
   notify: restart dovecot
 
 - name: Disabling system authentication
@@ -49,7 +49,7 @@
     dest: /etc/dovecot/conf.d/10-auth.conf
     regexp: '^!include auth-system.conf.ext'
     line: '#!include auth-system.conf.ext'
-    backrefs: yes
+    backrefs: true
   notify: restart dovecot
 
 - name: Enabling SQL-based authentication
@@ -57,7 +57,7 @@
     dest: /etc/dovecot/conf.d/10-auth.conf
     regexp: '^\#!include auth-sql.conf.ext'
     line: '!include auth-sql.conf.ext'
-    backrefs: yes
+    backrefs: true
   notify: restart dovecot
 
 - name: Copying SQL authentication configuration (auth-sql.conf.ext)

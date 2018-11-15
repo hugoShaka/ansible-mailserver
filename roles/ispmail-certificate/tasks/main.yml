@@ -6,7 +6,7 @@
     owner: root
     group: root
     mode: 0775
-    recurse: yes
+    recurse: true
 
 - name: Create a self-signed certificate
   command: >

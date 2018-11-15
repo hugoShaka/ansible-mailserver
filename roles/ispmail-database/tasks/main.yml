@@ -7,7 +7,7 @@
 - name: Make sure postgresql server is started
   service:
     name: postgresql
-    enabled: yes
+    enabled: true
     state: started
 
 - name: Installing required Python pgsql module for Ansible to manage databases
