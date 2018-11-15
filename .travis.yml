@@ -1,43 +1,20 @@
 ---
-sudo: required
+services: docker
 
-services:
-  - docker
-
-before_install:
-  - sudo apt-get update -q
+language: python
+python:
+  - 3.6
+cache: pip
 
 install:
-  - docker pull ansiblecheck/ansiblecheck:debian-stretch
-  - container_id=$(mktemp)
-  - >
-      docker run --detach
-      --volume="${PWD}":/etc/ansible:ro
-      --privileged
-      --volume=/sys/fs/cgroup:/sys/fs/cgroup:ro
-      ansiblecheck/ansiblecheck:debian-stretch /lib/systemd/systemd
-      > "${container_id}"
+  - pip install -r molecule/requirements.txt
 
 script:
-  - >
-      docker exec
-      --env TERM=xterm --tty
-      "$(cat ${container_id})"
-      ansible-playbook /etc/ansible/test/test-docker.yml --syntax-check
-  - >
-      docker exec
-      "$(cat ${container_id})"
-      ansible-playbook /etc/ansible/test/test-docker.yml -v -l localhost
-
-after_script:
-  - >
-      docker exec
-      "$(cat ${container_id})"
-      ansible-playbook /etc/ansible/test/test-docker.yml -v -l localhost
-
+  - molecule test
 notifications:
   irc:
     channels:
       - "irc.rezosup.org#mailserver"
-    on_success: change # default: always
-    on_failure: always # default: always
+    on_success: change  # default: always
+    on_failure: always  # default: always
+...
