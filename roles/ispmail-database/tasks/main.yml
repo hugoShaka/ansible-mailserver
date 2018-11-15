@@ -26,7 +26,7 @@
 - name: Create SQL mail user (with password)
   postgresql_user:
     name: mail
-    password: "{{ispmail_mailserver_password}}"
+    password: "{{ ispmail_mailserver_password }}"
     state: present
   become: true
   become_user: postgres
@@ -46,7 +46,7 @@
 - name: Create SQL pgadmin user
   postgresql_user:
     name: pgadmin
-    password: "{{ispmail_pgadmin_password}}"
+    password: "{{ ispmail_pgadmin_password }}"
     state: present
     db: mailserver
     priv: ALL

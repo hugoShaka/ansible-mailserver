@@ -1,7 +1,7 @@
 ---
 - name: Create cert directory
   file:
-    path: "{{ispmail_certificate_directory}}"
+    path: "{{ ispmail_certificate_directory }}"
     state: directory
     owner: root
     group: root
@@ -15,14 +15,14 @@
       -days "{{ ispmail_certificate_days_valid }}"
       -nodes
       -subj "/C={{ ispmail_certificate_country }}/ST={{ ispmail_certificate_state }}/L={{ ispmail_certificate_city }}/O={{ ispmail_certificate_organisation }}/OU={{ ispmail_certificate_orgunit }}{% for domain in ispmail_certificate_domains %}/CN={{ domain }}{% endfor %}/emailAddress={{ ispmail_certificate_email }}"
-      -out "{{ispmail_certificate_location}}"
-      -keyout "{{ispmail_certificate_keyfile}}"
+      -out "{{ ispmail_certificate_location }}"
+      -keyout "{{ ispmail_certificate_keyfile }}"
   args:
-    creates: "{{ispmail_certificate_keyfile}}"
+    creates: "{{ ispmail_certificate_keyfile }}"
 
 - name: Restrict access permissions of the private key
   file:
-    path: "{{ispmail_certificate_keyfile}}"
+    path: "{{ ispmail_certificate_keyfile }}"
     mode: 0640
     group: root
     owner: root

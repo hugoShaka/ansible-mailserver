@@ -30,7 +30,7 @@
 
 - name: Grant user dovecot read permission on the private key
   acl:
-    path: "{{ispmail_certificate_keyfile}}"
+    path: "{{ ispmail_certificate_keyfile }}"
     entity: dovecot
     etype: user
     permissions: r
@@ -40,7 +40,7 @@
   lineinfile:
     dest: /etc/dovecot/conf.d/10-auth.conf
     regexp: '^auth_mechanisms ='
-    line: 'auth_mechanisms = {{ispmail_dovecot_auth_mechanisms}}'
+    line: 'auth_mechanisms = {{ ispmail_dovecot_auth_mechanisms }}'
     backrefs: true
   notify: restart dovecot
 
