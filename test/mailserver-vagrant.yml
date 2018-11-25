@@ -15,11 +15,15 @@
         backrefs: true
         regexp: '^(\S+\s+{{ point }}\s+\S+\s+)(?!(?:\S*,)?{{ opt }}(?:,\S*)?\s+)(\S+)(\s+.+)$'
         line: '\1{{ opt }},\2\3'
-      register: fstab
+      notify: remount
 
+  handlers:
     - name: 'If {{ point }} changed, remount'
       command: 'mount {{ point }} -o remount'
-      when: fstab.changed
+      listen: remount
+      args:
+        warn: false
+
   vars:
     opt: "acl"
     point: "/"
