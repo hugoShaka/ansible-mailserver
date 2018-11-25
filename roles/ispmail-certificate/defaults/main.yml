@@ -2,7 +2,7 @@
 ispmail_certificate_directory: /etc/letsencrypt/live/sub.domain.tld
 ispmail_certificate_location: /etc/letsencrypt/live/sub.domain.tld/fullchain.pem
 ispmail_certificate_keyfile: /etc/letsencrypt/live/sub.domain.tld/privkey.pem
-#ispmail_certificate_cafile: /etc/letsencrypt/live/sub.domain.tld/chain.pem
+# ispmail_certificate_cafile: /etc/letsencrypt/live/sub.domain.tld/chain.pem
 
 ispmail_certificate_country: DE
 ispmail_certificate_state: Hamburg
