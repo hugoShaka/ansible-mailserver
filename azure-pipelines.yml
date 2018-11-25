@@ -12,7 +12,7 @@ jobs:
       - script: |
           find . -type f -name '*.yml' | \
           grep -v 'venv' | \
-          xargs python3 -m yamllint
+          xargs python3 -m yamllint -c test/.yamllint.yml
         displayName: 'Lint yaml'
 
       - script: python3 -m ansiblelint test/mailserver-vagrant.yml
