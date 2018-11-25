@@ -21,8 +21,8 @@ install:
 script:
   - |
     docker exec \
-      --tty "$(cat ${container_id})" \
-      --env TERM=xterm \
+      --env TERM=xterm --tty \
+      "$(cat ${container_id})" \
       ansible-playbook /etc/ansible/test/test-docker.yml --syntax-check
   - |
     docker exec \
