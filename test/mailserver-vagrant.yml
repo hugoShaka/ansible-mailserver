@@ -2,7 +2,7 @@
 # Requires Ansible >= 1.9
 - hosts: all
   tasks:
-    - name: install acl
+    - name: Install acl
       apt:
         name: acl
         state: present
@@ -11,8 +11,8 @@
     - name: '/etc/fstab: Set opt "{{ opt }}" for mount point {{ point }}'
       lineinfile:
         path: /etc/fstab
-        backup: yes
-        backrefs: yes
+        backup: true
+        backrefs: true
         regexp: '^(\S+\s+{{ point }}\s+\S+\s+)(?!(?:\S*,)?{{ opt }}(?:,\S*)?\s+)(\S+)(\s+.+)$'
         line: '\1{{ opt }},\2\3'
       register: fstab

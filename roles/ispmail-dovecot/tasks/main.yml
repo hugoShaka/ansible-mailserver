@@ -30,7 +30,7 @@
 
 - name: Grant user dovecot read permission on the private key
   acl:
-    path: "{{ispmail_certificate_keyfile}}"
+    path: "{{ ispmail_certificate_keyfile }}"
     entity: dovecot
     etype: user
     permissions: r
@@ -40,57 +40,57 @@
   lineinfile:
     dest: /etc/dovecot/conf.d/10-auth.conf
     regexp: '^auth_mechanisms ='
-    line: 'auth_mechanisms = {{ispmail_dovecot_auth_mechanisms}}'
-    backrefs: yes
+    line: 'auth_mechanisms = {{ ispmail_dovecot_auth_mechanisms }}'
+    backrefs: true
   notify: restart dovecot
 
-- name: Disabling system authentication
+- name: Disable system authentication
   lineinfile:
     dest: /etc/dovecot/conf.d/10-auth.conf
     regexp: '^!include auth-system.conf.ext'
     line: '#!include auth-system.conf.ext'
-    backrefs: yes
+    backrefs: true
   notify: restart dovecot
 
-- name: Enabling SQL-based authentication
+- name: Enable SQL-based authentication
   lineinfile:
     dest: /etc/dovecot/conf.d/10-auth.conf
     regexp: '^\#!include auth-sql.conf.ext'
     line: '!include auth-sql.conf.ext'
-    backrefs: yes
+    backrefs: true
   notify: restart dovecot
 
-- name: Copying SQL authentication configuration (auth-sql.conf.ext)
+- name: Copy SQL authentication configuration (auth-sql.conf.ext)
   template:
     src: auth-sql.conf.ext.j2
     dest: /etc/dovecot/conf.d/auth-sql.conf.ext
   notify: restart dovecot
 
-- name: Copying mailbox and namespace configuration (10-mail.conf)
+- name: Copy mailbox and namespace configuration (10-mail.conf)
   copy:
     src: 10-mail.conf
     dest: /etc/dovecot/conf.d/10-mail.conf
   notify: restart dovecot
 
-- name: Copying service configuration (10-master.conf)
+- name: Copy service configuration (10-master.conf)
   copy:
     src: 10-master.conf
     dest: /etc/dovecot/conf.d/10-master.conf
   notify: restart dovecot
 
-- name: Copying SSL configuration (10-ssl.conf)
+- name: Copy SSL configuration (10-ssl.conf)
   template:
     src: 10-ssl.conf.j2
     dest: /etc/dovecot/conf.d/10-ssl.conf
   notify: restart dovecot
 
-- name: Copying LMTP configuration (20-lmtp.conf - enable sieve plugin)
+- name: Copy LMTP configuration (20-lmtp.conf - enable sieve plugin)
   copy:
     src: 20-lmtp.conf
     dest: /etc/dovecot/conf.d/20-lmtp.conf
   notify: restart dovecot
 
-- name: Copying mailboxes configuration (15-mailboxes.conf - autocreate folders)
+- name: Copy mailboxes configuration (15-mailboxes.conf - autocreate folders)
   copy:
     src: 15-mailboxes.conf
     dest: /etc/dovecot/conf.d/15-mailboxes.conf
@@ -114,7 +114,8 @@
       value: "yes"
   when: ispmail_debug
 
-- name: Generating SQL access configuration for each database (<database>-sql.conf)
+- name: Generate SQL access configuration for each database (<database>-sql.conf)
+
   template:
     src: dovecot-sql.conf.ext.j2
     dest: /etc/dovecot/{{ item.name }}-sql.conf
@@ -122,14 +123,14 @@
   loop: "{{ ispmail_dovecot_databases }}"
   notify: restart dovecot
 
-- name: Fixing ownership and mode of dovecot.conf
+- name: Fix ownership and mode of dovecot.conf
   file:
     path: /etc/dovecot/dovecot.conf
     group: vmail
     mode: 0644
   notify: restart dovecot
 
-- name: Fixing ownership and mode of dovecot-sql.conf.ext
+- name: Fix ownership and mode of dovecot-sql.conf.ext
   file:
     path: /etc/dovecot/dovecot-sql.conf.ext
     owner: root
@@ -148,7 +149,7 @@
     dest: /etc/dovecot/sieve-after/spam-to-folder.sieve
   notify: recompile sieve script
 
-- name: Copying Sieve plugin configuration (90-sieve.conf)
+- name: Copy Sieve plugin configuration (90-sieve.conf)
   copy:
     src: 90-sieve.conf
     dest: /etc/dovecot/conf.d/90-sieve.conf
