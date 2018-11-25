@@ -96,6 +96,24 @@
     dest: /etc/dovecot/conf.d/15-mailboxes.conf
   notify: restart dovecot
 
+- name: Enable dovecot debug mode
+  ini_file:
+    path: /etc/dovecot/conf.d/10-logging.conf
+    section:
+    option: "{{ item.option }}"
+    value: "{{ item.value }}"
+    state: present
+  loop:
+    - option: debug_log_path
+      value: /var/log/mail.debug
+    - option: auth_verbose
+      value: "yes"
+    - option: auth_debug
+      value: "yes"
+    - option: mail_debug
+      value: "yes"
+  when: ispmail_debug
+
 - name: Generating SQL access configuration for each database (<database>-sql.conf)
   template:
     src: dovecot-sql.conf.ext.j2
