@@ -7,3 +7,4 @@ log
 *junit-report.xml
 __pycache__
 credentials
+docs/_build
