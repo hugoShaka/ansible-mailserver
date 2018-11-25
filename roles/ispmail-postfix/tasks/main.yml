@@ -1,5 +1,5 @@
 ---
-- name: purge Exim installation
+- name: Purge Exim installation
   apt:
     name:
       - exim4
@@ -7,7 +7,7 @@
       - exim4-config
       - exim4-daemon-light
     state: absent
-    purge: yes
+    purge: true
 
 - name: Install postfix packages
   apt:
@@ -16,7 +16,7 @@
       - postfix-pgsql
     state: present
 
-- name: "Grant user postfix read permission on the private key"
+- name: Grant user postfix read permission on the private key
   acl:
     path: "{{ ispmail_certificate_keyfile }}"
     entity: postfix
@@ -24,7 +24,7 @@
     permissions: r
     state: present
 
-- name: define Postfix sender login mapping
+- name: Define Postfix sender login mapping
   template:
     src: "{{ item }}.j2"
     dest: "/etc/postfix/{{ item }}"
