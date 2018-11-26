@@ -4,16 +4,25 @@ jobs:
     pool:
       vmImage: 'Ubuntu 16.04'
     steps:
-      - script: |
-          pip3 install setuptools wheel
-          pip3 install ansible-lint yamllint
+
+      - task: Bash@3
         displayName: 'Install linters'
+        inputs:
+          targetType: 'inline'
+          script: |
+            pip3 install setuptools wheel
+            pip3 install ansible-lint yamllint
 
-      - script: |
-          find . -type f -name '*.yml' | \
-          grep -v 'venv' | \
-          xargs python3 -m yamllint -c test/.yamllint.yml
+      - task: Bash@3
         displayName: 'Lint yaml'
+        inputs:
+          targetType: 'inline'
+          script: >
+            find . -type f -name '*.yml' |
+            xargs python3 -m yamllint -c test/.yamllint.yml
 
-      - script: python3 -m ansiblelint test/mailserver-vagrant.yml
+      - task: Bash@3
         displayName: 'Lint ansible'
+        inputs:
+          targetType: 'inline'
+          script: python3 -m ansiblelint test/mailserver-vagrant.yml
