@@ -3,5 +3,5 @@ ispmail_populate_test_data: false
 ispmail_mailserver_password: ChangeMe
 ispmail_pgadmin_password: ChangeMeAlso
 
-ispmail_database_allow_local: True
+ispmail_database_allow_local: true
 mailservers: []

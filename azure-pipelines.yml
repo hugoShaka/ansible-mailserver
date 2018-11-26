@@ -1,16 +1,28 @@
-# Starter pipeline
-# Start with a minimal pipeline that you can customize to build and deploy your code.
-# Add steps that build, run tests, deploy, and more:
-# https://aka.ms/yaml
+---
+jobs:
+  - job: Lint
+    pool:
+      vmImage: 'Ubuntu 16.04'
+    steps:
 
-pool:
-  vmImage: 'Ubuntu 16.04'
+      - task: Bash@3
+        displayName: 'Install linters'
+        inputs:
+          targetType: 'inline'
+          script: |
+            pip3 install setuptools wheel
+            pip3 install ansible-lint yamllint
 
-steps:
-- script: echo Hello, world!
-  displayName: 'Run a one-line script'
+      - task: Bash@3
+        displayName: 'Lint yaml'
+        inputs:
+          targetType: 'inline'
+          script: >
+            find . -type f -name '*.yml' |
+            xargs python3 -m yamllint -c test/.yamllint.yml
 
-- script: |
-    echo Add other tasks to build, test, and deploy your project.
-    echo See https://aka.ms/yaml
-  displayName: 'Run a multi-line script'
+      - task: Bash@3
+        displayName: 'Lint ansible'
+        inputs:
+          targetType: 'inline'
+          script: python3 -m ansiblelint test/mailserver-vagrant.yml
