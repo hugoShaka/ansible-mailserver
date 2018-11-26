@@ -10,27 +10,27 @@ before_install:
 install:
   - docker pull ansiblecheck/ansiblecheck:debian-stretch
   - container_id=$(mktemp)
-  - |
-    docker run --detach \
-      --volume="${PWD}":/etc/ansible:ro \
-      --privileged \
-      --volume=/sys/fs/cgroup:/sys/fs/cgroup:ro \
-      ansiblecheck/ansiblecheck:debian-stretch /lib/systemd/systemd \
+  - >
+    docker run --detach
+      --volume="${PWD}":/etc/ansible:ro
+      --privileged
+      --volume=/sys/fs/cgroup:/sys/fs/cgroup:ro
+      ansiblecheck/ansiblecheck:debian-stretch /lib/systemd/systemd
     > "${container_id}"
 
 script:
-  - |
-    docker exec \
-      --env TERM=xterm --tty \
-      "$(cat ${container_id})" \
+  - >
+    docker exec
+      --env TERM=xterm --tty
+      "$(cat ${container_id})"
       ansible-playbook /etc/ansible/test/test-docker.yml --syntax-check
-  - |
-    docker exec \
-      "$(cat ${container_id})" \
+  - >
+    docker exec
+      "$(cat ${container_id})"
       ansible-playbook /etc/ansible/test/test-docker.yml -v -l localhost
 
 after_script:
-  - |
-    docker exec \
-      "$(cat ${container_id})" \
+  - >
+    docker exec
+      "$(cat ${container_id})"
       ansible-playbook /etc/ansible/test/test-docker.yml -v -l localhost
