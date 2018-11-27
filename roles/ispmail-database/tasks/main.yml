@@ -15,6 +15,19 @@
     enabled: true
     state: started
 
+- name: Install required Python pgsql module for Ansible to manage databases
+  apt:
+    name: python-psycopg2
+    state: present
+
+- name: Wait for postgresql to be ready
+  command: /usr/bin/pg_isready
+  register: pgready
+  until: pgready.rc == 0
+  retries: 30
+  delay: 10
+  changed_when: false
+
 - name: Create SQL mail user (without password)
   postgresql_user:
     name: mail

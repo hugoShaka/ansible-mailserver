@@ -31,4 +31,4 @@ jobs:
           targetType: 'inline'
           script: |
             export PATH=$HOME/.local/bin:$PATH
-            molecule --debug check
+            molecule check
