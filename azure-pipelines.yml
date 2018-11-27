@@ -19,7 +19,7 @@ jobs:
           targetType: 'inline'
           script: >
             find . -type f -name '*.yml' |
-            xargs python3 -m yamllint -c test/.yamllint.yml
+            xargs python3 -m yamllint -c molecule/yamllint.yml
 
       - task: Bash@3
         displayName: 'Lint ansible'
