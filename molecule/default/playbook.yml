@@ -25,7 +25,8 @@
         name: postgresql
         state: restarted
 
-- hosts: mta
+- name: Deploy mail transfer agent
+  hosts: mta
   roles:
     - ispmail-certificate
     - ispmail-postfix
@@ -33,7 +34,8 @@
     - postfix
     - mta
 
-- hosts: mda
+- name: Deploy mail delivery agent
+  hosts: mda
   roles:
     - ispmail-certificate
     - ispmail-dovecot
@@ -41,7 +43,8 @@
     - dovecot
     - mda
 
-# - hosts: ns
+# - name: Deploy name server
+#   hosts: ns
 #   roles:
 #     - mailtester-dnsmasq
 #   tags:
