@@ -13,7 +13,8 @@
         path: /etc/fstab
         backup: true
         backrefs: true
-        regexp: ^(\S+\s+{{ point }}\s+\S+\s+)(?!(?:\S*,)?{{ opt }}(?:,\S*)?\s+)(\S+)(\s+.+)$
+        regexp: "^(\\S+\\s+{{ point }}\\s+\\S+\\s+)(?!(?:\\S*,)?{{ opt }}\
+          (?:,\\S*)?\\s+)(\\S+)(\\s+.+)$"
         line: \1{{ opt }},\2\3
       register: fstab
 
