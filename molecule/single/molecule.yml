@@ -19,27 +19,10 @@ platforms:
     networks:
       - name: external
 
-  - name: south
-    groups:
-      - mta
-      - mda
-    image: minimum2scp/systemd-stretch
-    privileged: true
-    command: /sbin/init
-    networks:
-      - name: external
-
   - name: ns
     image: hugoshaka/dnsmasq-ansible-mailserver
     privileged: true
     command: --conf-file=/etc/dnsmasq.conf
-    networks:
-      - name: external
-
-  - name: client
-    image: minimum2scp/systemd-stretch
-    privileged: true
-    command: /sbin/init
     networks:
       - name: external
 
@@ -53,7 +36,7 @@ provisioner:
   lint:
     name: ansible-lint
 scenario:
-  name: default
+  name: single
 verifier:
   name: testinfra
   lint:
