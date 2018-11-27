@@ -39,6 +39,8 @@
   roles:
     - ispmail-certificate
     - ispmail-dovecot
+  vars:
+    ispmail_debug: true
   tags:
     - dovecot
     - mda
