@@ -1,0 +1,5 @@
+FROM andyshinn/dnsmasq:2.75
+
+RUN mkdir /var/dns-hosts
+
+ADD dnsmasq.conf /etc/dnsmasq.conf

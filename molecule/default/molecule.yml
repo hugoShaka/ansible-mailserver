@@ -16,6 +16,8 @@ platforms:
     image: minimum2scp/systemd-stretch
     privileged: true
     command: /sbin/init
+    networks:
+      - name: external
 
   - name: south
     groups:
@@ -24,16 +26,22 @@ platforms:
     image: minimum2scp/systemd-stretch
     privileged: true
     command: /sbin/init
+    networks:
+      - name: external
 
   - name: ns
-    image: minimum2scp/systemd-stretch
+    image: hugoshaka/dnsmasq-asnible-mailserver
     privileged: true
-    command: /sbin/init
+    command: --conf-file=/etc/dnsmasq.conf
+    networks:
+      - name: external
 
   - name: client
     image: minimum2scp/systemd-stretch
     privileged: true
     command: /sbin/init
+    networks:
+      - name: external
 
 provisioner:
   name: ansible
