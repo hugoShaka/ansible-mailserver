@@ -36,12 +36,12 @@ platforms:
     networks:
       - name: external
 
-  - name: client
-    image: minimum2scp/systemd-stretch
-    privileged: true
-    command: /sbin/init
-    networks:
-      - name: external
+# - name: client
+#   image: minimum2scp/systemd-stretch
+#   privileged: true
+#   command: /sbin/init
+#   networks:
+#     - name: external
 
 provisioner:
   name: ansible
