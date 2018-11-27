@@ -1,4 +1,5 @@
 ---
+# yamllint disable rule:line-length
 - name: Create
   hosts: localhost
   connection: local
@@ -133,3 +134,4 @@
       until: docker_jobs.finished
       retries: 300
       with_items: "{{ server.results }}"
+# yamllint enable rule:line-length
