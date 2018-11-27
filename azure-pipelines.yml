@@ -1,6 +1,39 @@
 ---
 jobs:
-  - job: Lint
+  - job: Single
+    pool:
+      vmImage: 'Ubuntu 16.04'
+    steps:
+
+      - task: UsePythonVersion@0
+        inputs:
+          versionSpec: '3.6'
+
+      - task: Bash@3
+        displayName: 'Install ansible and molecule'
+        inputs:
+          targetType: 'inline'
+          script: |
+            pip3 install --user setuptools wheel
+            pip3 install --user ansible-lint molecule docker-py
+
+      - task: Bash@3
+        displayName: 'Lint'
+        inputs:
+          targetType: 'inline'
+          script: |
+            export PATH=$HOME/.local/bin:$PATH
+            molecule lint
+
+      - task: Bash@3
+        displayName: 'Molecule check'
+        inputs:
+          targetType: 'inline'
+          script: |
+            export PATH=$HOME/.local/bin:$PATH
+            molecule check -s single
+
+  - job: Double
     pool:
       vmImage: 'Ubuntu 16.04'
     steps:

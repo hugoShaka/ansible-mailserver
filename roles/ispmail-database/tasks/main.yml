@@ -8,10 +8,12 @@
   register: apt_result
   until: apt_result is succeeded
   retries: 3
+  environment:
+    RUNLEVEL: 1
 
 - name: Make sure postgresql server is started
   service:
-    name: postgresql
+    name: postgresql@9.6-main
     enabled: true
     state: started
 
@@ -24,8 +26,8 @@
   command: /usr/bin/pg_isready
   register: pgready
   until: pgready.rc == 0
-  retries: 30
-  delay: 10
+  retries: 10
+  delay: 5
   changed_when: false
 
 - name: Create SQL mail user (without password)
