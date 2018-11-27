@@ -1,6 +1,6 @@
 ---
 - name: Prepare
-  hosts: all
+  hosts: all:!ns
   tasks:
     - name: install acl
       apt:

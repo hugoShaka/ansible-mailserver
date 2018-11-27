@@ -30,7 +30,7 @@ platforms:
       - name: external
 
   - name: ns
-    image: hugoshaka/dnsmasq-asnible-mailserver
+    image: hugoshaka/dnsmasq-ansible-mailserver
     privileged: true
     command: --conf-file=/etc/dnsmasq.conf
     networks:
