@@ -19,7 +19,9 @@
         target: /tmp/mailserverdb.sql
       become: true
       become_user: postgres
+      notify: Restart postgres
 
+  handlers:
     - name: Restart postgres
       service:
         name: postgresql
