@@ -15,7 +15,7 @@ jobs:
           targetType: 'inline'
           script: |
             pip3 install --user setuptools wheel
-            pip3 install --user ansible-lint molecule docker-py
+            pip3 install --user -r molecule/requirements.txt
 
       - task: Bash@3
         displayName: 'Lint'
@@ -26,12 +26,12 @@ jobs:
             molecule lint
 
       - task: Bash@3
-        displayName: 'Molecule check'
+        displayName: 'Molecule test'
         inputs:
           targetType: 'inline'
           script: |
             export PATH=$HOME/.local/bin:$PATH
-            molecule check -s single
+            molecule test -s single
 
   - job: Double
     pool:
@@ -48,7 +48,7 @@ jobs:
           targetType: 'inline'
           script: |
             pip3 install --user setuptools wheel
-            pip3 install --user ansible-lint molecule docker-py
+            pip3 install --user -r molecule/requirements.txt
 
       - task: Bash@3
         displayName: 'Lint'
@@ -59,9 +59,9 @@ jobs:
             molecule lint
 
       - task: Bash@3
-        displayName: 'Molecule check'
+        displayName: 'Molecule test'
         inputs:
           targetType: 'inline'
           script: |
             export PATH=$HOME/.local/bin:$PATH
-            molecule check
+            molecule test
