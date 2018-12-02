@@ -3,6 +3,9 @@ Postfix
 
 **Role Variables:**
 
+.. include:: ../roles/ispmail-postfix/defaults/main.yml
+   :literal:
+
 Postscreen
 ----------
 
