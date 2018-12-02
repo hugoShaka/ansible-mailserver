@@ -54,24 +54,22 @@ def login(user, password="test", *, conn=None, server=None):
     result = conn.login(user, password)
     return result.decode("utf-8"), conn
 
+
 def login_error_code(user, **kwargs):
     with pytest.raises(Exception) as excinfo:
         _, _ = login(user, **kwargs)
     print(excinfo)
     print(excinfo.value)
-    return excinfo.value.args[0].split(' ')[0][3:-1]
+    return excinfo.value.args[0].split(" ")[0][3:-1]
+
 
 @pytest.mark.parametrize(
-    "user",
-    [
-        ("sidious@sith.local"),
-        ("obiwan@jedi.local"),
-        ("vader@sith.local"),
-    ],
+    "user", [("maul@sith.local"), ("obiwan@jedi.local"), ("padme@jedi.local")]
 )
-def test_login(user, server):
+def test_login(user, server, populate_db):
     """We check if legitimate users can log in"""
-    assert login(user, server=server)[0] == 'Logged in'
+    assert login(user, server=server)[0] == "Logged in"
+
 
 @pytest.mark.parametrize(
     "user, password",
@@ -83,20 +81,25 @@ def test_login(user, server):
 )
 def test_invalid_credentials(user, password, server, populate_db):
     """Users with invalid credentials should not be able to log in"""
-    assert login_error_code(user, password=password, server=server) == 'AUTHENTICATIONFAILED'
+    assert (
+        login_error_code(user, password=password, server=server)
+        == "AUTHENTICATIONFAILED"
+    )
+
 
 def test_no_tls(server, populate_db):
     """No login should be possible over non-TLS"""
     conn = imapclient.IMAPClient(server, 143, ssl=False)
-    assert login_error_code("obiwan@jedi.local", conn=conn) == 'PRIVACYREQUIRED'
+    assert login_error_code("obiwan@jedi.local", conn=conn) == "PRIVACYREQUIRED"
+
 
 def test_read_email(populate_mailbox, server):
     """Reads fixture emails and recover content"""
     _, conn = login("padme@jedi.local", server=server)
     folder, flag = populate_mailbox
     conn.select_folder(folder)
-    messages_ids = conn.search('ALL')
+    messages_ids = conn.search("ALL")
     assert len(messages_ids) == 3
-    messages = conn.fetch(messages_ids, 'RFC822')
-    message_content = messages[messages_ids[0]][b'RFC822'].decode('utf-8')
+    messages = conn.fetch(messages_ids, "RFC822")
+    message_content = messages[messages_ids[0]][b"RFC822"].decode("utf-8")
     assert message_content == flag
