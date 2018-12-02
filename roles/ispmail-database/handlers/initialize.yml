@@ -26,6 +26,21 @@
   become: true
   become_user: postgres
 
+  # This line is mandatory in order for pgadmin to be able to use the SERIALs
+- name: Give pgadmin rights on the mail db serials
+  postgresql_privs:
+    database: mailserver
+    type: sequence
+    objs: "{{ item }}"
+    roles: pgadmin
+    privs: SELECT,USAGE
+  with_items:
+    - virtual_domains_id_seq
+    - virtual_aliases_id_seq
+    - virtual_users_id_seq
+  become: true
+  become_user: postgres
+
 - name: Give mail user rights on the mail db
   postgresql_privs:
     database: mailserver
