@@ -1,7 +1,8 @@
 CREATE TABLE IF NOT EXISTS virtual_domains (
   id SERIAL,
   name varchar(50) NOT NULL,
-  PRIMARY KEY (id)
+  PRIMARY KEY (id),
+  UNIQUE (name)
 );
 
 CREATE TABLE IF NOT EXISTS virtual_users (
