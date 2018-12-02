@@ -3,6 +3,9 @@ Certificates
 
 **Role Variables**
 
+.. include:: ../roles/ispmail-certificate/defaults/main.yml
+   :literal:
+
 Public cert
 -----------
 
