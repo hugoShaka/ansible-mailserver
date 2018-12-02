@@ -25,7 +25,7 @@ local   mailserver      all             peer                    map=mailmap
 host    mailserver      mail            {{ mailserver.ip }}/32            md5
 {% endfor %}
 # Distant connection for admin
-host    mailserver      pgadmin         127.0.0.1/32            md5
+host    mailserver      pgadmin         {{ ispmail_pgadmin_ip_range }}            md5
 # IPv4 local connections:
 host    all             all             127.0.0.1/32            md5
 # IPv6 local connections:
