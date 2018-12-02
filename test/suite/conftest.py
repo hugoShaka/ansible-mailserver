@@ -8,4 +8,4 @@ def pytest_generate_tests(metafunc):
     # if the argument is specified in the list of test "fixturenames".
     option_value = metafunc.config.option.server
     if 'server' in metafunc.fixturenames and option_value is not None:
-        metafunc.parametrize("server", [option_value])
+        metafunc.parametrize("server", [option_value], scope='session')
