@@ -33,6 +33,10 @@ provisioner:
   inventory:
     links:
       group_vars: ../../group_vars
+  playbooks:
+    create: ../create.yml
+    converge: ../playbook.yml
+    prepare: ../prepare.yml
   lint:
     name: ansible-lint
 scenario:
