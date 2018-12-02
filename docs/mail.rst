@@ -37,6 +37,15 @@ storing mail into the recipient's environment (typically a mailbox).
 
 Mail User Agent
 ^^^^^^^^^^^^^^^
+In Internet, an email client, email reader or more formally mail user agent
+(MUA) is a computer program in the category of groupware environments used to
+access and manage a user's email.
+
+Client is meant to be a role. For example, a web application which provides
+message management, composition, and reception functions may internally act as
+an email client; as a whole, it is commonly referred to as webmail. Likewise,
+email client may refer to a piece of computer hardware or software whose
+primary or most visible role is to work as an email client.  [Wikipedia_MUA]_
 
 Protocols
 ---------
@@ -73,3 +82,7 @@ DMARC
 .. [Wikipedia_MDA] Mail delivery agent,
   https://en.wikipedia.org/w/index.php?title=Mail_delivery_agent&oldid=860431679
   (last visited Nov. 13, 2018). 
+
+.. [Wikipedia_MUA] Email client,
+  https://en.wikipedia.org/w/index.php?title=Email_client&oldid=869783973 
+  (last visited Dec. 2, 2018).
