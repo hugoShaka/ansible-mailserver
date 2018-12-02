@@ -13,6 +13,7 @@ platforms:
       - mta
       - mda
       - db
+      - test
     image: minimum2scp/systemd-stretch
     privileged: true
     command: /sbin/init
