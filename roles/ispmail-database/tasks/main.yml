@@ -57,6 +57,7 @@
     owner: mail
   become: true
   become_user: postgres
+  notify: initialize database
 
 - name: Create SQL pgadmin user
   postgresql_user:
@@ -91,44 +92,3 @@
     - pg_hba.conf
     - postgresql.conf
   notify: restart postgresql
-
-- name: Copy SQL database schema to server
-  copy:
-    src: schema.sql
-    dest: /tmp
-
-- name: Set up SQL schema of mailserver database
-  postgresql_db:
-    name: mailserver
-    state: restore
-    target: /tmp/schema.sql
-  become: true
-  become_user: postgres
-
-- name: Give pgadmin user some rights
-  postgresql_privs:
-    database: mailserver
-    type: table
-    objs: "{{ item }}"
-    roles: pgadmin
-    privs: SELECT,INSERT,UPDATE,DELETE
-  with_items:
-    - virtual_domains
-    - virtual_aliases
-    - virtual_users
-  become: true
-  become_user: postgres
-
-- name: Give mail user some rights
-  postgresql_privs:
-    database: mailserver
-    type: table
-    objs: "{{ item }}"
-    roles: mail
-    privs: SELECT,INSERT,UPDATE,DELETE
-  with_items:
-    - virtual_domains
-    - virtual_aliases
-    - virtual_users
-  become: true
-  become_user: postgres
