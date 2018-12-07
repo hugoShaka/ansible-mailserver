@@ -1,7 +1,7 @@
 ---
 ispmail_populate_test_data: false
-ispmail_mailserver_password: ChangeMe
-ispmail_pgadmin_password: ChangeMeAlso
+ispmail_mailserver_password: "{{ lookup('password', 'credentials/mailserver_password length=15') }}"
+ispmail_pgadmin_password: "{{ lookup('password', 'credentials/pgadmin_password length=15') }}"
 ispmail_pgadmin_ip_range: '127.0.0.1/32'
 
 ispmail_database_allow_local: true
