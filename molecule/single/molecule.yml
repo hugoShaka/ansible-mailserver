@@ -44,6 +44,9 @@ scenario:
   name: single
 verifier:
   name: testinfra
+  directory: ../../test/suite/
   lint:
     name: flake8
+    options:
+      max-line-length: 88
 ...
