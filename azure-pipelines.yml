@@ -33,6 +33,12 @@ jobs:
             export PATH=$HOME/.local/bin:$PATH
             molecule test -s single
 
+      - task: PublishTestResults@2
+        inputs:
+          testResultsFormat: 'JUnit'
+          testResultsFiles: './molecule/single/junit-report.xml'
+          testRunTitle: 'Single server'
+
   - job: Double
     pool:
       vmImage: 'Ubuntu 16.04'

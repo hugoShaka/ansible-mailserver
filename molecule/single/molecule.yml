@@ -45,6 +45,8 @@ scenario:
 verifier:
   name: testinfra
   directory: ../../test/suite/
+  options:
+    junit-xml: junit-report.xml
   lint:
     name: flake8
     options:
