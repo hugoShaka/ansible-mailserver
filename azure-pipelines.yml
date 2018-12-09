@@ -31,6 +31,7 @@ jobs:
           targetType: 'inline'
           script: |
             export PATH=$HOME/.local/bin:$PATH
+            export ANSIBLE_FORCE_COLOR="True"
             molecule test -s single
 
       - task: PublishTestResults@2
@@ -70,4 +71,5 @@ jobs:
           targetType: 'inline'
           script: |
             export PATH=$HOME/.local/bin:$PATH
+            export ANSIBLE_FORCE_COLOR="True"
             molecule test
