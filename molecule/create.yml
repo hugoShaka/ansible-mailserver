@@ -94,6 +94,12 @@
       retries: 300
       with_items: "{{ dnsserver.results }}"
 
+    - name: Add DNS container to inventory
+      add_host:
+        name: ns
+        ansible_connection: docker
+      changed_when: false
+
     - name: Recover internal_dns_ip (from ns container)
       set_fact:
         internal_dns_ip: "{{ dnsdocker_jobs.results[0].ansible_facts.docker_container.NetworkSettings.Networks.external.IPAddress }}"
@@ -134,4 +140,27 @@
       until: docker_jobs.finished
       retries: 300
       with_items: "{{ server.results }}"
+
+    - name: Print docker_jobs (debug only)
+      debug:
+        var: docker_jobs
+        verbosity: 2
+
+    - name: Add mail.not.local DNS entry
+      lineinfile:
+        line: "{{ item.ansible_facts.docker_container.NetworkSettings.Networks.external.Gateway }}   mail.not.local"
+        state: present
+        path: /var/dns-hosts/molecule
+        create: true
+      loop: "{{docker_jobs.results}}"
+      delegate_to: ns
+
+    - name: Add per-container DNS entry
+      lineinfile:
+        line: "{{ item.ansible_facts.docker_container.NetworkSettings.Networks.external.IPAddress }}   {{ item.ansible_facts.docker_container.Config.Hostname }}.mail.local"
+        state: present
+        path: /var/dns-hosts/molecule
+        create: true
+      loop: "{{docker_jobs.results}}"
+      delegate_to: ns
 # yamllint enable rule:line-length
