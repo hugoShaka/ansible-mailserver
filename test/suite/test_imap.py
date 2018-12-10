@@ -4,10 +4,10 @@ import pytest
 import uuid
 
 import tools
+from tools import server_address  # noqa: F401
 
 
-# TODO(shaka) put this in a file shared between tests
-@pytest.fixture(scope="session")
+@pytest.fixture(scope="session")  # noqa: F811
 def server(server_address):
     """Add fixtures into the database before teesting"""
 
