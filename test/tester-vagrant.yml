@@ -18,6 +18,8 @@
           - bpython
           - pytest
           - imapclient
+          - psycopg2-binary
+          - dnspython
         executable: pip3
 
     - name: Copy test suite
@@ -36,26 +38,6 @@
         path: /etc/resolv.conf
         regexp: "^nameserver"
         line: "nameserver 10.0.0.50"
-
-- hosts: db
-  tasks:
-    - name: Copy fixtures file
-      copy:
-        src: fixtures/mailserverdb.sql
-        dest: /tmp
-
-    - name: Import fixtures
-      postgresql_db:
-        name: mailserver
-        state: restore
-        target: /tmp/mailserverdb.sql
-      become: true
-      become_user: postgres
-
-    - name: Restart postgres
-      service:
-        name: postgresql
-        state: restarted
 
 - hosts: mta
   tasks:
