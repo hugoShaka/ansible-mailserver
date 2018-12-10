@@ -13,6 +13,7 @@ platforms:
       - mta
       - mda
       - db
+      - test
     image: minimum2scp/systemd-stretch
     privileged: true
     command: /sbin/init
@@ -23,6 +24,7 @@ platforms:
     groups:
       - mta
       - mda
+      - test
     image: minimum2scp/systemd-stretch
     privileged: true
     command: /sbin/init
@@ -33,13 +35,6 @@ platforms:
     image: hugoshaka/dnsmasq-ansible-mailserver
     privileged: true
     command: --conf-file=/etc/dnsmasq.conf
-    networks:
-      - name: external
-
-  - name: client
-    image: minimum2scp/systemd-stretch
-    privileged: true
-    command: /sbin/init
     networks:
       - name: external
 
@@ -60,6 +55,11 @@ scenario:
   name: default
 verifier:
   name: testinfra
+  directory: ../../test/suite/
+  options:
+    junit-xml: junit-report.xml
   lint:
     name: flake8
+    options:
+      max-line-length: 88
 ...
