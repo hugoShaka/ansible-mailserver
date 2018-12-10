@@ -1,6 +1,5 @@
 import dns.resolver
 import os
-import testinfra.utils.ansible_runner
 
 # pytest configuration file
 
@@ -14,6 +13,7 @@ def pytest_generate_tests(metafunc):
     # if the argument is specified in the list of test "fixturenames".
 
     if "MOLECULE_INVENTORY_FILE" in os.environ:
+        import testinfra.utils.ansible_runner
         inventory = testinfra.utils.ansible_runner.AnsibleRunner(
             os.environ["MOLECULE_INVENTORY_FILE"]
         )
@@ -30,4 +30,4 @@ def pytest_generate_tests(metafunc):
     else:
         option_value = metafunc.config.option.server
         if "server" in metafunc.fixturenames and option_value is not None:
-            metafunc.parametrize("server", [option_value], scope="session")
+            metafunc.parametrize("server_address", [option_value], scope="session")
