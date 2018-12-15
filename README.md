@@ -4,7 +4,7 @@ This repository contains a playbook and roles that you can use to set up your
 own Debian-based mail server. Behind the scene, it makes use of postfix,
  dovecot, postgresql.
 
-This is a modified version of the original repo :
+This is a modified version of the original repo:
 (https://git.workaround.org/chaas/ansible-ispmail-jessie/)
 
 Modifications include:
@@ -30,11 +30,11 @@ Modifications include:
 * `cd ansible-mailserver`
 * *If you want to use a virtual environment make sure it is activated here*
 
-You can use vagrant :
+You can use vagrant:
 
-* `vagrant up` will create 3 VMs : the mailservers (north and south) and the tester
+* `vagrant up` will create 3 VMs: the mailservers (north and south) and the tester
 
-Or you can use molecule dans docker :
+Or you can use molecule in docker:
 
 * molecule converge
 
@@ -46,12 +46,12 @@ Or you can use molecule dans docker :
 
 ### With vagrant
 
-Tests are  manually started :
+Tests are  manually started:
 * `vagrant ssh tester`
 * `cd suite`
 * `pytest`
 
-Test suites `test_imap.py` and `test_dmtp.py` hits by default
+Test suites `test_imap.py` and `test_smtp.py` hits by default
 `north.mail.local`. The target can be configured with the flag `--server`.
 
 # Credits and copyrights #
@@ -61,8 +61,8 @@ The original code was written by Christoph "Signum" Haas © for
 Please take a look at his article about mailservers, it's one of the best you
 could find on the Internet.
 
-Contributors :
-- Christopher Haas (original code : ansible-ispmail-jessie)
+Contributors:
+- Christopher Haas (original code: ansible-ispmail-jessie)
 - hugoShaka
 - dric0
 

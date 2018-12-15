@@ -28,7 +28,6 @@ def insert_virtual_users(server_address: str, users: List):
 def do_query(server_address: str, query: str, items: List):
     """Opens a connection and executes a database query."""
 
-    # TODO(shaka) gather password using testinfra and ansible info
     conn = psycopg2.connect(
         host=server_address,
         dbname="mailserver",
