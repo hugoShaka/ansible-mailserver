@@ -7,6 +7,9 @@
         name: acl
         state: present
         update_cache: true
+      register: apt_result
+      until: apt_result is succeeded
+      retries: 3
 
     - name: '/etc/fstab: Set opt "{{ opt }}" for mount point {{ point }}'
       lineinfile:
