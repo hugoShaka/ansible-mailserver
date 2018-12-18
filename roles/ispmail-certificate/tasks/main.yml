@@ -14,11 +14,17 @@
       - python-pip
       - python-setuptools
     state: present
+  register: apt_result
+  until: apt_result is succeeded
+  retries: 3
 
 - name: Ensure python OpenSSL dependencies are installed
   pip:
     name: pyOpenSSL
     state: present
+  register: pip_result
+  until: pip_result is succeeded
+  retries: 3
 
 - name: Generate an OpenSSL private key
   openssl_privatekey:
