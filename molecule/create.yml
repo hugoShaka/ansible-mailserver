@@ -56,7 +56,7 @@
       loop: "{{ molecule_yml.platforms | molecule_get_docker_networks }}"
 
       # DNS container should be started first
-      # We will then recover its ip and use it to create other containers
+      # We will then extract its ip and use it to create other containers
     - name: Create DNS instance(s)
       docker_container:
         name: "{{ item.name }}"

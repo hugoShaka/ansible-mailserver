@@ -51,7 +51,7 @@ Tests are  manually started:
 * `cd suite`
 * `pytest`
 
-Test suites `test_imap.py` and `test_smtp.py` hits by default
+Test suites `test_imap.py` and `test_smtp.py` hit by default
 `north.mail.local`. The target can be configured with the flag `--server`.
 
 # Credits and copyrights #
