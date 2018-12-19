@@ -8,6 +8,9 @@
       - dovecot-lmtpd
       - dovecot-managesieved
     state: present
+  register: apt_result
+  until: apt_result is succeeded
+  retries: 3
 
 - name: Create the vmail group
   group:

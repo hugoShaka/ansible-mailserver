@@ -1,19 +1,19 @@
 ---
-- name: Install postgres package
+- name: Install postgres packages
   apt:
-    name: postgresql
+    name:
+      - postgresql
+      - python-psycopg2
     state: present
+  register: apt_result
+  until: apt_result is succeeded
+  retries: 3
 
 - name: Make sure postgresql server is started
   service:
     name: postgresql
     enabled: true
     state: started
-
-- name: Install required Python pgsql module for Ansible to manage databases
-  apt:
-    name: python-psycopg2
-    state: present
 
 - name: Create SQL mail user (without password)
   postgresql_user:
