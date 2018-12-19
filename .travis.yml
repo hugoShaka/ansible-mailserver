@@ -6,11 +6,27 @@ python:
   - 3.6
 cache: pip
 
-install:
-  - pip install -r molecule/requirements.txt
+stages:
+  - test
+  - name: build-docker
+    if: branch = master
 
-script:
-  - molecule test
+jobs:
+  include:
+    - stage: test
+      install:
+        - pip install -r molecule/requirements.txt
+      script:
+        - molecule test
+    - stage: build-docker
+      script:
+        - >2
+          docker build molecule/docker-images/
+          -f molecule/docker-images/Dockerfile-dnsmasq
+          hugoshaka/dnsmasq-ansible-mailserver
+        - docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD"
+        - docker push hugoshaka/dnsmasq-ansible-mailserver
+
 notifications:
   irc:
     channels:
