@@ -112,7 +112,7 @@ def test_invalid_sender(server):
 def test_non_existant_sender_domain(server):
     """Should be 450 4.1.8 Sender address rejected: Domain not found"""
     assert (
-        smtp_error_code("luke@jedi.local", sender="vader@poudlard.local", server=server)
+        smtp_error_code("luke@jedi.local", sender="vader@hogwarts.local", server=server)
         == 450
     )
 
