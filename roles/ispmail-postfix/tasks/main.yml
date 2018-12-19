@@ -15,6 +15,9 @@
       - postfix
       - postfix-pgsql
     state: present
+  register: apt_result
+  until: apt_result is succeeded
+  retries: 3
 
 - name: Grant user postfix read permission on the private key
   acl:
