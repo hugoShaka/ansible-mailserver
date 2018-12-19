@@ -8,6 +8,8 @@ lint:
   options:
     config-file: molecule/yamllint.yml
 platforms:
+  # to define DNS server please use only ns. The other ones are overloaded
+  # for testing purposes in the create.yml
   - name: north
     groups:
       - mta
