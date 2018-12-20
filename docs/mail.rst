@@ -5,7 +5,7 @@ The big picture
 ---------------
 Sending email involves lots of components.
 
-.. image:: https://res.cloudinary.com/shaka/image/upload/v1542098296/ansible_mailserver/simple_mail_1.png
+.. image:: https://res.cloudinary.com/shaka/image/upload/v1545332352/ansible_mailserver/simple_mail_1.png
 
 Components
 ----------
