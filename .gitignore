@@ -5,3 +5,5 @@ log
 .venv
 *.retry
 *junit-report.xml
+__pycache__
+credentials

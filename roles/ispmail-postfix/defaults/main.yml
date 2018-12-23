@@ -5,4 +5,5 @@ ispmail_postfix_smtpd_countlimit: 10
 
 ispmail_postfix_database_hosts:
   - unix:/var/run/postgresql
-ispmail_postfix_database_password: ''
+ispmail_postfix_database_password: "{{ lookup('password',
+  'credentials/postfix_database_password length=15') }}"
