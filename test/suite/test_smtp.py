@@ -19,9 +19,11 @@ def server(server_address):
         (2, "{PLAIN}test", "luke"),
         (2, "{PLAIN}test", "leia"),
     ]
+    alias_domains = [("good.local", "jedi.local"), ("evil.local", "sith.local")]
 
     tools.insert_virtual_domains(server_address, domains)
     tools.insert_virtual_users(server_address, users)
+    tools.insert_virtual_alias_domains(server_address, alias_domains)
     return server_address
 
 
@@ -103,6 +105,12 @@ def test_external_alias(server):
 @pytest.mark.skip()
 def test_internal_alias(server):
     assert send_mail("kenobi@jedi.local", server=server) == dict()
+
+
+@pytest.mark.parametrize("recipient", [("sidious@evil.local"), ("luke@good.local")])
+def test_domain_alias(server, recipient):
+    """Test whole domain alias feature."""
+    assert send_mail(recipient, server=server) == dict()
 
 
 def test_invalid_sender(server):
