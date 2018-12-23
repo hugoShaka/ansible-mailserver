@@ -6,7 +6,6 @@
     owner: root
     group: root
     mode: 0775
-    recurse: true
 
 - name: Ensure pip and setuptools are installed
   apt:

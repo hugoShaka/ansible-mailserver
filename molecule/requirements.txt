@@ -1,0 +1,5 @@
+molecule==2.19.0
+docker-py==1.10.6
+IMAPClient==2.1.0
+psycopg2-binary
+dnspython

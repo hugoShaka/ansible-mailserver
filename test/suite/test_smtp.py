@@ -4,7 +4,25 @@ import smtplib
 import pytest
 import ssl
 
-##### Helpers
+import tools
+from tools import server_address  # noqa: F401
+
+
+@pytest.fixture(scope="session")  # noqa: F811
+def server(server_address):
+    """Add fixtures into the database before testing"""
+
+    domains = [(1, "sith.local"), (2, "jedi.local")]
+    users = [
+        (1, "{PLAIN}test", "sidious"),
+        (1, "{PLAIN}test", "vader"),
+        (2, "{PLAIN}test", "luke"),
+        (2, "{PLAIN}test", "leia"),
+    ]
+
+    tools.insert_virtual_domains(server_address, domains)
+    tools.insert_virtual_users(server_address, users)
+    return server_address
 
 
 def send_mail(recipient, *, sender="tester@mail.not.local", server=None, conn=None):
@@ -48,13 +66,12 @@ def smtp_error_code(recipient, **kwargs):
     return excinfo.value.recipients[recipient][0]
 
 
-##### Tests
-
-### Reception
+# Tests
+# Reception
 
 
 @pytest.mark.parametrize(
-    "recipient", [("sidious@sith.local"), ("vader@sith.local"), ("obiwan@jedi.local")]
+    "recipient", [("vader@sith.local"), ("sidious@sith.local"), ("luke@jedi.local")]
 )
 def test_legit_users(recipient, server):
     assert send_mail(recipient, server=server) == dict()
@@ -63,7 +80,7 @@ def test_legit_users(recipient, server):
 def test_wrong_domain(server):
     """What happens if the domain is not handled.
     should be error 554 5.7.1 Relay access denied"""
-    assert smtp_error_code("obiwan@gryffindor.local", server=server) == 554
+    assert smtp_error_code("luke@gryffindor.local", server=server) == 554
 
 
 def test_wrong_user(server):
@@ -85,20 +102,28 @@ def test_external_alias(server):
 
 @pytest.mark.skip()
 def test_internal_alias(server):
-    assert send_mail("luke@jedi.local", server=server) == dict()
+    assert send_mail("kenobi@jedi.local", server=server) == dict()
 
 
 def test_invalid_sender(server):
-    assert smtp_error_code("obiwan@jedi.local", sender="vader@none", server=server) == 504
+    assert smtp_error_code("luke@jedi.local", sender="vader@none", server=server) == 504
 
 
 def test_non_existant_sender_domain(server):
     """Should be 450 4.1.8 Sender address rejected: Domain not found"""
-    assert smtp_error_code("obiwan@jedi.local", sender="vader@poudlard.local", server=server) == 450
+    assert (
+        smtp_error_code("luke@jedi.local", sender="vader@hogwarts.local", server=server)
+        == 450
+    )
 
 
 def test_impostor_relay(server):
-    assert smtp_error_code("obiwan@jedi.not.local", sender="vader@sith.local", server=server) == 554
+    assert (
+        smtp_error_code(
+            "johndoe@mail.not.local", sender="vader@sith.local", server=server
+        )
+        == 554
+    )
 
 
 @pytest.mark.parametrize(
@@ -111,17 +136,17 @@ def test_impostor_relay(server):
 def test_impostor_local(sender, server):
     """Sending mail to local as local user, not logged in
     should be 553 5.7.1 Sender address rejected: not logged in"""
-    assert smtp_error_code("obiwan@jedi.local", sender=sender, server=server) == 553
+    assert smtp_error_code("luke@jedi.local", sender=sender, server=server) == 553
 
 
-##### Outgoing email
+# Outgoing email
 
 
 @pytest.mark.parametrize(
     "user, submission",
     [
         ("sidious@sith.local", False),
-        ("obiwan@jedi.local", True),
+        ("luke@jedi.local", True),
         ("vader@sith.local", True),
     ],
 )
@@ -142,26 +167,29 @@ def test_wrong_login(user, password, server):
     "recipient",
     [
         ("pikachu@mail.not.local"),  # non-local user
-        ("sidious@sith.local"),    # local user
+        ("sidious@sith.local"),  # local user
     ],
 )
 def test_auth_relay(recipient, server):
     """Send email to another domain from an authenticated account"""
-    sender = "obiwan@jedi.local"
+    sender = "luke@jedi.local"
     state, conn = login(sender, "test", submission=True, server=server)
     result = send_mail(recipient, sender=sender, conn=conn, server=server)
     assert result == dict()
+
 
 @pytest.mark.parametrize(
     "victim",
     [
         ("pikachu@mail.not.local"),  # non-local user
-        ("sidious@sith.local"),    # local user
+        ("sidious@sith.local"),  # local user
     ],
 )
 def test_auth_relay_mismatch(victim, server):
     """Login as a user and send an email as another user.
     Should be error 553 5.7.1 Sender access reject: not owned by user"""
-    state, conn = login("obiwan@jedi.local", "test", submission=True, server=server)
-    result = smtp_error_code("sidious@sith.local", sender=victim, conn=conn, server=server)
+    state, conn = login("luke@jedi.local", "test", submission=True, server=server)
+    result = smtp_error_code(
+        "sidious@sith.local", sender=victim, conn=conn, server=server
+    )
     assert result == 553

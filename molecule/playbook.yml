@@ -1,0 +1,29 @@
+---
+- name: Deploy database
+  hosts: db
+  roles:
+    - ispmail-database
+  tags:
+    - postgres
+    - db
+
+- name: Deploy mail transfer agent
+  hosts: mta
+  roles:
+    - ispmail-certificate
+    - ispmail-postfix
+  tags:
+    - postfix
+    - mta
+
+- name: Deploy mail delivery agent
+  hosts: mda
+  roles:
+    - ispmail-certificate
+    - ispmail-dovecot
+  vars:
+    ispmail_debug: true
+  tags:
+    - dovecot
+    - mda
+...

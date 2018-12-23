@@ -1,0 +1,4 @@
+---
+ispmail_pgadmin_ip_range: '0.0.0.0/0'
+ispmail_postfix_smtpd_ratelimit: 5000
+ispmail_postfix_smtpd_countlimit: 5000
