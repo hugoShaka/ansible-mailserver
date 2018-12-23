@@ -32,7 +32,7 @@ def do_query(server_address: str, query: str, items: List):
         host=server_address,
         dbname="mailserver",
         user="pgadmin",
-        password="ChangeMeAlso",
+        password="PGAdmin_Password",
     )
 
     cur = conn.cursor()

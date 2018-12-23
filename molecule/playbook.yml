@@ -3,6 +3,8 @@
   hosts: db
   roles:
     - ispmail-database
+  vars:
+    ispmail_pgadmin_password: PGAdmin_Password
   tags:
     - postgres
     - db
