@@ -15,12 +15,13 @@
 # import os
 # import sys
 # sys.path.insert(0, os.path.abspath('.'))
+import datetime
 
 
 # -- Project information -----------------------------------------------------
 
 project = 'Ansible mailserver'
-copyright = '2018, hugoShaka'
+copyright = ' %s, hugoShaka' % datetime.date.today().year
 author = 'hugoShaka'
 
 # The short X.Y version
