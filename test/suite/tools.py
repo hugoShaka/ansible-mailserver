@@ -12,6 +12,10 @@ ADD_USER_QUERY = """INSERT INTO virtual_users (domain_id, password, email)
                     VALUES (%s, %s, %s)
                     ON CONFLICT DO NOTHING;"""
 
+ADD_ALIAS_DOMAIN_QUERY = """INSERT INTO virtual_alias_domains (source, destination)
+                            VALUES (%s, %s)
+                            ON CONFLICT DO NOTHING;"""
+
 
 def insert_virtual_domains(server_address: str, domains: List):
     """Add domain fixtures into the database."""
@@ -23,6 +27,12 @@ def insert_virtual_users(server_address: str, users: List):
     """Add users fixtures into the database."""
 
     do_query(server_address, ADD_USER_QUERY, users)
+
+
+def insert_virtual_alias_domains(server_address: str, alias_domains: List):
+    """Add alias_domains fixtures into the database"""
+
+    do_query(server_address, ADD_ALIAS_DOMAIN_QUERY, alias_domains)
 
 
 def do_query(server_address: str, query: str, items: List):
