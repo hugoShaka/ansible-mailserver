@@ -1,4 +1,7 @@
 ---
+- name: initialize database
+  include: initialize.yml
+
 - name: restart postgresql
   service:
     name: postgresql

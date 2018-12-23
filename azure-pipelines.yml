@@ -1,28 +1,79 @@
 ---
 jobs:
-  - job: Lint
+  - job: Single
     pool:
       vmImage: 'Ubuntu 16.04'
     steps:
 
+      - task: UsePythonVersion@0
+        inputs:
+          versionSpec: '3.6'
+
       - task: Bash@3
-        displayName: 'Install linters'
+        displayName: 'Install ansible and molecule'
         inputs:
           targetType: 'inline'
           script: |
-            pip3 install setuptools wheel
-            pip3 install ansible-lint yamllint
+            pip3 install --user setuptools wheel
+            pip3 install --user -r molecule/requirements.txt
 
       - task: Bash@3
-        displayName: 'Lint yaml'
+        displayName: 'Lint'
         inputs:
           targetType: 'inline'
-          script: >
-            find . -type f -name '*.yml' |
-            xargs python3 -m yamllint -c test/.yamllint.yml
+          script: |
+            export PATH=$HOME/.local/bin:$PATH
+            molecule lint
 
       - task: Bash@3
-        displayName: 'Lint ansible'
+        displayName: 'Molecule test'
         inputs:
           targetType: 'inline'
-          script: python3 -m ansiblelint test/mailserver-vagrant.yml
+          script: |
+            export PATH=$HOME/.local/bin:$PATH
+            molecule test -s single
+
+      - task: PublishTestResults@2
+        inputs:
+          testResultsFormat: 'JUnit'
+          testResultsFiles: './molecule/single/junit-report.xml'
+          testRunTitle: 'Single server'
+
+  - job: Double
+    pool:
+      vmImage: 'Ubuntu 16.04'
+    steps:
+
+      - task: UsePythonVersion@0
+        inputs:
+          versionSpec: '3.6'
+
+      - task: Bash@3
+        displayName: 'Install ansible and molecule'
+        inputs:
+          targetType: 'inline'
+          script: |
+            pip3 install --user setuptools wheel
+            pip3 install --user -r molecule/requirements.txt
+
+      - task: Bash@3
+        displayName: 'Lint'
+        inputs:
+          targetType: 'inline'
+          script: |
+            export PATH=$HOME/.local/bin:$PATH
+            molecule lint
+
+      - task: Bash@3
+        displayName: 'Molecule test'
+        inputs:
+          targetType: 'inline'
+          script: |
+            export PATH=$HOME/.local/bin:$PATH
+            molecule test
+
+      - task: PublishTestResults@2
+        inputs:
+          testResultsFormat: 'JUnit'
+          testResultsFiles: './molecule/default/junit-report.xml'
+          testRunTitle: 'Dual server'
