@@ -9,7 +9,7 @@ cache: pip
 stages:
   - test
   - name: build-docker
-    if: branch = master
+    if: branch = master AND type != pull_request
 
 jobs:
   include:
@@ -23,7 +23,7 @@ jobs:
         - >2
           docker build molecule/docker-images/
           -f molecule/docker-images/Dockerfile-dnsmasq
-          hugoshaka/dnsmasq-ansible-mailserver
+          -t hugoshaka/dnsmasq-ansible-mailserver
         - docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD"
         - docker push hugoshaka/dnsmasq-ansible-mailserver
 
