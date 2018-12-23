@@ -1,6 +1,7 @@
 ---
 ispmail_dovecot_auth_mechanisms: plain login
-ispmail_dovecot_database_password: "{{ lookup('password', 'credentials/dovecot_database_password length=15') }}"
+ispmail_dovecot_database_password: "{{ lookup('password',
+  'credentials/dovecot_database_password length=15') }}"
 ispmail_dovecot_databases:
   - name: local
     address: /var/run/postgresql
