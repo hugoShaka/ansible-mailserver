@@ -2,7 +2,7 @@
 - name: Prepare
   hosts: all:!ns
   tasks:
-    - name: install acl
+    - name: Install Access Control List
       apt:
         name: acl
         state: present
