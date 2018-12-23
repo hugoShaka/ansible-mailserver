@@ -184,7 +184,9 @@ virtual_mailbox_domains = proxy:pgsql:/etc/postfix/pgsql-virtual-mailbox-domains
 # Mailboxes which are valid and exist on the server
 virtual_mailbox_maps = proxy:pgsql:/etc/postfix/pgsql-virtual-mailbox-maps.cf
 # Aliases that are valid and applied before delivering the email
-virtual_alias_maps = proxy:pgsql:/etc/postfix/pgsql-virtual-alias-maps.cf,proxy:pgsql:/etc/postfix/pgsql-email2email.cf
+virtual_alias_maps = proxy:pgsql:/etc/postfix/pgsql-virtual-alias-maps.cf,proxy:pgsql:/etc/postfix/pgsql-virtual-alias-domains-maps.cf,proxy:pgsql:/etc/postfix/pgsql-email2email.cf
+# Domain aliases allow domain-wide aliases (a bit like DNAME but for email)
+virtual_alias_domains = proxy:pgsql:/etc/postfix/pgsql-virtual-alias-domains.cf
 # Addresses that we manage, we will force authentification for these
 smtpd_sender_login_maps = proxy:pgsql:/etc/postfix/pgsql-sender-login-maps.cf
 

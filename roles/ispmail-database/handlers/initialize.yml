@@ -21,6 +21,7 @@
     privs: SELECT,INSERT,UPDATE,DELETE
   with_items:
     - virtual_domains
+    - virtual_alias_domains
     - virtual_aliases
     - virtual_users
   become: true
@@ -36,6 +37,7 @@
     privs: SELECT,USAGE
   with_items:
     - virtual_domains_id_seq
+    - virtual_alias_domains_id_seq
     - virtual_aliases_id_seq
     - virtual_users_id_seq
   become: true
@@ -50,6 +52,7 @@
     privs: SELECT
   with_items:
     - virtual_domains
+    - virtual_alias_domains
     - virtual_aliases
     - virtual_users
   become: true
