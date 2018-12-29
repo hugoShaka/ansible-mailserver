@@ -17,7 +17,8 @@ jobs:
       install:
         - pip install -r molecule/requirements.txt
       script:
-        - molecule test
+        - cd docs
+        - make html
     - stage: build-docker
       script:
         - >2
