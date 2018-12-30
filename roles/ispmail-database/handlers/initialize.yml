@@ -19,7 +19,7 @@
     objs: "{{ item }}"
     roles: pgadmin
     privs: SELECT,INSERT,UPDATE,DELETE
-  with_items:
+  loop:
     - virtual_domains
     - virtual_alias_domains
     - virtual_aliases
@@ -35,7 +35,7 @@
     objs: "{{ item }}"
     roles: pgadmin
     privs: SELECT,USAGE
-  with_items:
+  loop:
     - virtual_domains_id_seq
     - virtual_alias_domains_id_seq
     - virtual_aliases_id_seq
@@ -50,7 +50,7 @@
     objs: "{{ item }}"
     roles: mail
     privs: SELECT
-  with_items:
+  loop:
     - virtual_domains
     - virtual_alias_domains
     - virtual_aliases
