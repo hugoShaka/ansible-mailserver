@@ -38,6 +38,8 @@
     - pgsql-virtual-mailbox-domains.cf
     - pgsql-virtual-mailbox-maps.cf
     - pgsql-virtual-alias-maps.cf
+    - pgsql-virtual-alias-domains.cf
+    - pgsql-virtual-alias-domains-maps.cf
     - pgsql-email2email.cf
 
 - name: Copy main.cf conf file

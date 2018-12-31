@@ -5,6 +5,14 @@ CREATE TABLE IF NOT EXISTS virtual_domains (
   UNIQUE (name)
 );
 
+CREATE TABLE IF NOT EXISTS virtual_alias_domains (
+  id SERIAL,
+  source varchar(50) NOT NULL,
+  destination varchar(50) NOT NULL,
+  PRIMARY KEY (id),
+  UNIQUE (source)
+);
+
 CREATE TABLE IF NOT EXISTS virtual_users (
   id SERIAL,
   domain_id integer NOT NULL,
