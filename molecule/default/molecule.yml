@@ -47,6 +47,11 @@ provisioner:
   inventory:
     links:
       group_vars: ../../group_vars
+    host_vars:
+      north:
+        ispmail_dovecot_replication_peer: south.mail.local
+      south:
+        ispmail_dovecot_replication_peer: north.mail.local
   playbooks:
     create: ../create.yml
     converge: ../playbook.yml
