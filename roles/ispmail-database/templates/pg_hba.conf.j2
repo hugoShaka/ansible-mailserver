@@ -22,7 +22,7 @@ local   all             postgres                                peer
 local   mailserver      all             peer                    map=mailmap
 # Distant connection for mailservers over md5
 {% for mailserver in mailservers %}
-host    mailserver      mail            {{ mailserver.ip }}/32            md5
+host    mailserver      mail            {{ mailserver.ip }}/{{ mailserver.cidr }}            md5
 {% endfor %}
 # Distant connection for admin
 host    mailserver      pgadmin         {{ ispmail_pgadmin_ip_range }}            md5
