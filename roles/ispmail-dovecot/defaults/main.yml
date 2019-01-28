@@ -6,7 +6,7 @@ ispmail_dovecot_databases:
   - name: local
     address: /var/run/postgresql
 ispmail_debug: false
-ispmail_dovecot_replication_peer:
+# ispmail_dovecot_replication_peer:
 
 ispmail_dovecot_doveadm_port: 12345
 ispmail_dovecot_doveadm_secret: "{{ lookup('password',
