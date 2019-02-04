@@ -84,7 +84,7 @@
     - 20-lmtp.conf
     - 90-sieve.conf
 
-- name: Copying replication conf (if a peer is defined)
+- name: Copy replication conf (if a peer is defined)
   template:
     src: "{{ item }}.j2"
     dest: "/etc/dovecot/conf.d/{{ item }}"
@@ -94,7 +94,7 @@
   when: ispmail_dovecot_replication_peer is defined
   notify: restart dovecot
 
-- name: Removing replication conf (if no peer is defined)
+- name: Remove replication conf (if no peer is defined)
   file:
     path: "/etc/dovecot/conf.d/{{ item }}"
     state: absent
