@@ -13,13 +13,17 @@ def servers():
     inventory = testinfra.utils.ansible_runner.AnsibleRunner(
         os.environ["MOLECULE_INVENTORY_FILE"]
     )
-    north_facts = inventory.run("north", "setup")
-    north_ip = north_facts["ansible_facts"]["ansible_default_ipv4"]["address"]
+    mda_hosts = inventory.get_hosts("mda")
+    if len(mda_hosts) != 2:
+        raise ValuerError("Too many mda hosts")
 
-    south_facts = inventory.run("south", "setup")
-    south_ip = south_facts["ansible_facts"]["ansible_default_ipv4"]["address"]
+    server_ips = []
+    for mda_host in mda_hosts:
+        mda_facts = inventory.run(mda_host, "setup")
+        mda_ip = mda_facts["ansible_facts"]["ansible_default_ipv4"]["address"]
+        server_ips.append(mda_ip)
 
-    return north_ip, south_ip
+    return server_ips
 
 
 @pytest.fixture()
