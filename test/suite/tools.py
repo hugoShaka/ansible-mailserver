@@ -58,7 +58,11 @@ def database_address(request):
     inventory = testinfra.utils.ansible_runner.AnsibleRunner(
         os.environ["MOLECULE_INVENTORY_FILE"]
     )
-    database_facts = inventory.run("north", "setup")
+
+    database_hosts = inventory.get_hosts("db")
+    if len(database_hosts) != 1:
+        raise ValueError("Multiple databases are not correctly suported")
+    database_facts = inventory.run(database_hosts[0], "setup")
     database_ip = database_facts["ansible_facts"]["ansible_default_ipv4"]["address"]
 
     return database_ip

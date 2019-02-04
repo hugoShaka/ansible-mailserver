@@ -46,7 +46,7 @@ provisioner:
     ANSIBLE_ROLES_PATH: ../../roles
   inventory:
     links:
-      group_vars: ../../group_vars
+      group_vars: ../../group_vars/double
       host_vars: ../../host_vars/test-double
   playbooks:
     create: ../create.yml
