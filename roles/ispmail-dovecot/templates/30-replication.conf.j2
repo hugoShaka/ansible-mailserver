@@ -1,0 +1,25 @@
+service replicator {
+  process_min_avail = 1
+  unix_listener replicator-doveadm {
+    mode = 0600
+    user = vmail
+  }
+}
+
+service aggregator {
+  fifo_listener replication-notify-fifo {
+    user = vmail
+  }
+  unix_listener replication-notify {
+    user = vmail
+  }
+}
+
+service doveadm {
+  inet_listener {
+    port = {{ ispmail_dovecot_doveadm_port }}
+  }
+}
+
+doveadm_port = {{ ispmail_dovecot_doveadm_port }}
+doveadm_password = {{ ispmail_dovecot_doveadm_secret }}
