@@ -63,41 +63,45 @@
     backrefs: true
   notify: restart dovecot
 
-- name: Copy SQL authentication configuration (auth-sql.conf.ext)
+- name: Copy dynamic configuration files
   template:
-    src: auth-sql.conf.ext.j2
-    dest: /etc/dovecot/conf.d/auth-sql.conf.ext
+    src: "{{ item }}.j2"
+    dest: "/etc/dovecot/conf.d/{{ item }}"
   notify: restart dovecot
+  loop:
+    - 10-mail.conf
+    - 10-ssl.conf
+    - auth-sql.conf.ext
 
-- name: Copy mailbox and namespace configuration (10-mail.conf)
+- name: Copy static configuration files
   copy:
-    src: 10-mail.conf
-    dest: /etc/dovecot/conf.d/10-mail.conf
+    src: "{{ item }}"
+    dest: "/etc/dovecot/conf.d/{{ item }}"
   notify: restart dovecot
+  loop:
+    - 10-master.conf
+    - 15-mailboxes.conf
+    - 20-lmtp.conf
+    - 90-sieve.conf
 
-- name: Copy service configuration (10-master.conf)
-  copy:
-    src: 10-master.conf
-    dest: /etc/dovecot/conf.d/10-master.conf
-  notify: restart dovecot
-
-- name: Copy SSL configuration (10-ssl.conf)
+- name: Copy replication conf (if a peer is defined)
   template:
-    src: 10-ssl.conf.j2
-    dest: /etc/dovecot/conf.d/10-ssl.conf
+    src: "{{ item }}.j2"
+    dest: "/etc/dovecot/conf.d/{{ item }}"
+  loop:
+    - 30-replication.conf
+    - 90-plugin.conf
+  when: ispmail_dovecot_replication_peer is defined
   notify: restart dovecot
 
-- name: Copy LMTP configuration (20-lmtp.conf - enable sieve plugin)
-  copy:
-    src: 20-lmtp.conf
-    dest: /etc/dovecot/conf.d/20-lmtp.conf
-  notify: restart dovecot
-
-- name: Copy mailboxes configuration (15-mailboxes.conf - autocreate folders)
-  copy:
-    src: 15-mailboxes.conf
-    dest: /etc/dovecot/conf.d/15-mailboxes.conf
-  notify: restart dovecot
+- name: Remove replication conf (if no peer is defined)
+  file:
+    path: "/etc/dovecot/conf.d/{{ item }}"
+    state: absent
+  loop:
+    - 30-replication.conf
+    - 90-plugin.conf
+  when: ispmail_dovecot_replication_peer is not defined
 
 - name: Enable dovecot debug mode
   ini_file:
@@ -150,9 +154,3 @@
     src: spam-to-folder.sieve
     dest: /etc/dovecot/sieve-after/spam-to-folder.sieve
   notify: recompile sieve script
-
-- name: Copy Sieve plugin configuration (90-sieve.conf)
-  copy:
-    src: 90-sieve.conf
-    dest: /etc/dovecot/conf.d/90-sieve.conf
-  notify: restart dovecot
