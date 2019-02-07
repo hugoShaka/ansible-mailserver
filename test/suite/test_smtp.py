@@ -20,10 +20,13 @@ def server(server_address, database_address):
         (2, "{PLAIN}test", "leia"),
     ]
     alias_domains = [("good.local", "jedi.local"), ("evil.local", "sith.local")]
+    aliases = [(2, "anakin@jedi.local", "vader@sith.local"),
+               (1, "kenobi@jedi.local", "leia@jedi.local")]
 
-    tools.insert_virtual_domains(database_address, domains)
-    tools.insert_virtual_users(database_address, users)
-    tools.insert_virtual_alias_domains(database_address, alias_domains)
+    tools.insert_virtual_domains(server_address, domains)
+    tools.insert_virtual_users(server_address, users)
+    tools.insert_virtual_alias_domains(server_address, alias_domains)
+    tools.insert_virtual_aliases(server_address, aliases)
     return server_address
 
 
@@ -97,12 +100,10 @@ def test_domain_user_mismatch(server):
     assert smtp_error_code("sidious@jedi.local", server=server) == 550
 
 
-@pytest.mark.skip()
 def test_external_alias(server):
     assert send_mail("anakin@jedi.local", server=server) == dict()
 
 
-@pytest.mark.skip()
 def test_internal_alias(server):
     assert send_mail("kenobi@jedi.local", server=server) == dict()
 

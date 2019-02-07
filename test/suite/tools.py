@@ -15,6 +15,9 @@ ADD_ALIAS_DOMAIN_QUERY = """INSERT INTO virtual_alias_domains (source, destinati
                             VALUES (%s, %s)
                             ON CONFLICT DO NOTHING;"""
 
+ADD_ALIASES_QUERY = """INSERT INTO virtual_aliases (domain_id, source, destination)
+                            VALUES (%s, %s, %s)
+                            ON CONFLICT DO NOTHING;"""
 
 def insert_virtual_domains(database_address: str, domains: List):
     """Add domain fixtures into the database."""
@@ -33,6 +36,11 @@ def insert_virtual_alias_domains(database_address: str, alias_domains: List):
 
     do_query(database_address, ADD_ALIAS_DOMAIN_QUERY, alias_domains)
 
+
+def insert_virtual_aliases(server_address: str, aliases: List):
+    """Add aliases fixtures into the database"""
+
+    do_query(server_address, ADD_ALIASES_QUERY, aliases)
 
 def do_query(server_address: str, query: str, items: List):
     """Opens a connection and executes a database query."""
