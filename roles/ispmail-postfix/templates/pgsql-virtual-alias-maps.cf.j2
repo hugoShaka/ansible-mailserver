@@ -2,4 +2,4 @@ user = mail
 hosts = {{ ispmail_postfix_database_hosts|join(' ') }}
 password = {{ ispmail_postfix_database_password }}
 dbname = mailserver
-query = SELECT destination FROM virtual_aliases WHERE source='%s'
+query = SELECT a.destination FROM virtual_aliases AS a JOIN virtual_domains AS d ON a.domain_id = d.id WHERE a.source='%u' AND d.name='%d';
