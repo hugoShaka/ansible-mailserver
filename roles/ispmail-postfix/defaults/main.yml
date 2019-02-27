@@ -7,3 +7,4 @@ ispmail_postfix_database_hosts:
   - unix:/var/run/postgresql
 ispmail_postfix_database_password: "{{ lookup('password',
   'credentials/postfix_database_password length=15') }}"
+ispmail_postfix_smtpd_milters: "inet:localhost:11332"

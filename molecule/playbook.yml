@@ -13,6 +13,7 @@
   hosts: mta
   roles:
     - ispmail-certificate
+    - ispmail-rspamd
     - ispmail-postfix
   tags:
     - postfix

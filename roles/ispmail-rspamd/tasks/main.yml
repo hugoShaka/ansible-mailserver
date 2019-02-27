@@ -1,0 +1,29 @@
+---
+- name: Add rspamd APT signing key
+  apt_key:
+    url: https://rspamd.com/apt-stable/gpg.key
+    state: present
+  register: apt_key_result
+  retries: 3
+  until: apt_key_result is succeeded
+
+- name: Add Rspamd APT repository
+  apt_repository:
+    repo: >-2
+      {{ item }} [arch=amd64]
+      http://rspamd.com/apt-stable/
+      {{ ansible_distribution_release }} main
+    state: present
+    filename: rspamd
+    update_cache: true
+  loop:
+    - deb
+    - deb-src
+
+- name: Install rspamd packages
+  apt:
+    name: rspamd
+    state: present
+  register: apt_result
+  until: apt_result is succeeded
+  retries: 3
