@@ -213,7 +213,7 @@ milter_default_action = tempfail
 # We use Postfix > 2.6, so we can use milter_protocol 6
 milter_protocol = 6
 # We take all the mails and filter them, SMTP or not.
-#smtpd_milters = unix:/var/run/opendkim/opendkim.sock
+smtpd_milters = {{ ispmail_postfix_smtpd_milters }}
 #non_smtpd_milters = unix:/var/run/opendkim/opendkim.sock
 # unix:/run/spamass.sock
 #milter_connect_macros = j {daemon_name} v {if_name} _
