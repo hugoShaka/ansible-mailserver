@@ -15,7 +15,7 @@ platforms:
       - mta
       - mda
       - db
-      - rp
+      - reverse_proxy
       - test
     image: minimum2scp/systemd-stretch
     privileged: true
@@ -25,7 +25,7 @@ platforms:
 
   - name: south
     groups:
-      - rp
+      - reverse_proxy
       - mta
       - mda
       - test

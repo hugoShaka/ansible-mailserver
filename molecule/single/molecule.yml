@@ -13,7 +13,7 @@ platforms:
   - name: single
     groups:
       - mta
-      - rp
+      - reverse_proxy
       - mda
       - db
       - test
