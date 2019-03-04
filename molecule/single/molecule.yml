@@ -12,6 +12,7 @@ platforms:
   # for testing purposes in the create.yml
   - name: single
     groups:
+      - mail
       - mta
       - reverse_proxy
       - mda

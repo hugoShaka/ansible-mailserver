@@ -115,9 +115,9 @@ readme_directory = no
 ############# TLS parameters ##############
 # We will use TLS connections to secure the email
 # We specify the certificate (signed by a trusted CA)
-smtpd_tls_cert_file = {{ispmail_certificate_location}}
+smtpd_tls_cert_file = {{certificate_location}}
 # We give postfix the private key
-smtpd_tls_key_file = {{ispmail_certificate_keyfile}}
+smtpd_tls_key_file = {{certificate_keyfile}}
 # What random source postfix use
 tls_random_source = dev:/dev/urandom
 

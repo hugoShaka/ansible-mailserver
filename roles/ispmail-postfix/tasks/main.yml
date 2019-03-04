@@ -21,7 +21,7 @@
 
 - name: Grant user postfix read permission on the private key
   acl:
-    path: "{{ ispmail_certificate_keyfile }}"
+    path: "{{ certificate_keyfile }}"
     entity: postfix
     etype: user
     permissions: r

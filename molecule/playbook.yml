@@ -8,6 +8,13 @@
     - reverse_proxy
     - nginx
 
+- name: Deploy certificates
+  hosts: mail
+  roles:
+    - ispmail-certificate
+  tags:
+    - certs
+
 - name: Deploy database
   hosts: db
   roles:
@@ -21,7 +28,6 @@
 - name: Deploy mail transfer agent
   hosts: mta
   roles:
-    - ispmail-certificate
     - ispmail-rspamd
     - ispmail-postfix
   tags:
@@ -31,7 +37,6 @@
 - name: Deploy mail delivery agent
   hosts: mda
   roles:
-    - ispmail-certificate
     - ispmail-dovecot
   vars:
     ispmail_debug: true
