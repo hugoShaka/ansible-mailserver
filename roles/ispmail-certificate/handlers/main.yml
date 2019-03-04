@@ -1,0 +1,7 @@
+---
+- name: update ca-certificates
+  command: /usr/sbin/update-ca-certificates
+  delegate_to: "{{ item }}"
+  with_inventory_hostnames:
+    - mail
+  become: true
