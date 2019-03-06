@@ -50,7 +50,7 @@ verifier:
   options:
     junit-xml: junit-report.xml
     host: single
-    maxfail: 2
+    verbosity: 2
   lint:
     name: flake8
     options:
