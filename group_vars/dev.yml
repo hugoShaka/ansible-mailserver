@@ -2,7 +2,9 @@
 mailservers:
   - name: "north"
     ip: "10.0.0.100"
+    cidr: "32"
     host: "north.mail.local"
   - name: "south"
     ip: "10.0.0.101"
+    cidr: "32"
     host: "south.mail.local"

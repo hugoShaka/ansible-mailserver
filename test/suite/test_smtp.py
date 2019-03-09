@@ -5,11 +5,11 @@ import pytest
 import ssl
 
 import tools
-from tools import server_address  # noqa: F401
+from tools import server_address, database_address  # noqa: F401
 
 
-@pytest.fixture(scope="session")  # noqa: F811
-def server(server_address):
+@pytest.fixture(scope="module")  # noqa: F811
+def server(server_address, database_address):
     """Add fixtures into the database before testing"""
 
     domains = [(1, "sith.local"), (2, "jedi.local")]
@@ -20,13 +20,13 @@ def server(server_address):
         (2, "{PLAIN}test", "leia"),
     ]
     alias_domains = [("good.local", "jedi.local"), ("evil.local", "sith.local")]
-    aliases = [(2, "anakin@jedi.local", "vader@sith.local"),
-               (1, "kenobi@jedi.local", "leia@jedi.local")]
+    aliases = [(2, "anakin", "vader@sith.local"),  # anakin@jedi.local
+               (2, "kenobi", "ben@tatooine.local")]  # kenobi@jedi.local
 
-    tools.insert_virtual_domains(server_address, domains)
-    tools.insert_virtual_users(server_address, users)
-    tools.insert_virtual_alias_domains(server_address, alias_domains)
-    tools.insert_virtual_aliases(server_address, aliases)
+    tools.insert_virtual_domains(database_address, domains)
+    tools.insert_virtual_users(database_address, users)
+    tools.insert_virtual_alias_domains(database_address, alias_domains)
+    tools.insert_virtual_aliases(database_address, aliases)
     return server_address
 
 

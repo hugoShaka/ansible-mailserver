@@ -10,7 +10,7 @@ lint:
 platforms:
   # to define DNS server please use only ns. The other ones are overloaded
   # for testing purposes in the create.yml
-  - name: north
+  - name: single
     groups:
       - mta
       - mda
@@ -35,7 +35,7 @@ provisioner:
     ANSIBLE_ROLES_PATH: ../../roles
   inventory:
     links:
-      group_vars: ../../group_vars
+      group_vars: ../../group_vars/single
   playbooks:
     create: ../create.yml
     converge: ../playbook.yml
@@ -49,6 +49,8 @@ verifier:
   directory: ../../test/suite/
   options:
     junit-xml: junit-report.xml
+    host: single
+    verbosity: 2
   lint:
     name: flake8
     options:

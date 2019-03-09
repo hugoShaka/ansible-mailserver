@@ -2,7 +2,6 @@ from typing import List
 import psycopg2
 import pytest
 import os
-import dns.resolver
 
 ADD_DOMAIN_QUERY = """INSERT INTO virtual_domains
                       VALUES (%s, %s)
@@ -20,23 +19,28 @@ ADD_ALIASES_QUERY = """INSERT INTO virtual_aliases (domain_id, source, destinati
                             VALUES (%s, %s, %s)
                             ON CONFLICT DO NOTHING;"""
 
-def insert_virtual_domains(server_address: str, domains: List):
+def insert_virtual_domains(database_address: str, domains: List):
     """Add domain fixtures into the database."""
 
-    do_query(server_address, ADD_DOMAIN_QUERY, domains)
+    do_query(database_address, ADD_DOMAIN_QUERY, domains)
 
 
-def insert_virtual_users(server_address: str, users: List):
+def insert_virtual_users(database_address: str, users: List):
     """Add users fixtures into the database."""
 
-    do_query(server_address, ADD_USER_QUERY, users)
+    do_query(database_address, ADD_USER_QUERY, users)
 
 
-def insert_virtual_alias_domains(server_address: str, alias_domains: List):
+def insert_virtual_alias_domains(database_address: str, alias_domains: List):
     """Add alias_domains fixtures into the database"""
 
-    do_query(server_address, ADD_ALIAS_DOMAIN_QUERY, alias_domains)
+    do_query(database_address, ADD_ALIAS_DOMAIN_QUERY, alias_domains)
 
+
+def insert_virtual_aliases(server_address: str, aliases: List):
+    """Add aliases fixtures into the database"""
+
+    do_query(server_address, ADD_ALIASES_QUERY, aliases)
 
 def insert_virtual_aliases(server_address: str, aliases: List):
     """Add aliases fixtures into the database"""
@@ -61,23 +65,24 @@ def do_query(server_address: str, query: str, items: List):
 
 
 @pytest.fixture(scope="session")
-def server_address(request):
+def database_address(request):
+    import testinfra.utils.ansible_runner
+
+    inventory = testinfra.utils.ansible_runner.AnsibleRunner(
+        os.environ["MOLECULE_INVENTORY_FILE"]
+    )
+
+    database_hosts = inventory.get_hosts("db")
+    if len(database_hosts) != 1:
+        raise ValueError("Multiple databases are not correctly suported")
+    database_facts = inventory.run(database_hosts[0], "setup")
+    database_ip = database_facts["ansible_facts"]["ansible_default_ipv4"]["address"]
+
+    return database_ip
+
+
+@pytest.fixture(scope="module")
+def server_address(request, host):
     """Get server address"""
 
-    if "MOLECULE_INVENTORY_FILE" in os.environ:
-        import testinfra.utils.ansible_runner
-
-        inventory = testinfra.utils.ansible_runner.AnsibleRunner(
-            os.environ["MOLECULE_INVENTORY_FILE"]
-        )
-        dns_facts = inventory.run("ns", "setup")
-        dns_ip = dns_facts["ansible_facts"]["ansible_default_ipv4"]["address"]
-
-        test_resolver = dns.resolver.Resolver()
-        test_resolver.nameservers = [dns_ip]
-        answers = test_resolver.query("north.mail.local", "A")
-
-        north_ip = answers[0].address
-        return north_ip
-    else:
-        return request.config.getoption("--server")
+    return host.interface("eth0").addresses[0]
