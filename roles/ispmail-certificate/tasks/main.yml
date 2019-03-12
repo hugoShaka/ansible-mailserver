@@ -60,3 +60,6 @@
 - name: Import PKI tasks
   import_tasks: pki.yml
   become: true
+
+- name: Import internal certs tasks
+  import_tasks: internal-certs.yml
