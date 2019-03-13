@@ -1,2 +1,3 @@
 ---
 ispmail_dovecot_replication_peer: south.mail.local
+domain_name: north.mail.local
