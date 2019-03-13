@@ -1,39 +1,13 @@
 ---
-- name: Generate the list of certificates to be created
-  set_fact:
-    # TODO(shaka) : add conditional here
-    # TODO(shaka) : sign demo certs if demo mode
-    ispmail_internal_tls_material:
-      - name: dovecot internal
-        privatekey: /etc/ssl/dovecot/internal/privkey.pem
-        csr: /etc/ssl/dovecot/internal/csr.pem
-        cert: /etc/ssl/dovecot/internal/cert.pem
-        common_name: "{{ domain_name }}"
-        alt_names:
-          - "IP:{{ ansible_default_ipv4.address }}"
-          - "DNS:{{ domain_name }}"
-      - name: postfix internal
-        privatekey: /etc/ssl/postfix/internal/privkey.pem
-        csr: /etc/ssl/postfix/internal/csr.pem
-        cert: /etc/ssl/postfix/internal/cert.pem
-        common_name: "{{ domain_name }}"
-        alt_names:
-          - "IP:{{ ansible_default_ipv4.address }}"
-          - "DNS:{{ domain_name }}"
-      - name: database internal
-        privatekey: /etc/ssl/postgres/internal/privkey.pem
-        csr: /etc/ssl/postgres/internal/csr.pem
-        cert: /etc/ssl/postgres/internal/cert.pem
-        common_name: "{{ domain_name }}"
-        alt_names:
-          - "IP:{{ ansible_default_ipv4.address }}"
-          - "DNS:{{ domain_name }}"
-
 - name: Create directories
   file:
     path: "{{ item[0][item[1]]| dirname }}"
     state: directory
-  loop: "{{ ispmail_internal_tls_material | product(['privatekey', 'csr', 'cert']) | list}}"
+  loop: "{{
+    ispmail_internal_certs
+    | product(['privatekey', 'csr', 'cert'])
+    | list
+  }}"
   become: true
 
 - name: Generate OpenSSL private keys
@@ -43,7 +17,7 @@
     mode: 0640
     group: root
     owner: root
-  loop: "{{ ispmail_internal_tls_material }}"
+  loop: "{{ ispmail_internal_certs }}"
   become: true
 
 - name: Generate an OpenSSL Certificate Signing Request
@@ -54,7 +28,7 @@
     subject_alt_name: "{{ item.alt_names }}"
     digest: sha512
     state: present
-  loop: "{{ ispmail_internal_tls_material }}"
+  loop: "{{ ispmail_internal_certs }}"
   become: true
 
 - name: Generate a Self Signed OpenSSL certificate
@@ -66,5 +40,5 @@
     valid_in: "{{ 60*60*24*365 }}"
     provider: ownca
     state: present
-  loop: "{{ ispmail_internal_tls_material }}"
+  loop: "{{ ispmail_internal_certs }}"
   become: true
