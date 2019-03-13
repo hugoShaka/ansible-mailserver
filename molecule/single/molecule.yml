@@ -13,6 +13,7 @@ platforms:
   - name: single
     groups:
       - mta
+      - reverse_proxy
       - mda
       - db
       - test
@@ -36,6 +37,7 @@ provisioner:
   inventory:
     links:
       group_vars: ../../group_vars/single
+      host_vars: ../../host_vars/test-single
   playbooks:
     create: ../create.yml
     converge: ../playbook.yml
