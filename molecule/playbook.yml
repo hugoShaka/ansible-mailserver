@@ -9,7 +9,7 @@
     - nginx
 
 - name: Deploy certificates
-  hosts: mail
+  hosts: mail:mta:mda:reverse_proxy:db
   roles:
     - ispmail-certificate
   tags:
