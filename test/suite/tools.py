@@ -36,12 +36,6 @@ def insert_virtual_alias_domains(database_address: str, alias_domains: List):
 
     do_query(database_address, ADD_ALIAS_DOMAIN_QUERY, alias_domains)
 
-
-def insert_virtual_aliases(server_address: str, aliases: List):
-    """Add aliases fixtures into the database"""
-
-    do_query(server_address, ADD_ALIASES_QUERY, aliases)
-
 def insert_virtual_aliases(server_address: str, aliases: List):
     """Add aliases fixtures into the database"""
 
