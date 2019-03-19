@@ -9,34 +9,29 @@
   loop:
     - "{{ node_ca_key | dirname }}"
     - "{{ node_ca_cert | dirname }}"
-  become: true
 
 - name: Generate an OpenSSL private key.
   openssl_privatekey:
     path: "{{ node_ca_key }}"
-  become: true
 
 - name: Generate an OpenSSL CSR.
   openssl_csr:
     path: "{{ node_ca_key }}.csr"
     privatekey_path: "{{ node_ca_key }}"
     common_name: "{{ domain_name }}"
-  become: true
 
 - name: Generate a Self Signed OpenSSL certificate
+  # cert is valid for 10 years
   openssl_certificate:
     path: "{{ node_ca_cert }}"
     privatekey_path: "{{ node_ca_key }}"
     csr_path: "{{ node_ca_key }}.csr"
     provider: selfsigned
-  become: true
-  # cert is valid for 10 years
 
 - name: Recover certificate
   slurp:
     src: "{{ node_ca_cert }}"
   register: certificate
-  become: true
 
 - name: Trust CA on every server
   copy:
@@ -47,5 +42,4 @@
   delegate_to: "{{ item }}"
   with_inventory_hostnames:
     - mail
-  become: true
   notify: update ca-certificates
