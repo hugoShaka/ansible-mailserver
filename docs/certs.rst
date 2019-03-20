@@ -9,7 +9,7 @@ Certificates
 Introduction
 ------------
 
-A lot of differets certificates are used in this role. We can divide them in
+A lot of different certificates are used in this role. We can divide them in
 two categories : 
 
 - certificates that will be used by external entities (MXs, MUA, ...)
@@ -21,7 +21,7 @@ Public facing certs
 -------------------
 
 Those certs should be trusted by the client (MX or MUA).
-For testing setups we're using self-signed certificates, for productions ones
+For testing setups we're using self-signed certificates, for production ones
 letsencrypt is used.
 
 Depending on what protocol is used to contact the server the client will ask
@@ -54,7 +54,7 @@ Internal PKI
 ------------
 
 In case of internal communication we don't need our certs to be trusted by the
-usual PKIs (Public Key Infrastructures). We only need the cert to be trsuted by
+usual PKIs (Public Key Infrastructures). We only need the cert to be trusted by
 all of our servers.
 
 Each server will generate a CA (Certifiate Authority) and sign its certificates
