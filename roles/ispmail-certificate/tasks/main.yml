@@ -56,3 +56,7 @@
     provider: selfsigned
     selfsigned_digest: sha512
     state: present
+
+- name: Import PKI tasks
+  import_tasks: pki.yml
+  become: true

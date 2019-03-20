@@ -12,6 +12,7 @@ platforms:
   # for testing purposes in the create.yml
   - name: north
     groups:
+      - mail
       - mta
       - mda
       - db
@@ -25,6 +26,7 @@ platforms:
 
   - name: south
     groups:
+      - mail
       - reverse_proxy
       - mta
       - mda
