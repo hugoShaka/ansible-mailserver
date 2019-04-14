@@ -31,11 +31,11 @@
 - name: Recover certificate
   slurp:
     src: "{{ node_ca_cert }}"
-  register: certificate
+  register: ca_certificate
 
 - name: Trust CA on every server
   copy:
-    content: "{{ certificate['content'] | b64decode }}"
+    content: "{{ ca_certificate['content'] | b64decode }}"
     dest: "/usr/local/share/ca-certificates/{{ domain_name }}.crt"
     owner: root
     group: root
