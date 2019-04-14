@@ -31,7 +31,7 @@
   loop: "{{ ispmail_internal_certs }}"
   become: true
 
-- name: Generate a Self Signed OpenSSL certificate
+- name: Sign internal certificate
   openssl_certificate:
     path: "{{ item.cert }}"
     ownca_path: "{{ node_ca_cert }}"
@@ -42,3 +42,19 @@
     state: present
   loop: "{{ ispmail_internal_certs }}"
   become: true
+
+- name: Read certificate content
+  slurp:
+    src: "{{ item.cert }}"
+  register: internal_certs
+  loop: "{{ ispmail_internal_certs }}"
+
+- name: Write fullchain
+  copy:
+    content: |-
+      {{ item.content | b64decode }}
+      {{ ca_certificate.content | b64decode }}
+    dest: "{{ item.item.fullchain }}"
+    owner: root
+    group: root
+  loop: "{{ internal_certs.results }}"
