@@ -71,6 +71,8 @@
   loop:
     - 10-mail.conf
     - 10-ssl.conf
+    - 20-imap.conf
+    - 20-pop3.conf
     - auth-sql.conf.ext
 
 - name: Copy static configuration files

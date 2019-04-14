@@ -18,6 +18,7 @@ service aggregator {
 service doveadm {
   inet_listener {
     port = {{ ispmail_dovecot_doveadm_port }}
+    ssl = yes
   }
 }
 
