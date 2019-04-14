@@ -19,6 +19,7 @@
     path: "{{ node_ca_key }}.csr"
     privatekey_path: "{{ node_ca_key }}"
     common_name: "{{ domain_name }}"
+    basic_constraints: "CA:true"
 
 - name: Generate a Self Signed OpenSSL certificate
   # cert is valid for 10 years
