@@ -1,8 +1,8 @@
-# ISPmail Ansible Playbook #
+# Mailserver Ansible Playbook
 
 This repository contains a playbook and roles that you can use to set up your
 own Debian-based mail server. Behind the scenes, it makes use of postfix,
- dovecot, postgresql.
+dovecot, postgresql.
 
 This is a modified version of the original repo:
 (https://git.workaround.org/chaas/ansible-ispmail-jessie/)
@@ -54,12 +54,12 @@ Tests are  manually started:
 Test suites `test_imap.py` and `test_smtp.py` hit by default
 `north.mail.local`. The target can be configured with the flag `--server`.
 
-# Credits and copyrights #
+# Credits and copyrights
 
 The original code was written by Christoph "Signum" Haas © for
 (http://www.workaround.org) and is licensed under MIT.
 Please take a look at his article about mailservers, it's one of the best you
-could find on the Internet.
+can find on the Internet.
 
 Contributors:
 - Christopher Haas (original code: ansible-ispmail-jessie)
