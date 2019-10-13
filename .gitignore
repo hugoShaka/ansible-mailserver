@@ -2,7 +2,7 @@
 log
 .tags
 .tags*
-.venv
+.venv*
 *.retry
 *junit-report.xml
 __pycache__
