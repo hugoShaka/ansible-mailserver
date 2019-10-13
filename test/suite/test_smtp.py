@@ -9,7 +9,7 @@ from tools import server_address, database_address  # noqa: F401
 
 
 @pytest.fixture(scope="module")  # noqa: F811
-def server(server_address, database_address):
+def server(server_address, database_address):  # noqa: F811
     """Add fixtures into the database before testing"""
 
     domains = [(1, "sith.local"), (2, "jedi.local")]

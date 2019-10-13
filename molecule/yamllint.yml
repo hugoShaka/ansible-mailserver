@@ -11,4 +11,7 @@ rules:
   line-length:  # 80 chars should be enough, but don't fail if a line is longer
     max: 80
     level: warning
+
+ignore: |
+  .venv*/
 ...

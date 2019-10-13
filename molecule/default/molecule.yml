@@ -67,7 +67,7 @@ verifier:
     - ../../test/suite/additional/replication.py
   options:
     junit-xml: junit-report.xml
-    host: north,south
+    hosts: north,south
     verbosity: 2
   lint:
     name: flake8
