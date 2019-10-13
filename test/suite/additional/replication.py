@@ -19,7 +19,7 @@ def servers():
 
     server_ips = []
     for mda_host in mda_hosts:
-        mda_facts = inventory.run(mda_host, "setup")
+        mda_facts = inventory.run_module(mda_host, "setup", [])
         mda_ip = mda_facts["ansible_facts"]["ansible_default_ipv4"]["address"]
         server_ips.append(mda_ip)
 
