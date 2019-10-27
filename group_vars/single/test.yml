@@ -6,3 +6,7 @@ ispmail_postfix_smtpd_countlimit: 5000
 ispmail_mailserver_password: 'TestDatabasePassword'
 ispmail_postfix_database_password: 'TestDatabasePassword'
 ispmail_dovecot_database_password: 'TestDatabasePassword'
+
+ispmail_public_certificate_directory: /etc/letsencrypt/live/domain
+ispmail_public_certificate_location: /etc/letsencrypt/live/domain/fullchain.pem
+ispmail_public_certificate_keyfile: /etc/letsencrypt/live/domain/privkey.pem

@@ -9,5 +9,5 @@ ispmail_postfix_database_password: "{{ lookup('password',
   'credentials/postfix_database_password length=15') }}"
 ispmail_postfix_smtpd_milters: "inet:localhost:11332"
 
-certificate_location: /etc/letsencrypt/live/sub.domain.tld/fullchain.pem
-certificate_keyfile: /etc/letsencrypt/live/sub.domain.tld/privkey.pem
+certificate_location: "{{ ispmail_public_certificate_location }}"
+certificate_keyfile: "{{ ispmail_public_certificate_keyfile }}"

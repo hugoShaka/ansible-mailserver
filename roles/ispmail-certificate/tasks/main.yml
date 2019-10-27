@@ -1,7 +1,7 @@
 ---
 - name: Create cert directory
   file:
-    path: "{{ ispmail_certificate_directory }}"
+    path: "{{ ispmail_public_certificate_directory }}"
     state: directory
     owner: root
     group: root
@@ -25,37 +25,10 @@
   until: pip_result is succeeded
   retries: 3
 
-- name: Generate an OpenSSL private key
-  openssl_privatekey:
-    path: "{{ ispmail_certificate_keyfile }}"
-    state: present
-    mode: 0640
-    group: root
-    owner: root
-
-- name: Generate an OpenSSL Certificate Signing Request
-  openssl_csr:
-    path: "{{ ispmail_certificate_signing_request }}"
-    privatekey_path: "{{ ispmail_certificate_keyfile }}"
-    common_name: "{{ ispmail_certificate_domains | join(',') }}"
-    country_name: "{{ ispmail_certificate_country }}"
-    state_or_province_name: "{{ ispmail_certificate_state }}"
-    locality_name: "{{ ispmail_certificate_city }}"
-    organization_name: "{{ ispmail_certificate_organisation }}"
-    organizational_unit_name: "{{ ispmail_certificate_orgunit }}"
-    email_address: "{{ ispmail_certificate_email }}"
-    digest: sha512
-    state: present
-
-- name: Generate a Self Signed OpenSSL certificate
-  openssl_certificate:
-    path: "{{ ispmail_certificate_location }}"
-    privatekey_path: "{{ ispmail_certificate_keyfile }}"
-    csr_path: "{{ ispmail_certificate_signing_request }}"
-    valid_in: "{{ ispmail_certificate_days_valid * 86400 }}"
-    provider: selfsigned
-    selfsigned_digest: sha512
-    state: present
+- name: Import self-signed public cert tasks
+  import_tasks: selfsigned-public-certs.yml
+  when: ispmail_public_certificate_source == "selfsigned"
+  become: true
 
 - name: Import PKI tasks
   import_tasks: pki.yml
