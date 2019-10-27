@@ -10,9 +10,15 @@
   retries: 3
   become: true
 
+- name: Create directory for LE HTTP challenge
+  file:
+    path: /var/www/letsencrypt
+    state: directory
+  become: true
+
 - name: Deploy nginx default template for LE challenge
   template:
     src: default.conf.j2
-    dest: /etc/nginx/conf.d/default.conf
+    dest: /etc/nginx/sites-available/default
   become: true
   notify: reload nginx
