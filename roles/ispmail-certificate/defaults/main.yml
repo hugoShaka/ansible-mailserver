@@ -1,22 +1,28 @@
 ---
-ispmail_certificate_directory: /etc/letsencrypt/live/sub.domain.tld
-ispmail_certificate_location: /etc/letsencrypt/live/sub.domain.tld/fullchain.pem
-ispmail_certificate_keyfile: /etc/letsencrypt/live/sub.domain.tld/privkey.pem
-ispmail_certificate_signing_request: /etc/ssl/private/sub.domain.tld.csr
-# ispmail_certificate_cafile: /etc/letsencrypt/live/sub.domain.tld/chain.pem
+# Public certs
+ispmail_public_certificate_source: "selfsigned"
 
-ispmail_certificate_country: DE
-ispmail_certificate_state: Hamburg
-ispmail_certificate_city: Hamburg
-ispmail_certificate_organisation: workaround.org
-ispmail_certificate_orgunit: IT-Crowd
-ispmail_certificate_domains:
+ispmail_public_certificate_directory: /etc/letsencrypt/live/domain
+ispmail_public_certificate_location: /etc/letsencrypt/live/domain/fullchain.pem
+ispmail_public_certificate_keyfile: /etc/letsencrypt/live/domain/privkey.pem
+ispmail_public_certificate_signing_request: /etc/ssl/private/domain.csr
+
+ispmail_public_certificate_country: DE
+ispmail_public_certificate_state: Hamburg
+ispmail_public_certificate_city: Hamburg
+ispmail_public_certificate_organisation: workaround.org
+ispmail_public_certificate_orgunit: IT-Crowd
+ispmail_public_certificate_domains:
   - example.org
-ispmail_certificate_email: postmaster@example.org
-ispmail_certificate_days_valid: 3650
+ispmail_public_certificate_email: postmaster@example.org
+ispmail_public_certificate_days_valid: 3650
+
+# Internal PKI
 
 node_ca_key: /etc/ssl/ca/privkey.pem
 node_ca_cert: /etc/ssl/ca/cert.pem
+
+# Internal certs
 
 # Internal certs items should follow the same structure as in this example.
 # internal_certs:

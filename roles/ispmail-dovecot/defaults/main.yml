@@ -12,5 +12,5 @@ ispmail_dovecot_doveadm_port: 12345
 ispmail_dovecot_doveadm_secret: "{{ lookup('password',
   'credentials/dovecot_doveadm_password length=15') }}"
 
-certificate_location: /etc/letsencrypt/live/sub.domain.tld/fullchain.pem
-certificate_keyfile: /etc/letsencrypt/live/sub.domain.tld/privkey.pem
+certificate_location: "{{ ispmail_public_certificate_location }}"
+certificate_keyfile: "{{ ispmail_public_certificate_keyfile }}"
