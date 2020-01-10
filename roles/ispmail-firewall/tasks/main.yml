@@ -1,0 +1,15 @@
+---
+- name: Install or update iptables-related packages
+  apt:
+    update_cache: true
+    name:
+      - iptables
+      - iptables-persistent
+    state: present
+    autoclean: true
+
+- name: Copy iptables rules
+  template:
+    src: "{{ firewall_name }}/rules.v4.j2"
+    dest: /etc/iptables/rules.v4
+  notify: reload iptables

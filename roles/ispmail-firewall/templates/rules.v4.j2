@@ -1,0 +1,43 @@
+{#
+  Test the result by typing: ansible all -i "localhost," -c local -m template -a "src=rules.v4.j2 dest=./rules.v4.testrender" --extra-vars=@../../vars/servers.yml
+#}
+# FILTER chain - do all traffic filtering here
+*filter
+
+# Set default policies
+:INPUT DROP [0:0]
+:FORWARD DROP [0:0]
+:OUTPUT ACCEPT [0:0]
+
+#Opens the selected ports in input
+{% for port in ports}
+-A INPUT -p tcp -m tcp --dport {{ port }} -j ACCEPT
+{% endfor}
+
+# If a packet did not match any of the above rules, it will be dropped
+# because of the policy "INPUT DROP" at the top of this table
+
+COMMIT
+# End of FILTER chain
+
+# MANGLE chain
+*mangle
+:PREROUTING ACCEPT [0:0]
+:INPUT ACCEPT [0:0]
+:FORWARD ACCEPT [0:0]
+:OUTPUT ACCEPT [0:0]
+:POSTROUTING ACCEPT [0:0]
+COMMIT
+# End of MANGLE chain
+
+# NAT chain (Network Address Translation)
+*nat
+
+# Set default policies
+:PREROUTING ACCEPT [0:0]
+:INPUT ACCEPT [0:0]
+:OUTPUT ACCEPT [0:0]
+:POSTROUTING ACCEPT [0:0]
+
+COMMIT
+# End of NAT chain
