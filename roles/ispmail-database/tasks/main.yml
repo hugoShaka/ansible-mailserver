@@ -13,7 +13,7 @@
 
 - name: Make sure postgresql server is started
   service:
-    name: postgresql@9.6-main
+    name: postgresql@11-main
     enabled: true
     state: started
 
@@ -71,7 +71,7 @@
 
 - name: Create the postgres user map
   blockinfile:
-    dest: /etc/postgresql/9.6/main/pg_ident.conf
+    dest: /etc/postgresql/11/main/pg_ident.conf
     marker: "### {mark} ANSIBLE MANAGED BLOCK : MAILMAP ###"
     insertafter: "^#\\s-+"
     content: |
@@ -83,7 +83,7 @@
 
 - name: Create postgresql configuration files
   template:
-    dest: "/etc/postgresql/9.6/main/{{ item }}"
+    dest: "/etc/postgresql/11/main/{{ item }}"
     src: "{{ item }}.j2"
     mode: 0640
     owner: postgres
