@@ -18,7 +18,7 @@ platforms:
       - db
       - reverse_proxy
       - test
-    image: minimum2scp/systemd-stretch
+    image: minimum2scp/systemd-buster
     privileged: true
     command: /sbin/init
     networks:
@@ -31,7 +31,7 @@ platforms:
       - mta
       - mda
       - test
-    image: minimum2scp/systemd-stretch
+    image: minimum2scp/systemd-buster
     privileged: true
     command: /sbin/init
     networks:

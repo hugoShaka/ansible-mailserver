@@ -20,8 +20,10 @@ def server(server_address, database_address):  # noqa: F811
         (2, "{PLAIN}test", "leia"),
     ]
     alias_domains = [("good.local", "jedi.local"), ("evil.local", "sith.local")]
-    aliases = [(2, "anakin", "vader@sith.local"),  # anakin@jedi.local
-               (2, "kenobi", "ben@tatooine.local")]  # kenobi@jedi.local
+    aliases = [
+        (2, "anakin", "vader@sith.local"),  # anakin@jedi.local
+        (2, "kenobi", "ben@tatooine.local"),
+    ]  # kenobi@jedi.local
 
     tools.insert_virtual_domains(database_address, domains)
     tools.insert_virtual_users(database_address, users)
@@ -127,12 +129,9 @@ def test_non_existant_sender_domain(server):
 
 
 def test_impostor_relay(server):
-    assert (
-        smtp_error_code(
-            "johndoe@mail.not.local", sender="vader@sith.local", server=server
-        )
-        == 554
-    )
+    assert smtp_error_code(
+        "johndoe@mail.not.local", sender="vader@sith.local", server=server
+    ) in [553, 554]
 
 
 @pytest.mark.parametrize(
