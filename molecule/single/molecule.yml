@@ -18,7 +18,7 @@ platforms:
       - mda
       - db
       - test
-    image: minimum2scp/systemd-stretch
+    image: minimum2scp/systemd-buster
     privileged: true
     command: /sbin/init
     networks:

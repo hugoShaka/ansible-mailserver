@@ -14,6 +14,14 @@
 # login user, so that login processes can't disturb other processes.
 #default_internal_user = dovecot
 
+{% if ispmail_dovecot_disable_auth_penalty | default(False) %}
+service anvil {
+  unix_listener anvil-auth-penalty {
+    mode = 0
+  }
+}
+{% endif %}
+
 service imap-login {
   inet_listener imap {
     #port = 143

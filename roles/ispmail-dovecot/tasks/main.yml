@@ -39,6 +39,14 @@
     permissions: r
     state: present
 
+- name: Define login trusted networks
+  lineinfile:
+    dest: /etc/dovecot/dovecot.conf
+    regexp: '^(#)?login_trusted_networks ='
+    line: 'login_trusted_networks = {{ ispmail_dovecot_login_trusted_networks }}'
+    backrefs: true
+  notify: restart dovecot
+
 - name: Allow LOGIN authentication method for Outlook clients
   lineinfile:
     dest: /etc/dovecot/conf.d/10-auth.conf
@@ -69,6 +77,7 @@
     dest: "/etc/dovecot/conf.d/{{ item }}"
   notify: restart dovecot
   loop:
+    - 10-master.conf
     - 10-mail.conf
     - 10-ssl.conf
     - 20-imap.conf
@@ -81,7 +90,6 @@
     dest: "/etc/dovecot/conf.d/{{ item }}"
   notify: restart dovecot
   loop:
-    - 10-master.conf
     - 15-mailboxes.conf
     - 20-lmtp.conf
     - 90-sieve.conf
