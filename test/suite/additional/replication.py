@@ -5,9 +5,11 @@ import uuid
 import time
 import os
 
+import tools
+from tools import database_address  # noqa: F401
 
-@pytest.fixture()
-def servers():
+@pytest.fixture(scope="module")
+def servers(database_address):
     import testinfra.utils.ansible_runner
 
     inventory = testinfra.utils.ansible_runner.AnsibleRunner(
@@ -23,12 +25,20 @@ def servers():
         mda_ip = mda_facts["ansible_facts"]["ansible_default_ipv4"]["address"]
         server_ips.append(mda_ip)
 
+    domains = [(1, "sith.local"), (2, "jedi.local")]
+    users = [
+        (2, "{PLAIN}test", "rey"),
+    ]
+
+    tools.insert_virtual_domains(database_address, domains)
+    tools.insert_virtual_users(database_address, users)
+
     return server_ips
 
 
 @pytest.fixture()
 def populate_mailbox(servers):
-    _, conn = login("padme@jedi.local", server=servers[0])
+    _, conn = login("rey@jedi.local", server=servers[0])
     folder = "folder-%s" % uuid.uuid4()
     flag = "May the force be with you %s" % uuid.uuid4()
     conn.create_folder(folder)
@@ -67,8 +77,8 @@ def check_messages(conn, folder, flag):
 
 def test_read_email(populate_mailbox, servers):
     """Reads fixture emails and recover content"""
-    _, conn1 = login("padme@jedi.local", server=servers[0])
-    _, conn2 = login("padme@jedi.local", server=servers[1])
+    _, conn1 = login("rey@jedi.local", server=servers[0])
+    _, conn2 = login("rey@jedi.local", server=servers[1])
     folder, flag = populate_mailbox
     # We wait or the server to do the sync
     time.sleep(5)
