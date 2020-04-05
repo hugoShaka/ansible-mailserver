@@ -8,6 +8,7 @@ ispmail_dovecot_databases:
 ispmail_debug: false
 # ispmail_dovecot_replication_peer:
 
+ispmail_dovecot_login_trusted_networks: ""
 ispmail_dovecot_doveadm_port: 12345
 ispmail_dovecot_doveadm_secret: "{{ lookup('password',
   'credentials/dovecot_doveadm_password length=15') }}"
