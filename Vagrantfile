@@ -8,7 +8,7 @@ Vagrant.configure(2) do |config|
   config.vm.define "docker" do |subconfig|
     subconfig.vm.hostname = "docker-vm"
     subconfig.vm.provider "virtualbox" do |vb|
-      vb.memory=8192
+      vb.memory=4096
       vb.cpus=4
     end
     subconfig.vm.synced_folder ".", "/vagrant", type: "rsync", rsync__exclude: ".git/"
