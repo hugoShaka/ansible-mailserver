@@ -11,3 +11,4 @@ dovecot_internal_certificate:
     - "DNS:{{ domain_name }}"
 
 ispmail_dovecot_internal_certs: "{{ [dovecot_internal_certificate] }}"
+ispmail_dovecot_disable_auth_penalty: true

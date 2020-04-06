@@ -10,3 +10,5 @@ ispmail_dovecot_database_password: 'TestDatabasePassword'
 ispmail_public_certificate_directory: /etc/letsencrypt/live/domain
 ispmail_public_certificate_location: /etc/letsencrypt/live/domain/fullchain.pem
 ispmail_public_certificate_keyfile: /etc/letsencrypt/live/domain/privkey.pem
+
+ispmail_dovecot_disable_auth_penalty: true
