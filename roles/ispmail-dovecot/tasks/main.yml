@@ -43,7 +43,8 @@
   lineinfile:
     dest: /etc/dovecot/dovecot.conf
     regexp: '^(#)?login_trusted_networks ='
-    line: 'login_trusted_networks = {{ ispmail_dovecot_login_trusted_networks }}'
+    line: >-
+      login_trusted_networks = {{ ispmail_dovecot_login_trusted_networks }}
     backrefs: true
   notify: restart dovecot
 

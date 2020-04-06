@@ -5,3 +5,4 @@ IMAPClient==2.1.0
 psycopg2-binary
 dnspython
 Sphinx
+pytest-xdist
