@@ -66,6 +66,8 @@ verifier:
   additional_files_or_dirs:
     - ../../test/suite/additional/replication.py
   options:
+    numprocesses: auto
+    dist: loadscope
     junit-xml: junit-report.xml
     hosts: north,south
     verbosity: 2
