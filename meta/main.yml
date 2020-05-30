@@ -1,32 +1,15 @@
 ---
-galaxy_info:
-  author: Hugo Shaka
-  description: Setup an entire mailserver stack
-  license: GPLv3
-  min_ansible_version: 2.6
-  platforms:
-  - name: Debian
-    versions:
-     - wheezy
-     - jessie
-     - stretch
-
-  # Below are all categories currently available. Just as with
-  # the platforms above, uncomment those that apply to your role.
-  #
-  categories:
-  #- cloud
-  #- cloud:ec2
-  #- cloud:gce
-  #- cloud:rax
-  #- database
-  #- database:nosql
-  #- database:sql
-  #- development
-  #- monitoring
-  #- networking
-  #- packaging
-  - system
-  #- web
-dependencies: []
-
+namespace: hugoShaka
+name: mailserver
+version: 1.0.0
+readme: README.md
+authors:
+    - Christopher Haas
+    - hugoShaka
+    - dric0
+license: MIT
+tags:
+    - mail
+repository: https://github.com/hugoShaka/ansible-mailserver
+# documentation: documentation URL
+issues: https://github.com/hugoShaka/ansible-mailserver/issues
