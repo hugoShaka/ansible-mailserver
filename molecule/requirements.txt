@@ -1,5 +1,5 @@
 ansible==2.9.9
-molecule==2.22
+molecule==3.0.4
 docker-py==1.10.6
 IMAPClient==2.1.0
 psycopg2-binary
