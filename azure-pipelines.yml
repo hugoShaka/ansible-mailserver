@@ -1,6 +1,6 @@
 ---
 jobs:
-  - job: Single Postgres
+  - job: Single_Postgres
     pool:
       vmImage: 'Ubuntu 16.04'
     steps:
@@ -39,7 +39,7 @@ jobs:
           testResultsFiles: './molecule/single/junit-report.xml'
           testRunTitle: 'Single server'
 
-  - job: Double Postgres
+  - job: Double_Postgres
     pool:
       vmImage: 'Ubuntu 16.04'
     steps:
@@ -78,7 +78,7 @@ jobs:
           testResultsFiles: './molecule/default/junit-report.xml'
           testRunTitle: 'Double'
 
-  - job: Double Sqlite
+  - job: Double_Sqlite
     pool:
       vmImage: 'Ubuntu 16.04'
     steps:
