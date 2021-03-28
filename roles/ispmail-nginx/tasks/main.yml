@@ -13,12 +13,14 @@
 - name: Create directory for LE HTTP challenge
   file:
     path: /var/www/letsencrypt
+    mode: "0750"
     state: directory
   become: true
 
 - name: Deploy nginx default template for LE challenge
   template:
     src: default.conf.j2
+    mode: "0640"
     dest: /etc/nginx/sites-available/default
   become: true
   notify: reload nginx

@@ -1,0 +1,18 @@
+---
+- name: Install postgres packages
+  apt:
+    name:
+      - sqlite3
+    state: present
+  register: apt_result
+  until: apt_result is succeeded
+  retries: 3
+
+- name: Create db file and set ownership
+  file:
+    path: /etc/maildb.sqlite3
+    state: touch
+    owner: root
+    group: root
+    mode: "0744"
+  notify: initialize database

@@ -28,6 +28,7 @@ platforms:
     groups:
       - mail
       - reverse_proxy
+      - db
       - mta
       - mda
       - test
@@ -50,7 +51,7 @@ provisioner:
     ANSIBLE_ROLES_PATH: ../../roles
   inventory:
     links:
-      group_vars: ../../group_vars/double
+      group_vars: ../../group_vars/double-sqlite
       host_vars: ../../host_vars/test-double
   playbooks:
     create: ../create.yml
@@ -59,19 +60,20 @@ provisioner:
   lint:
     name: ansible-lint
 scenario:
-  name: default
+  name: double-sqlite
 verifier:
   name: testinfra
   directory: ../../test/suite/
   additional_files_or_dirs:
     - ../../test/suite/additional/replication.py
   options:
-    maxfail: 2
-    numprocesses: auto
-    dist: loadscope
+    # numprocesses: auto
+    # dist: loadscope
+    maxfail: 1
     junit-xml: junit-report.xml
     hosts: north,south
     verbosity: 2
+    dbtype: sqlite
   lint:
     name: flake8
     options:

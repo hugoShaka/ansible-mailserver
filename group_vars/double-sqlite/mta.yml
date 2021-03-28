@@ -1,0 +1,13 @@
+---
+postfix_internal_certificate:
+  name: postfix internal
+  privatekey: /etc/ssl/postfix/internal/privkey.pem
+  csr: /etc/ssl/postfix/internal/csr.pem
+  cert: /etc/ssl/postfix/internal/cert.pem
+  fullchain: /etc/ssl/postfix/internal/fullchain.pem
+  common_name: "postfix.internal.{{ domain_name }}"
+  alt_names:
+    - "IP:{{ ansible_default_ipv4.address }}"
+    - "DNS:{{ domain_name }}"
+
+ispmail_postfix_internal_certs: "{{ [postfix_internal_certificate] }}"

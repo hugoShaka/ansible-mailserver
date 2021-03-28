@@ -3,12 +3,11 @@ import ssl
 import pytest
 import uuid
 
-import tools
-from tools import server_address, database_address  # noqa: F401
+from tools import server_address, database  # noqa: F401
 
 
 @pytest.fixture(scope="module")  # noqa: F811
-def server(server_address, database_address):  # noqa: F811
+def server(server_address, database):  # noqa: F811
     """Add fixtures into the database before teesting"""
 
     domains = [(1, "sith.local"), (2, "jedi.local")]
@@ -18,8 +17,9 @@ def server(server_address, database_address):  # noqa: F811
         (1, "{PLAIN}test", "maul"),
     ]
 
-    tools.insert_virtual_domains(database_address, domains)
-    tools.insert_virtual_users(database_address, users)
+    database.insert_virtual_domains(domains)
+    database.insert_virtual_users(users)
+    print(server_address)
     return server_address
 
 

@@ -1,0 +1,2 @@
+dbpath = /etc/maildb.sqlite3
+query = SELECT '@' || destination FROM virtual_alias_domains WHERE ('@' || source)='%s'

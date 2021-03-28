@@ -1,0 +1,2 @@
+dbpath = /etc/maildb.sqlite3
+query = SELECT u.email || '@' || d.name FROM virtual_users AS u JOIN virtual_domains AS d ON u.domain_id = d.id WHERE d.name='%d'

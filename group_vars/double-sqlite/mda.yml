@@ -1,0 +1,14 @@
+---
+dovecot_internal_certificate:
+  name: dovecot internal
+  privatekey: /etc/ssl/dovecot/internal/privkey.pem
+  csr: /etc/ssl/dovecot/internal/csr.pem
+  cert: /etc/ssl/dovecot/internal/cert.pem
+  fullchain: /etc/ssl/dovecot/internal/fullchain.pem
+  common_name: "dovecot.internal.{{ domain_name }}"
+  alt_names:
+    - "IP:{{ ansible_default_ipv4.address }}"
+    - "DNS:{{ domain_name }}"
+
+ispmail_dovecot_internal_certs: "{{ [dovecot_internal_certificate] }}"
+ispmail_dovecot_disable_auth_penalty: true

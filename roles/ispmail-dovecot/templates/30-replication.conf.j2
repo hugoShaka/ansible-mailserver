@@ -24,3 +24,7 @@ service doveadm {
 
 doveadm_port = {{ ispmail_dovecot_doveadm_port }}
 doveadm_password = {{ ispmail_dovecot_doveadm_secret }}
+
+# Those 10 and 15 seconds timeout workaround and io issue
+# when running in containers during local development
+replication_dsync_parameters = -d -N -l 15 -T 10 -U
