@@ -9,9 +9,10 @@
   retries: 3
 
 - name: Create db file and set ownership
-  file:
-    path: /etc/maildb.sqlite3
-    state: touch
+  copy:
+    content: ""
+    dest: /etc/maildb.sqlite3
+    force: false
     owner: root
     group: root
     mode: "0744"
