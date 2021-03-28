@@ -11,3 +11,5 @@ ispmail_postfix_smtpd_milters: "inet:localhost:11332"
 
 certificate_location: "{{ ispmail_public_certificate_location }}"
 certificate_keyfile: "{{ ispmail_public_certificate_keyfile }}"
+
+ispmail_database: pgsql

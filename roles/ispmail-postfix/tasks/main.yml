@@ -14,6 +14,7 @@
     name:
       - postfix
       - postfix-pgsql
+      - postfix-sqlite
     state: present
   register: apt_result
   until: apt_result is succeeded
@@ -34,22 +35,24 @@
     mode: 0644
   notify: restart postfix
   loop:
-    - pgsql-sender-login-maps.cf
-    - pgsql-virtual-mailbox-domains.cf
-    - pgsql-virtual-mailbox-maps.cf
-    - pgsql-virtual-alias-maps.cf
-    - pgsql-virtual-alias-domains.cf
-    - pgsql-virtual-alias-domains-maps.cf
-    - pgsql-email2email.cf
+    - "{{ ispmail_database }}-sender-login-maps.cf"
+    - "{{ ispmail_database }}-virtual-mailbox-domains.cf"
+    - "{{ ispmail_database }}-virtual-mailbox-maps.cf"
+    - "{{ ispmail_database }}-virtual-alias-maps.cf"
+    - "{{ ispmail_database }}-virtual-alias-domains.cf"
+    - "{{ ispmail_database }}-virtual-alias-domains-maps.cf"
+    - "{{ ispmail_database }}-email2email.cf"
 
 - name: Copy main.cf conf file
   template:
     src: main.cf.j2
+    mode: "0640"
     dest: /etc/postfix/main.cf
   notify: restart postfix
 
 - name: Copy master.cf conf file
   template:
     src: master.cf.j2
+    mode: "0640"
     dest: /etc/postfix/master.cf
   notify: restart postfix

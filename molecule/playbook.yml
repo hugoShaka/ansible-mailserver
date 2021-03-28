@@ -1,13 +1,13 @@
 ---
-- name: Deploy reverse proxy
-  hosts: reverse_proxy
-  # reverse_proxy = mta + mda + antispam
-  roles:
-    - ispmail-nginx
-  tags:
-    - reverse_proxy
-    - nginx
-
+# - name: Deploy reverse proxy
+#   hosts: reverse_proxy
+#   # reverse_proxy = mta + mda + antispam
+#   roles:
+#     - ispmail-nginx
+#   tags:
+#     - reverse_proxy
+#     - nginx
+#
 - name: Deploy certificates
   hosts: mail:mta:mda:reverse_proxy:db
   roles:

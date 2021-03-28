@@ -2,16 +2,24 @@
 - name: Copy SQL database schema to server
   copy:
     src: schema.sql
+    mode: "0644"
     dest: /tmp
   listen: initialize database
 
-- name: Set up SQL schema of mailserver database
+- name: Set up SQL schema of mailserver database (postgresql)
   postgresql_db:
     name: mailserver
     state: restore
     target: /tmp/schema.sql
   become: true
   become_user: postgres
+  when: ispmail_database == "pgsql"
+  listen: initialize database
+
+- name: Set up SQL schema of mailserver database (sqlite)
+  shell:
+    cmd: "sqlite3 /etc/maildb.sqlite3 < /tmp/schema.sql"
+  when: ispmail_database == "sqlite"
   listen: initialize database
 
 - name: Give pgadmin rights on the mail db
@@ -28,6 +36,7 @@
     - virtual_users
   become: true
   become_user: postgres
+  when: ispmail_database == "pgsql"
   listen: initialize database
 
   # This line is mandatory in order for pgadmin to be able to use the SERIALs
@@ -45,6 +54,7 @@
     - virtual_users_id_seq
   become: true
   become_user: postgres
+  when: ispmail_database == "pgsql"
   listen: initialize database
 
 - name: Give mail user rights on the mail db
@@ -61,4 +71,5 @@
     - virtual_users
   become: true
   become_user: postgres
+  when: ispmail_database == "pgsql"
   listen: initialize database

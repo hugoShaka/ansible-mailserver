@@ -2,6 +2,7 @@
 - name: Create directories
   file:
     path: "{{ item[0][item[1]]| dirname }}"
+    mode: "0750"
     state: directory
   loop: "{{
     ispmail_internal_certs
@@ -14,7 +15,7 @@
   openssl_privatekey:
     path: "{{ item.privatekey }}"
     state: present
-    mode: 0640
+    mode: "0640"
     group: root
     owner: root
   loop: "{{ ispmail_internal_certs }}"
@@ -55,6 +56,7 @@
       {{ item.content | b64decode }}
       {{ ca_certificate.content | b64decode }}
     dest: "{{ item.item.fullchain }}"
+    mode: "0640"
     owner: root
     group: root
   loop: "{{ internal_certs.results }}"

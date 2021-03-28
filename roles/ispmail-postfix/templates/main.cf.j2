@@ -157,7 +157,7 @@ mydestination = localhost, localhost.localdomain
 mynetworks = 127.0.0.0/8 [::ffff:127.0.0.0]/104 [::1]/128
 mailbox_size_limit = 0
 # Allow to use tags : user.foo@domain.tld -> user@fomain.tld
-recipient_delimiter = +-
+recipient_delimiter = +_
 #Listen on every network interface
 inet_interfaces = all
 
@@ -176,19 +176,19 @@ virtual_transport = lmtp:unix:private/dovecot-lmtp
 
 # Additional informations you may need :
 # proxy: creates a single socket for all requests
-# pgsql: specifies the driver to use to request
+# {{ ispmail_database }}: specifies the driver to use to request
 # Specify the conf file used by the driver to answer the request
 
 # Domains we handle mails for
-virtual_mailbox_domains = proxy:pgsql:/etc/postfix/pgsql-virtual-mailbox-domains.cf
+virtual_mailbox_domains = proxy:{{ ispmail_database }}:/etc/postfix/{{ ispmail_database }}-virtual-mailbox-domains.cf
 # Mailboxes which are valid and exist on the server
-virtual_mailbox_maps = proxy:pgsql:/etc/postfix/pgsql-virtual-mailbox-maps.cf
+virtual_mailbox_maps = proxy:{{ ispmail_database }}:/etc/postfix/{{ ispmail_database }}-virtual-mailbox-maps.cf
 # Aliases that are valid and applied before delivering the email
-virtual_alias_maps = proxy:pgsql:/etc/postfix/pgsql-virtual-alias-maps.cf,proxy:pgsql:/etc/postfix/pgsql-virtual-alias-domains-maps.cf,proxy:pgsql:/etc/postfix/pgsql-email2email.cf
+virtual_alias_maps = proxy:{{ ispmail_database }}:/etc/postfix/{{ ispmail_database }}-virtual-alias-maps.cf,proxy:{{ ispmail_database }}:/etc/postfix/{{ ispmail_database }}-virtual-alias-domains-maps.cf,proxy:{{ ispmail_database }}:/etc/postfix/{{ ispmail_database }}-email2email.cf
 # Domain aliases allow domain-wide aliases (a bit like DNAME but for email)
-virtual_alias_domains = proxy:pgsql:/etc/postfix/pgsql-virtual-alias-domains.cf
+virtual_alias_domains = proxy:{{ ispmail_database }}:/etc/postfix/{{ ispmail_database }}-virtual-alias-domains.cf
 # Addresses that we manage, we will force authentification for these
-smtpd_sender_login_maps = proxy:pgsql:/etc/postfix/pgsql-sender-login-maps.cf
+smtpd_sender_login_maps = proxy:{{ ispmail_database }}:/etc/postfix/{{ ispmail_database }}-sender-login-maps.cf
 
 
 # Specify the UID & GUI of the virtual worker and the mailbox

@@ -1,6 +1,6 @@
 ---
 jobs:
-  - job: Single
+  - job: Single Postgres
     pool:
       vmImage: 'Ubuntu 16.04'
     steps:
@@ -39,7 +39,7 @@ jobs:
           testResultsFiles: './molecule/single/junit-report.xml'
           testRunTitle: 'Single server'
 
-  - job: Double
+  - job: Double Postgres
     pool:
       vmImage: 'Ubuntu 16.04'
     steps:
@@ -76,4 +76,43 @@ jobs:
         inputs:
           testResultsFormat: 'JUnit'
           testResultsFiles: './molecule/default/junit-report.xml'
-          testRunTitle: 'Dual server'
+          testRunTitle: 'Double'
+
+  - job: Double Sqlite
+    pool:
+      vmImage: 'Ubuntu 16.04'
+    steps:
+
+      - task: UsePythonVersion@0
+        inputs:
+          versionSpec: '3.6'
+
+      - task: Bash@3
+        displayName: 'Install ansible and molecule'
+        inputs:
+          targetType: 'inline'
+          script: |
+            pip3 install --user setuptools wheel
+            pip3 install --user -r molecule/requirements.txt
+
+      - task: Bash@3
+        displayName: 'Lint'
+        inputs:
+          targetType: 'inline'
+          script: |
+            export PATH=$HOME/.local/bin:$PATH
+            molecule lint
+
+      - task: Bash@3
+        displayName: 'Molecule test'
+        inputs:
+          targetType: 'inline'
+          script: |
+            export PATH=$HOME/.local/bin:$PATH
+            molecule test -s double-sqlite
+
+      - task: PublishTestResults@2
+        inputs:
+          testResultsFormat: 'JUnit'
+          testResultsFiles: './molecule/default/junit-report.xml'
+          testRunTitle: 'Double sqlite'

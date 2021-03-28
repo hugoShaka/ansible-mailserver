@@ -2,6 +2,7 @@
 - name: Install dovecot packages
   apt:
     name:
+      - dovecot-sqlite
       - dovecot-pgsql
       - dovecot-pop3d
       - dovecot-imapd
@@ -28,6 +29,7 @@
   file:
     path: /var/vmail
     state: directory
+    mode: "0750"
     owner: vmail
     group: vmail
 
@@ -74,6 +76,7 @@
 
 - name: Copy dynamic configuration files
   template:
+    mode: "0640"
     src: "{{ item }}.j2"
     dest: "/etc/dovecot/conf.d/{{ item }}"
   notify: restart dovecot
@@ -88,6 +91,7 @@
 - name: Copy static configuration files
   copy:
     src: "{{ item }}"
+    mode: "0640"
     dest: "/etc/dovecot/conf.d/{{ item }}"
   notify: restart dovecot
   loop:
@@ -98,6 +102,7 @@
 - name: Copy replication conf (if a peer is defined)
   template:
     src: "{{ item }}.j2"
+    mode: "0640"
     dest: "/etc/dovecot/conf.d/{{ item }}"
   loop:
     - 30-replication.conf
@@ -121,6 +126,7 @@
     option: "{{ item.option }}"
     value: "{{ item.value }}"
     state: present
+    mode: "0640"
   loop:
     - option: debug_log_path
       value: /var/log/mail.debug
@@ -136,6 +142,7 @@
   template:
     src: dovecot-sql.conf.ext.j2
     dest: /etc/dovecot/{{ item.name }}-sql.conf
+    mode: "0640"
     owner: root
   loop: "{{ ispmail_dovecot_databases }}"
   notify: restart dovecot
@@ -144,7 +151,7 @@
   file:
     path: /etc/dovecot/dovecot.conf
     group: vmail
-    mode: 0644
+    mode: "0644"
   notify: restart dovecot
 
 - name: Fix ownership and mode of dovecot-sql.conf.ext
@@ -152,16 +159,18 @@
     path: /etc/dovecot/dovecot-sql.conf.ext
     owner: root
     group: root
-    mode: 0640
+    mode: "0640"
   notify: restart dovecot
 
 - name: Create directory for global sieve-after scripts
   file:
     path: /etc/dovecot/sieve-after
+    mode: "0750"
     state: directory
 
 - name: Create global sieve-after script to send spam to its mail folder
   copy:
     src: spam-to-folder.sieve
+    mode: "0640"
     dest: /etc/dovecot/sieve-after/spam-to-folder.sieve
   notify: recompile sieve script

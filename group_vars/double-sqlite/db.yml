@@ -1,0 +1,13 @@
+---
+database_internal_certificate:
+  name: database internal
+  privatekey: /etc/ssl/database/internal/privkey.pem
+  csr: /etc/ssl/database/internal/csr.pem
+  cert: /etc/ssl/database/internal/cert.pem
+  fullchain: /etc/ssl/database/internal/fullchain.pem
+  common_name: "database.internal.{{ domain_name }}"
+  alt_names:
+    - "IP:{{ ansible_default_ipv4.address }}"
+    - "DNS:{{ domain_name }}"
+
+ispmail_database_internal_certs: "{{ [database_internal_certificate] }}"

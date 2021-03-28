@@ -1,5 +1,2 @@
-user = mail
-hosts = {{ ispmail_postfix_database_hosts|join(' ') }}
-password = {{ ispmail_postfix_database_password }}
-dbname = mailserver
+dbpath = /etc/maildb.sqlite3
 query = SELECT u.email || '@' || d.name FROM virtual_users AS u JOIN virtual_domains AS d ON u.domain_id = d.id WHERE u.email='%u' AND d.name='%d'

@@ -7,9 +7,13 @@
 #
 # {{item.name}} database configuration file
 
-driver = pgsql
+driver = {{ ispmail_database }}
+{% if ispmail_database=="pgsql" -%}
 connect = host={{ item.address }} dbname=mailserver user=mail password={{ ispmail_dovecot_database_password }}
-user_query = SELECT '/var/vmail/%d/%n/' as home, 5000 AS uid, 5000 as gid FROM virtual_users AS u JOIN virtual_domains AS d ON u.domain_id = d.id WHERE u.email=split_part('%n','_',1) AND d.name='%d';
+{% elif ispmail_database=="sqlite" -%}
+connect = /etc/maildb.sqlite3
+{% endif -%}
+user_query = SELECT '/var/vmail/%d/%n/' as home, 5000 AS uid, 5000 as gid FROM virtual_users AS u JOIN virtual_domains AS d ON u.domain_id = d.id WHERE u.email='%n' AND d.name='%d';
 default_pass_scheme = SHA512-CRYPT
 password_query = SELECT u.email||'@'||d.name as user, u.password as password  FROM virtual_users AS u JOIN virtual_domains AS d ON u.domain_id = d.id WHERE u.email='%n' AND d.name='%d'
 iterate_query = SELECT u.email AS username, d.name AS domain FROM virtual_users AS u JOIN virtual_domains AS d ON u.domain_id = d.id;

@@ -38,6 +38,7 @@
   copy:
     content: "{{ ca_certificate['content'] | b64decode }}"
     dest: "/usr/local/share/ca-certificates/{{ domain_name }}.crt"
+    mode: "0640"
     owner: root
     group: root
   delegate_to: "{{ item }}"

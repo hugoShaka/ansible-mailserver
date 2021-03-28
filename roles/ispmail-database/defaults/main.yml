@@ -8,3 +8,4 @@ ispmail_pgadmin_ip_range: '127.0.0.1/32'
 
 ispmail_database_allow_local: true
 mailservers: []
+ispmail_database: pgsql

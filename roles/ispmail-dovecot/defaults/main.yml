@@ -15,3 +15,5 @@ ispmail_dovecot_doveadm_secret: "{{ lookup('password',
 
 certificate_location: "{{ ispmail_public_certificate_location }}"
 certificate_keyfile: "{{ ispmail_public_certificate_keyfile }}"
+
+ispmail_database: pgsql

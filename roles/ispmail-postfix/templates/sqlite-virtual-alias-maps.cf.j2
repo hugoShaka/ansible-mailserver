@@ -1,0 +1,2 @@
+dbpath = /etc/maildb.sqlite3
+query = SELECT a.destination FROM virtual_aliases AS a JOIN virtual_domains AS d ON a.domain_id = d.id WHERE a.source='%u' AND d.name='%d';

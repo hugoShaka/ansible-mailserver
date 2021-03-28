@@ -4,12 +4,11 @@ import smtplib
 import pytest
 import ssl
 
-import tools
-from tools import server_address, database_address  # noqa: F401
+from tools import server_address, database  # noqa: F401
 
 
 @pytest.fixture(scope="module")  # noqa: F811
-def server(server_address, database_address):  # noqa: F811
+def server(server_address, database):  # noqa: F811
     """Add fixtures into the database before testing"""
 
     domains = [(1, "sith.local"), (2, "jedi.local")]
@@ -25,10 +24,10 @@ def server(server_address, database_address):  # noqa: F811
         (2, "kenobi", "ben@tatooine.local"),
     ]  # kenobi@jedi.local
 
-    tools.insert_virtual_domains(database_address, domains)
-    tools.insert_virtual_users(database_address, users)
-    tools.insert_virtual_alias_domains(database_address, alias_domains)
-    tools.insert_virtual_aliases(database_address, aliases)
+    database.insert_virtual_domains(domains)
+    database.insert_virtual_users(users)
+    database.insert_virtual_alias_domains(alias_domains)
+    database.insert_virtual_aliases(aliases)
     return server_address
 
 
