@@ -1,0 +1,22 @@
+version: 2
+updates:
+- package-ecosystem: pip
+  directory: "/molecule"
+  schedule:
+    interval: daily
+    time: "04:00"
+  assignees:
+  - hugoShaka
+  ignore:
+  - dependency-name: ansible
+    versions:
+    - 2.10.6
+    - 2.10.7
+    - 3.0.0
+    - 3.1.0
+    - 3.2.0
+  - dependency-name: molecule
+    versions:
+    - 3.2.2
+    - 3.2.3
+    - 3.2.4
