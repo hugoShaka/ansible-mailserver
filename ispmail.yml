@@ -6,5 +6,6 @@
     - ispmail-database
     - ispmail-postfix
     - ispmail-dovecot
+    - ispmail-rspamd
   become: true
   become_user: root

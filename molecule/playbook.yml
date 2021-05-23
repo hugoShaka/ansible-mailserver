@@ -43,4 +43,14 @@
   tags:
     - dovecot
     - mda
+
+- name: Deploy mail delivery agent
+  hosts: mta
+  roles:
+    - ispmail-rspamd
+  vars:
+    ispmail_debug: true
+  tags:
+    - rspamd
+    - mta
 ...
