@@ -1,0 +1,9 @@
+{% if groups['mta'] | length >= 2 -%}
+neighbours {
+{%- for host in groups['mta'] %}
+    {{ host }} {
+        host = "http://{{ hostvars[host]['ansible_default_ipv4']['address'] }}";
+    }
+{%- endfor %}
+}
+{%- endif %}

@@ -25,10 +25,19 @@
     - postgres
     - db
 
-- name: Deploy mail transfer agent
+- name: Deploy mail delivery agent
   hosts: mta
   roles:
     - ispmail-rspamd
+  vars:
+    ispmail_debug: true
+  tags:
+    - rspamd
+    - mta
+
+- name: Deploy mail transfer agent
+  hosts: mta
+  roles:
     - ispmail-postfix
   tags:
     - postfix
@@ -43,14 +52,4 @@
   tags:
     - dovecot
     - mda
-
-- name: Deploy mail delivery agent
-  hosts: mta
-  roles:
-    - ispmail-rspamd
-  vars:
-    ispmail_debug: true
-  tags:
-    - rspamd
-    - mta
 ...

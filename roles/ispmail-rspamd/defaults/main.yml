@@ -1,0 +1,6 @@
+# Run `rspamadm pw` to generate a password hash
+# defautl password is "hello"
+rspamd_admin_password: "$2$wqtfbht8k3bnweuack38o3pexizgwnqn$qnkrrx7wfwhhiypw87rjmejdsf81iuzn9kir141ghaq5rkfsph5y"
+outbound_domains:
+  - jedi.local
+  - sith.local

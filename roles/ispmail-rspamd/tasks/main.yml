@@ -22,8 +22,82 @@
 
 - name: Install rspamd packages
   apt:
-    name: rspamd
+    name:
+      - rspamd
+      - redis
     state: present
   register: apt_result
   until: apt_result is succeeded
   retries: 3
+
+- name: Set UI password
+  template:
+    src: local.d/worker-controller.inc.j2
+    dest: /etc/rspamd/local.d/worker-controller.inc
+    mode: 0644
+    owner: root
+    group: root
+  notify: restart rspamd
+
+- name: Bind UI on all interfaces
+  copy:
+    src: override.d/worker-controller.inc
+    dest: /etc/rspamd/override.d/worker-controller.inc
+    mode: 0644
+    owner: root
+    group: root
+  notify: restart rspamd
+
+- name: Add neighbours
+  template:
+    src: local.d/options.inc.j2
+    dest: /etc/rspamd/local.d/options.inc
+    mode: 0644
+    owner: root
+    group: root
+  notify: restart rspamd
+
+- name: Specify Redis location
+  copy:
+    src: local.d/redis.conf
+    dest: /etc/rspamd/local.d/redis.conf
+    mode: 0644
+    owner: root
+    group: root
+  notify: restart rspamd
+
+- name: Create DKIM key directory
+  file:
+    path: /etc/opendkim/userkeys/{{ item }}
+    state: directory
+    owner: root
+    group: _rspamd
+    mode: 0770
+  loop: "{{ outbound_domains }}"
+
+- name: Generate Keys for DKIM
+  command:
+    argv:
+      - rspamadm
+      - dkim_keygen
+      - -b
+      - "2048"
+      - -s
+      - "{{ ansible_hostname }}"
+      - -d
+      - "{{ item }}"
+      - -k
+      - /etc/opendkim/userkeys/{{ item }}/{{ ansible_hostname }}.private
+    creates: /etc/opendkim/userkeys/{{ item }}/{{ ansible_hostname }}.private
+  loop: "{{ outbound_domains }}"
+  register: dkim_keys
+
+- name: Write records to files
+  copy:
+    dest: /etc/opendkim/userkeys/{{ item.item }}/{{ ansible_hostname }}.record
+    content: "{{ item.stdout }}"
+    owner: root
+    group: root
+    mode: 0644
+  loop: "{{ dkim_keys.results }}"
+  when: "item.changed"
