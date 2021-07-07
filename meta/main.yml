@@ -1,0 +1,15 @@
+---
+namespace: hugoShaka
+name: mailserver
+version: 1.0.0
+readme: README.md
+authors:
+    - Christopher Haas
+    - hugoShaka
+    - dric0
+license: MIT
+tags:
+    - mail
+repository: https://github.com/hugoShaka/ansible-mailserver
+# documentation: documentation URL
+issues: https://github.com/hugoShaka/ansible-mailserver/issues
