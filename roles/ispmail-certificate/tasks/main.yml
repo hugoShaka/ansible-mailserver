@@ -10,8 +10,8 @@
 - name: Ensure pip and setuptools are installed
   apt:
     name:
-      - python-pip
-      - python-setuptools
+      - python3-pip
+      - python3-setuptools
     state: present
   register: apt_result
   until: apt_result is succeeded
