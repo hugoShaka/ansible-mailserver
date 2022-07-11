@@ -1,7 +1,7 @@
 ansible==2.9.20
 molecule==2.22
 docker-py==1.10.6
-IMAPClient==2.2.0
+IMAPClient==2.3.1
 psycopg2-binary
 dnspython
 Sphinx
